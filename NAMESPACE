@@ -1,0 +1,10 @@
+import(nnls)
+exportPattern("^[^\\.]")
+
+importFrom(stats, coef)
+
+S3method(print, SuperLearner)
+S3method(coef, SuperLearner)
+
+S3method(print, CV.SuperLearner)
+S3method(coef, CV.SuperLearner)

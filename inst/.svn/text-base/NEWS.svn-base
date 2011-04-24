@@ -1,0 +1,8 @@
+# News for the SuperLearner package. #
+
+---
+Version: 2.0-0  
+Date: 2010-12-27
+
+* Version 2.* represents a complete rewrite of the SuperLearner package.
+* Details on the changes from Version 1.* to 2.* can be found in ChangeLog.

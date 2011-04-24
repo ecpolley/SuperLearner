@@ -1,0 +1,13 @@
+Package: SuperLearner
+Type: Package
+Title: Super Learner Prediction
+Version: 2.0-0
+Date: 2011-04-22
+Author: Eric Polley, Mark van der Laan
+Maintainer: Eric Polley <eric.polley@nih.gov>
+Description: This package implements the super learner prediction method and contains a library of prediction algorithms to be used in the super learner.
+License: GPL-3
+URL: https://github.com/ecpolley/SuperLearner	 
+Depends: R (>= 2.12.0), nnls, quadprog
+Suggests: arm, BayesTree, caret, class, DSA, e1071, earth, gam, gbm, genefilter, glmnet, Hmisc, ipred, LogicReg, MASS, mda, mlbench, multicore, nnet, party, polspline, randomForest, rpart, SIS, snow, spls, stepPlr
+LazyLoad: yes

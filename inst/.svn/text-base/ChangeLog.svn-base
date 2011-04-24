@@ -1,0 +1,7 @@
+# This file documents the differences between version 1.* and 2.* #
+
+* X and newX will now assume the class is data.frame, the SuperLearner function does not force a conversion with as.data.frame(). Since the conversion does not take place, it is possible to create your own wrappers that use X and newX as a matrix without error.
+* The check for factors in X has been dropped.
+* the user can now specify a list with the row numbers for the V-fold cross-validation step.  The name of the list is validRows and should be a list of length V with each element in the list containing a numeric vector with the row numbers for the corresponding validation fold.  
+* added write.SL.template() and write.screen.template(). These functions generate a new file containing the template text.
+* The user can now create their own loss functions and methods to combine the individual learners.
