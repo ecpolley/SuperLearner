@@ -30,8 +30,8 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
 	whichDiscreteSL <- rep.int(NA, V)
 	library.predict <- matrix(NA, nrow = N, ncol = k)
 	colnames(library.predict) <- libraryNames
-	coef <- matrix(NA, nrow = V, ncol = k)
-	colnames(coef) <- libraryNames
+  # coef <- matrix(NA, nrow = V, ncol = k)
+  # colnames(coef) <- libraryNames
   
   # run SuperLearner:
   .crossValFun <- function(valid, Y, dataX, family, id, obsWeights, SL.library, method, verbose, control, cvControl, saveAll) {
@@ -54,8 +54,9 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   SL.predict[unlist(folds, use.names = FALSE)] <- unlist(lapply(cvList, '[[', 'cvSL.predict'), use.names = FALSE)
   discreteSL.predict[unlist(folds, use.names = FALSE)] <- unlist(lapply(cvList, '[[', 'cvdiscreteSL.predict'), use.names = FALSE)
   whichDiscreteSL <- lapply(cvList, '[[', 'cvwhichDiscreteSL')
-  library.predict[unlist(folds, use.names = FALSE), ] <- unlist(lapply(cvList, '[[', 'cvlibrary.predict'), use.names = FALSE)
-  coef <- lapply(folds, '[[', 'cvcoef')
+  library.predict[unlist(folds, use.names = FALSE), ] <- do.call('rbind', lapply(cvList, '[[', 'cvlibrary.predict'))
+  coef <- do.call('rbind', lapply(cvList, '[[', 'cvcoef'))
+  colnames(coef) <- libraryNames
   
   # put together output
   out <- list(call = call, AllSL = AllSL, SL.predict = SL.predict, discreteSL.predict = discreteSL.predict, whichDiscreteSL = whichDiscreteSL, library.predict = library.predict, coef = coef, folds = folds, V = V)
