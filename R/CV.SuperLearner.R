@@ -54,7 +54,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   SL.predict[unlist(folds, use.names = FALSE)] <- unlist(lapply(cvList, '[[', 'cvSL.predict'), use.names = FALSE)
   discreteSL.predict[unlist(folds, use.names = FALSE)] <- unlist(lapply(cvList, '[[', 'cvdiscreteSL.predict'), use.names = FALSE)
   whichDiscreteSL <- lapply(cvList, '[[', 'cvwhichDiscreteSL')
-  library.predict[unlist(folds, use.names = FALSE)] <- unlist(lapply(cvList, '[[', 'cvlibrary.predict'), use.names = FALSE)
+  library.predict[unlist(folds, use.names = FALSE), ] <- unlist(lapply(cvList, '[[', 'cvlibrary.predict'), use.names = FALSE)
   coef <- lapply(folds, '[[', 'cvcoef')
   
   # put together output

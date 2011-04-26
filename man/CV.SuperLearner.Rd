@@ -67,9 +67,19 @@ A List.
 }
 
 \examples{
-\dontrun{
-  CV.SuperLearner()
-}
+  set.seed(23432)
+  ## training set
+  n <- 500
+  p <- 50
+  X <- matrix(rnorm(n*p), nrow = n, ncol = p)
+  colnames(X) <- paste("X", 1:p, sep="")
+  X <- data.frame(X)
+  Y <- X[, 1] + sqrt(abs(X[, 2] * X[, 3])) + X[, 2] - X[, 3] + rnorm(n)
+  
+  # generate Library and run Super Learner
+  SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
+  test <- CV.SuperLearner(Y = Y, X = X, V = 10, SL.library = SL.library, verbose = TRUE, method = "method.NNLS")
+  test
 }
 
 \keyword{models}

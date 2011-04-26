@@ -1,4 +1,0 @@
-# ToDo: #
-
-* Make CV.SuperLearner parallel. Allow user to only make outer loop parallel, only inner loop parallel, or both. Should run a few tests to see how the options compare.
-* improve summary.CV.SuperLearner and summary.SuperLearner
