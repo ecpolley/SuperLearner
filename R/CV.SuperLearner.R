@@ -1,6 +1,6 @@
 # V-fold Cross-validation wrapper for SuperLearner
 
-CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), obsWeights = NULL, saveAll = TRUE) {
+CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), obsWeights = NULL, saveAll = TRUE, parallel = FALSE) {
   call <- match.call()
   N <- dim(X)[1L]
   
@@ -47,8 +47,16 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
     return(out)
   }
   
-  cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
-  
+  if(!parallel) {
+    cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+  } else if (parallel == 'multicore') {
+    .SL.require('multicore')
+    cvList <- mclapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll, mc.set.seed = FALSE)
+  } else if (inherits(parallel, 'cluster')) {
+    cvList <- parLapply(parallel, x = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+  } else {
+    stop('parallel option was not recognized, use parallel = FALSE for sequential computation.')
+  }
   # check out Biobase::subListExtract to replace the lapply
   AllSL <- lapply(cvList, '[[', 'cvAllSL')
   SL.predict[unlist(folds, use.names = FALSE)] <- unlist(lapply(cvList, '[[', 'cvSL.predict'), use.names = FALSE)
