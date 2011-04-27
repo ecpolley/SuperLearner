@@ -9,7 +9,9 @@
 \description{A Prediction Function for the Super Learner.  The \code{SuperLearner} function takes a training set pair (X,Y) and returns the predicted values based on a validation set.}
 
 \usage{
-SuperLearner(Y, X, newX = NULL, family = gaussian(), SL.library, method = "method.NNLS", id = NULL, verbose = FALSE, control = list(), cvControl = list(), obsWeights = NULL)
+SuperLearner(Y, X, newX = NULL, family = gaussian(), SL.library, 
+  method = "method.NNLS", id = NULL, verbose = FALSE, 
+  control = list(), cvControl = list(), obsWeights = NULL)
 }
 
 \arguments{
@@ -134,16 +136,21 @@ m <- 1000
 newX <- matrix(rnorm(m*p), nrow = m, ncol = p)
 colnames(newX) <- paste("X", 1:p, sep="")
 newX <- data.frame(newX)
-newY <- newX[, 1] + sqrt(abs(newX[, 2] * newX[, 3])) + newX[, 2] - newX[, 3] + rnorm(m)
+newY <- newX[, 1] + sqrt(abs(newX[, 2] * newX[, 3])) + newX[, 2] -
+  newX[, 3] + rnorm(m)
 
 # generate Library and run Super Learner
-SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
-test <- SuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library, verbose = TRUE, method = "method.NNLS")
+SL.library <- c("SL.glm", "SL.randomForest", "SL.gam",
+  "SL.polymars", "SL.mean")
+test <- SuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
+  verbose = TRUE, method = "method.NNLS")
 test
 
 # library with screening
-SL.library <- list(c("SL.glmnet", "All"), c("SL.glm", "screen.randomForest", "All", "screen.SIS"), "SL.randomForest", c("SL.polymars", "All"), "SL.mean")
-test <- SuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library, verbose = TRUE, method = "method.NNLS")
+SL.library <- list(c("SL.glmnet", "All"), c("SL.glm", "screen.randomForest",
+  "All", "screen.SIS"), "SL.randomForest", c("SL.polymars", "All"), "SL.mean")
+test <- SuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
+  verbose = TRUE, method = "method.NNLS")
 test
 
 # binary outcome
@@ -151,16 +158,19 @@ set.seed(1)
 N <- 200
 X <- matrix(rnorm(N*10), N, 10)
 X <- as.data.frame(X)
-Y <- rbinom(N, 1, plogis(.2*X[, 1] + .1*X[, 2] - .2*X[, 3] + .1*X[, 3]*X[, 4] - .2*abs(X[, 4])))
+Y <- rbinom(N, 1, plogis(.2*X[, 1] + .1*X[, 2] - .2*X[, 3] + 
+  .1*X[, 3]*X[, 4] - .2*abs(X[, 4])))
 
 SL.library <- c("SL.glmnet", "SL.glm", "SL.knn", "SL.gam", "SL.mean")
 
 # least squares loss function
-test.NNLS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = TRUE, method = "method.NNLS", family = binomial())
+test.NNLS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, 
+  verbose = TRUE, method = "method.NNLS", family = binomial())
 test.NNLS
 
 # negative log binomial likelihood loss function
-test.NNloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = TRUE, method = "method.NNloglik", family = binomial())
+test.NNloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library,
+  verbose = TRUE, method = "method.NNloglik", family = binomial())
 test.NNloglik
 
 # 2
@@ -195,15 +205,20 @@ newDATA2 <- data.frame(Y = newy, X=newx)
 
 create.SL.knn <- function(k = c(20, 30)) {
   for(mm in seq(length(k))){
-    eval(parse(text = paste('SL.knn.', k[mm], '<- function(..., k = ', k[mm], ') SL.knn(..., k = k)', sep = '')), envir = .GlobalEnv)
+    eval(parse(text = paste('SL.knn.', k[mm], '<- function(..., k = ', k[mm],
+      ') SL.knn(..., k = k)', sep = '')), envir = .GlobalEnv)
   }
   invisible(TRUE)
 }
 create.SL.knn(c(20, 30, 40, 50, 60, 70))
 
 # library with screening
-SL.library <- list(c("SL.glmnet", "All"), c("SL.glm", "screen.randomForest"), "SL.randomForest", "SL.knn", "SL.knn.20", "SL.knn.30", "SL.knn.40", "SL.knn.50", "SL.knn.60", "SL.knn.70", c("SL.polymars", "screen.randomForest"))
-test <- SuperLearner(Y = DATA2$Y, X = DATA2[, -1], newX = newDATA2[, -1], SL.library = SL.library, verbose = TRUE, family = binomial())
+SL.library <- list(c("SL.glmnet", "All"), c("SL.glm", "screen.randomForest"),
+  "SL.randomForest", "SL.knn", "SL.knn.20", "SL.knn.30", "SL.knn.40",
+  "SL.knn.50", "SL.knn.60", "SL.knn.70", 
+  c("SL.polymars", "screen.randomForest"))
+test <- SuperLearner(Y = DATA2$Y, X = DATA2[, -1], newX = newDATA2[, -1],
+  SL.library = SL.library, verbose = TRUE, family = binomial())
 test
 
 \dontrun{
@@ -225,26 +240,32 @@ newX <- data.frame(newX)
 newY <- newX[, 1] + sqrt(abs(newX[, 2] * newX[, 3])) + newX[, 2] - newX[, 3] + rnorm(m)
 
 # generate Library and run Super Learner
-SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
+SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", 
+  "SL.polymars", "SL.mean")
 
-testMC <- mcSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library, method = "method.NNLS")
+testMC <- mcSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
+  method = "method.NNLS")
 testMC
 
 ## examples with snow
 library(snow)
 cl <- makeCluster(2, type = 'MPI')
 clusterSetupRNG(cl, type = 'RNGstream')
-testSNOW <- snowSuperLearner(cluster = cl, Y = Y, X = X, newX = newX, SL.library = SL.library, method = "method.NNLS")
+testSNOW <- snowSuperLearner(cluster = cl, Y = Y, X = X, newX = newX,
+  SL.library = SL.library, method = "method.NNLS")
 testSNOW
 stopCluster(cl)
 
 ## timing
-replicate(5, system.time(SuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library, method = "method.NNLS")))
+replicate(5, system.time(SuperLearner(Y = Y, X = X, newX = newX, 
+  SL.library = SL.library, method = "method.NNLS")))
 
-replicate(5, system.time(mcSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library, method = "method.NNLS")))
+replicate(5, system.time(mcSuperLearner(Y = Y, X = X, newX = newX, 
+  SL.library = SL.library, method = "method.NNLS")))
 
 cl <- makeCluster(2, type = 'MPI')
-replicate(5, system.time(snowSuperLearner(cl, Y = Y, X = X, newX = newX, SL.library = SL.library, method = "method.NNLS")))
+replicate(5, system.time(snowSuperLearner(cl, Y = Y, X = X, newX = newX,
+  SL.library = SL.library, method = "method.NNLS")))
 stopCluster(cl)
 
 }

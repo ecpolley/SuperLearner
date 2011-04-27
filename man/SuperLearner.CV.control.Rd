@@ -8,7 +8,8 @@ Control parameters for the cross validation steps in \code{SuperLearner}
 Control parameters for the cross validation steps in \code{SuperLearner}
 }
 \usage{
-SuperLearner.CV.control(V = 10L, stratifyCV = FALSE, shuffle = TRUE, validRows = NULL)
+SuperLearner.CV.control(V = 10L, stratifyCV = FALSE, shuffle = TRUE, 
+  validRows = NULL)
 }
 
 \arguments{

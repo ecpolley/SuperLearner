@@ -10,7 +10,10 @@ Wrapper to get V-fold cross-validated risk estimate for super learner
 Wrapper to get V-fold cross-validated risk estimate for super learner
 }
 \usage{
-CV.SuperLearner(Y, X, V = 20, family = gaussian(), SL.library, method = "method.NNLS", id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), obsWeights = NULL, saveAll = TRUE, parallel = FALSE)
+CV.SuperLearner(Y, X, V = 20, family = gaussian(), SL.library, 
+  method = "method.NNLS", id = NULL, verbose = FALSE, 
+  control = list(saveFitLibrary = FALSE), cvControl = list(), 
+  obsWeights = NULL, saveAll = TRUE, parallel = FALSE)
 }
 
 \arguments{
@@ -70,19 +73,20 @@ A List.
 }
 
 \examples{
-  set.seed(23432)
-  ## training set
-  n <- 500
-  p <- 50
-  X <- matrix(rnorm(n*p), nrow = n, ncol = p)
-  colnames(X) <- paste("X", 1:p, sep="")
-  X <- data.frame(X)
-  Y <- X[, 1] + sqrt(abs(X[, 2] * X[, 3])) + X[, 2] - X[, 3] + rnorm(n)
+set.seed(23432)
+## training set
+n <- 500
+p <- 50
+X <- matrix(rnorm(n*p), nrow = n, ncol = p)
+colnames(X) <- paste("X", 1:p, sep="")
+X <- data.frame(X)
+Y <- X[, 1] + sqrt(abs(X[, 2] * X[, 3])) + X[, 2] - X[, 3] + rnorm(n)
   
-  # generate Library and run Super Learner
-  SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
-  test <- CV.SuperLearner(Y = Y, X = X, V = 10, SL.library = SL.library, verbose = TRUE, method = "method.NNLS")
-  test
+# build Library and run Super Learner
+SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
+test <- CV.SuperLearner(Y = Y, X = X, V = 10, SL.library = SL.library,
+  verbose = TRUE, method = "method.NNLS")
+test
 }
 
 \keyword{models}
