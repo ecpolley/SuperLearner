@@ -1,0 +1,23 @@
+% \VignetteIndexEntry{SuperLearner manual}
+% \VignetteDepends{SuperLearner}
+% \VignettePackage{SuperLearner}
+\documentclass[11pt, nojss]{jss}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\DeclareMathOperator{\argmax}{\arg\max}
+\DeclareMathOperator{\argmin}{\arg\min}
+
+%% need no \usepackage{Sweave.sty}
+\SweaveOpts{keep.source=TRUE}
+\SweaveOpts{eps = FALSE, pdf = TRUE}  % only produce pdf
+\SweaveOpts{width=6, height=4}  % default figure size in R
+\setkeys{Gin}{width=0.85\textwidth}   % default figure size in latex
+<<setup, echo=false, results = hide>>=
+options(width=60)
+if(!file.exists('plots')) dir.create('plots')
+# options(continue=' ')
+@
+\SweaveOpts{prefix.string = plots/fig}
