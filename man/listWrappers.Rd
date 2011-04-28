@@ -13,7 +13,7 @@ listWrappers(what = "both")
 
 \arguments{
   \item{what}{
-What list to return. Can be \code{both} for both prediction algorithms and screening algorithms, \code{SL} for the prediction algorithms, or \code{screen} for the screening algorithms, or anything else will return a list of all functions in the \code{SuperLearner} package
+What list to return. Can be \code{both} for both prediction algorithms and screening algorithms, \code{SL} for the prediction algorithms, \code{screen} for the screening algorithms, \code{method} for the estimation method details, or anything else will return a list of all (exported) functions in the \code{SuperLearner} package
 }
 }
 

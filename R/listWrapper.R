@@ -12,6 +12,9 @@ listWrappers <- function(what = "both") {
 		message("All screening algorithm wrappers in SuperLearner:\n")
 		print("All")
 		print(ls("package:SuperLearner", pattern="screen"))
+	} else if(what == 'method') {
+	  message("All methods in SuperLearner package:\n")
+		print(ls("package:SuperLearner", pattern="^method"))
 	} else {
 		message("All functions in SuperLearner:\n")
 		print(ls("package:SuperLearner"))
