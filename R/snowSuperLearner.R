@@ -177,10 +177,10 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
   #     message(paste("full", libraryNames[s]))
   #   }
   # }
-  .predFun <- function(index, lib, Y, dataX, newX, family, id, obsWeights, verbose, control, libraryNames) {
-    testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = dataX[, whichScreen[lib$rowScreen[index], drop = FALSE]], newX = newX[, whichScreen[lib$rowScreen[index], drop = FALSE]], family = family, id = id, obsWeights = obsWeights)))
+  .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
+    testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
     if(inherits(testAlg, "try-error")) {
-      warning(paste("Error in algorithm", library$library$predAlgorithm[s], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
+      warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
       out <- rep.int(NA, times = nrow(newX))
     } else {
       out <- testAlg$pred
@@ -193,7 +193,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
     }
     invisible(out)
   }
-  predY <- do.call('cbind', parLapply(cluster, seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
+  predY <- do.call('cbind', parLapply(cluster, seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
   
   # check for errors
   errorsInLibrary <- apply(predY, 2, function(xx) any(is.na(xx)))
