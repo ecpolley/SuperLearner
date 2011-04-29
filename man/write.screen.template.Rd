@@ -5,6 +5,8 @@
 \alias{screen.randomForest}
 \alias{screen.SIS}
 \alias{screen.ttest}
+\alias{screen.corP}
+\alias{screen.corRank}
 
 \title{
 screening algorithms for SuperLearner
