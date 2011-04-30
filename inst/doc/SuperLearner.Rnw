@@ -214,6 +214,43 @@ listWrappers(what = 'screen')
 \section{Examples}
 Below we work out a few examples using the \pkg{SuperLearner} package with real data.
 
+\subsection{Boston Housing example}
+The Boston housing data available in the \pkg{mlbench} package contains information on the housing prices from 506 census tracts around Boston from the 1970 census. The original data description can be found in \cite{Harrison:1978} and a correction in \cite{Gilley:1996}. Here we build an estimator to predict the median value of owner-occupied homes based on the covariates supplied. First we load the data and examine the variables includes:
+<<>>=
+library(mlbench)
+data(BostonHousing2)
+@ 
+With the data loaded, we need to change the \code{chas} variable from a factor to a numeric and then remove the variables we will not be using in the analysis.
+<<>>=
+BostonHousing2$chas <- as.numeric(BostonHousing2$chas=="1")
+DATA <- BostonHousing2[, c("cmedv", "crim", "zn", "indus", "chas", "nox",
+  "rm", "age", "dis", "rad", "tax", "ptratio", "b", "lstat")]
+@
+
+<<echo=FALSE, eval=TRUE, results=hide>>=
+library(ggplot2)
+@
+
+\begin{figure}[htbp]
+   \centering
+<<fig=TRUE, include=TRUE, eval=TRUE, echo=FALSE>>=
+print(qplot(cmedv, data=DATA, binwidth=2, xlab = "Median home values", ylab = "Count"))
+@
+   \caption{Histogram of median home values (in 1000 USD)}
+   \label{fig:histY}
+\end{figure}
+
+Before estimating the super learner, the library of prediction algorithms needs to be put together. As demonstrated above, the package contains a wide variety of built in algorithms. But the available algorithms may not be sufficient for any given problem.
+
+For example, the \code{SL.gam} function has the tuning parameter \code{deg.gam = 2}.  If we wanted to also consider the \code{gam} model with degree 3 we do not need to write a new wrapper function but can easily use the current function and change the argument.  For example:
+<<>>=
+SL.gam.3 <- function(..., deg.gam = 3){
+	SL.gam(..., deg.gam = deg.gam)
+}
+@
+\code{SL.gam.3} is a simple function calling the \code{SL.gam} function but changing the argument \code{deg.gam} to the desired value for the tuning parameter.  The ``\ldots'' will simply pass all other arguments from \code{SL.gam.3} into \code{SL.gam} since these should be the same.  This mechanism of writing functions of the wrapper functions allows for the easy adaptation of the currently available prediction algorithms to the current prediction problem and the desired range for tuning parameters.
+
+
 \bibliography{SLrefs}
 
 \section{Computing Environment}
