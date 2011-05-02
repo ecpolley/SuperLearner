@@ -10,6 +10,7 @@ The folders here are the source documents for creating the SuperLearner R packag
 2.  Unzip the downloaded file.
 3.  Run `R CMD build /path/to/folder`
 4.  You should now have a file called SuperLearner\_2.0-0.tar.gz
-5.  Run `R CMD install SuperLearner_2.0-0.tar.gz`
+5.  Run `R CMD INSTALL SuperLearner_2.0-0.tar.gz`
+6.  Alternative to step 5, in R use the command `install.packages('SuperLearner_2.0-0.tar.gz', repos = NULL, type = 'source')` assuming you are in the correct directory with the .tar.gz file (or add full path to the command)
 
 The package should now exist in your R library and can be loaded with the command `library(SuperLearner)`.  
