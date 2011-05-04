@@ -69,7 +69,7 @@
 	if("SL.spls" %in% library) .SL.require('spls', message = 'You have selected spls as a library algorithm but either do not have the spls package installed or it can not be loaded')
 	if("SL.step.plr" %in% library) .SL.require('stepPlr', message = 'You have selected step.plr as a library algorithm but either do not have the stepPlr package installed or it can not be loaded')
 	if("SL.svm" %in% library) .SL.require('e1071', message = 'You have selected svm as a library algorithm but either do not have the e1071 package installed or it can not be loaded')
-	if("SL.bagging" %in% library) .SL.require('ipred', message = 'You have selected bagging as a library algorithm but either do not have the ipred package installed or it can not be loaded')
+	if("SL.ipredbagg" %in% library) .SL.require('ipred', message = 'You have selected bagging as a library algorithm but either do not have the ipred package installed or it can not be loaded')
 	if("SL.bart" %in% library) .SL.require('BayesTree', message = 'You have selected bart as a library algorithm but either do not have the BayesTree package installed or it can not be loaded')
 	if("SL.gbm" %in% library) .SL.require('gbm', message = 'You have selected gbm as a library algorithm but either do not have the gbm package installed or it can not be loaded')
 	if("SL.mars" %in% library) .SL.require('mda', message = 'You have selected mars as a library algorithm but either do not have the mda package installed or it can not be loaded')
