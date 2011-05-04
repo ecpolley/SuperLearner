@@ -26,19 +26,21 @@
 		whichScreen <- matrix(1, nrow = 1, ncol = k)
 		screenAlgorithm <- "All"
 		library <- data.frame(predAlgorithm = SL.library, rowScreen = 1, stringsAsFactors=FALSE)
-	} else {
-		predNames <- sapply(SL.library, FUN="[", 1)
-		NumberScreen <- (sapply(SL.library, FUN=length) - 1)
+	} else if (is.list(SL.library)) {
+		predNames <- sapply(SL.library, FUN = "[", 1)
+		NumberScreen <- (sapply(SL.library, FUN = length) - 1)
 		if (sum(NumberScreen == 0) > 0) {
-			for(ii in which(NumberScreen == 0)){
+			for(ii in which(NumberScreen == 0)) {
 				SL.library[[ii]] <- c(SL.library[[ii]], "All")
 				NumberScreen[ii] <- 1
 			}
 		}
-		screenAlgorithmFull <- unlist(sapply(SL.library, FUN="[", -1))
+		screenAlgorithmFull <- unlist(lapply(SL.library, FUN="[", -1))
 		screenAlgorithm <- unique(screenAlgorithmFull)
 		
 		library <- data.frame(predAlgorithm = rep(predNames, times=NumberScreen), rowScreen = match(screenAlgorithmFull, screenAlgorithm), stringsAsFactors = FALSE)
+	} else {
+	  stop('format for SL.library is not recognized')
 	}
 	
 	out <- list(library = library, screenAlgorithm = screenAlgorithm)
