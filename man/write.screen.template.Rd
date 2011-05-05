@@ -7,6 +7,7 @@
 \alias{screen.ttest}
 \alias{screen.corP}
 \alias{screen.corRank}
+\alias{screen.glmnet}
 
 \title{
 screening algorithms for SuperLearner
