@@ -1,7 +1,7 @@
 ## lm.ridge{MASS}
 # may want to change range lambda searches over
 # will only work with guassian
-SL.ridge <- function(Y, X, newX, family, lambda = seq(1, 20, .1) ...) {
+SL.ridge <- function(Y, X, newX, family, lambda = seq(1, 20, .1), ...) {
 	.SL.require('MASS')
 	if(family$family=="binomial"){
 		stop("Currently only works with gaussian data")
