@@ -50,6 +50,8 @@
 \alias{predict.SL.svm}
 \alias{SL.glmnet}
 \alias{predict.SL.glmnet}
+\alias{SL.ridge}
+\alias{predict.SL.ridge}
 
 \title{
 Wrapper functions for prediction algorithms in SuperLearner
