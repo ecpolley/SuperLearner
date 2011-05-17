@@ -17,6 +17,6 @@ SL.earth <- function(Y, X, newX, family, obsWeights, id, degree = 2, penalty = 3
 # 
 predict.SL.earth <- function(object, newdata,...) {
   .SL.require('earth')
-	pred <- predict(object$object, newdata = newdata, type = "repsonse")
+	pred <- predict(object$object, newdata = newdata, type = "response")
 	return(pred)
 }
