@@ -1,5 +1,13 @@
 # News for the SuperLearner package. #
 
+
+---
+Version: 2.0-1  
+Date: 2011-05-17
+
+* added predict.SuperLearner
+
+
 ---
 Version: 2.0-0  
 Date: 2010-12-27

@@ -16,6 +16,9 @@ SL.glmnet <- function(Y, X, newX, family, obsWeights, id, alpha = 1, nfolds = 10
 }
 
 predict.SL.glmnet <- function(object, newdata, ...) {
+  if(!is.matrix(newdata)) {
+    newdata <- model.matrix(~ -1 + ., newdata)
+  }
   pred <- predict(object$object$glmnet.fit, newx = newdata, s = ifelse(object$useMin, object$object$lambda.min, object$object$lambda.1se), type = 'response')
   return(pred)
 }
