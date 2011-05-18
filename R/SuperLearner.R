@@ -219,7 +219,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 	colnames(predY) <- libraryNames
 	# clean up when errors in library
 	if(sum(errorsInCVLibrary) > 0) {
-		getCoef$cvRisk[, as.logical(errorsInCVLibrary)] <- NA
+		getCoef$cvRisk[as.logical(errorsInCVLibrary)] <- NA
 	}
 	
   # put everything together in a list
