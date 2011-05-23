@@ -13,7 +13,7 @@ SuperLearnerDocs(what = 'SuperLearnerR.pdf')
 
 \arguments{
   \item{\dots}{additional arguments passed to \code{RShowDoc}}
-  \item{what}{specify what document to open. Currently supports the NEWS file, and the PDF files 'SuperLearner.pdf' and 'SuperLearnerR.pdf' are available.}
+  \item{what}{specify what document to open. Currently supports the NEWS file and the PDF files 'SuperLearner.pdf' and 'SuperLearnerR.pdf'.}
 }
 \value{
 A invisible character string given the path to the SuperLearner NEWS file
