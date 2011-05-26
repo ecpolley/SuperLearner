@@ -8,7 +8,7 @@ Show the NEWS file of the SuperLearner package. The function is simply a wrapper
 }
 \usage{
 SuperLearnerNews(\dots)
-SuperLearnerDocs(what = 'SuperLearnerR.pdf')
+SuperLearnerDocs(what = 'SuperLearnerR.pdf', \dots)
 }
 
 \arguments{
