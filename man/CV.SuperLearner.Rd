@@ -30,7 +30,7 @@ The number of folds for \code{CV.SuperLearner}. This is not the number of folds 
 Currently allows \code{gaussian} or \code{binomial} to describe the error distribution. Link function information will be ignored and should be contained in the method argument below.
 }
   \item{SL.library}{
-Either a character vector of prediction algorithms or a list containing character vectors. See details below for examples on the structure. A list of functions included in the SuperLearner package can be found with \code{listWrappers()}.}
+Either a character vector of prediction algorithms or a list containing character vectors. See details below for examples on the structure. A list of functions included in the SuperLearner package can be found with \code{listWrappers()}.
 }
   \item{method}{
 A list (or a function to create a list) containing details on estimating the coefficients for the super learner and the model to combine the individual algorithms in the library. See \code{?method.template} for details.  Currently, the built in options are either "method.NNLS" (the default), "method.NNLS2", or "method.NNloglik".  NNLS and NNLS2 are non-negative least squares based on the Lawson-Hanson algorithm and the dual method of Goldfarb and Idnani, respectively.  NNLS and NNLS2 will work for both gaussian and binomial outcomes.  NNloglik is a non-negative binomial likelihood maximization using the BFGS quasi-Newton optimization method.
@@ -62,7 +62,8 @@ Options for parallel computation of the V-fold step. Use FALSE (the default) for
 The \code{SuperLearner} function builds a estimator, but does not contain an estimate on the performance of the estimator. Various methods exist for estimator performance evaluation. If you are familiar with the super learner algorithm, it should be no surprise we recommend using cross-validation to evaluate the honest performance of the super learner estimator. The function \code{CV.SuperLearner} computes the usual V-fold cross-validated risk estimate for the super learner (and all algorithms in \code{SL.library} for comparison).
 }
 \value{
-A List.
+An object of class \code{CV.SuperLearner} (a list) with components:
+
   \item{call}{
 The matched call.
 }
