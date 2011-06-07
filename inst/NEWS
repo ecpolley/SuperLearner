@@ -1,5 +1,10 @@
 # News for the SuperLearner package. #
 
+---
+Version: 2.0-2
+Date: 2011-06-07
+
+* fixed bug when one of the algorithms in SL.library has an error
 
 ---
 Version: 2.0-1  

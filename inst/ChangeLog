@@ -6,3 +6,5 @@
 * added write.SL.template() and write.screen.template(). These functions generate a new file containing the template text.
 * The user can now create their own loss functions and methods to combine the individual learners. See write.method.template() for details on the required format and syntax.
 * Added functions mcSuperLearner and snowSuperLearner for parallel computations based on the multicore package and the snow package, respectively. Additionally, CV.SuperLearner has the new argument, parallel, for the same effect.
+* The syntax of the wrappers has changed. For example, Y.temp is now Y, X.temp is now X. Check out ?write.SL.template() for details
+* All cross-validation controls, like V, are now in the list cvControl. See ?SuperLearner for details

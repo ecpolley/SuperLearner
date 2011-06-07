@@ -117,7 +117,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
-				errorsInCVLibrary[s] <- 1
+				errorsInCVLibrary[s] <<- 1
 			} else {
 				out[, s] <- testAlg$pred
 			}
@@ -183,9 +183,9 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
       out <- rep.int(NA, times = nrow(newX))
     } else {
       out <- testAlg$pred
-    }
-    if(control$saveFitLibrary) {
-      eval(bquote(fitLibrary[[.(index)]] <- .(testAlg$fit)), envir = fitLibEnv)
+      if(control$saveFitLibrary) {
+        eval(bquote(fitLibrary[[.(index)]] <- .(testAlg$fit)), envir = fitLibEnv)
+      }
     }
     if(verbose) {
       message(paste("full", libraryNames[index]))
