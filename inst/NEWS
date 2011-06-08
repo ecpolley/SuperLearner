@@ -5,6 +5,7 @@ Version: 2.0-2
 Date: 2011-06-07
 
 * fixed bug when one of the algorithms in SL.library has an error
+* fixed mcSuperLearner and snowSuperLearner not saving fitLibrary
 
 ---
 Version: 2.0-1  
