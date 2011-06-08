@@ -22,6 +22,11 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # get defaults for controls and make sure in correct format
   control <- do.call('SuperLearner.control', control)
   cvControl <- do.call('SuperLearner.CV.control', cvControl)
+
+  if(control$saveFitLibrary) {
+    warning('saveFitLibrary = TRUE does not currently work with mcSuperLearner')
+  }
+  
   # put together the library
   # should this be in a new environment?
   library <- .createLibrary(SL.library)
@@ -117,7 +122,8 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
-				errorsInCVLibrary[s] <<- 1
+        # errorsInCVLibrary[s] <<- 1
+        # '<<-' doesn't work with snow. might try environments or a different check.
 			} else {
 				out[, s] <- testAlg$pred
 			}
@@ -132,6 +138,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', mclapply(validRows, FUN = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
 	
   # check for errors. If any algorithms had errors, replace entire column with 0 even if error is only in one fold.
+  errorsInCVLibrary <- apply(Z, 2, function(x) any(is.na(x)))
   if(sum(errorsInCVLibrary) > 0) {
 		Z[, as.logical(errorsInCVLibrary)] <- 0 
 	}
