@@ -15,7 +15,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
     method <- method()
   }
   if(!is.list(method)) {
-    stop('method is not in the appropriate format. Check out ?NNLS and ?method.template')
+    stop("method is not in the appropriate format. Check out help('method.template')")
   }
   if(!is.null(method$require)) {
 	  sapply(method$require, function(x) require(force(x), character.only = TRUE))
@@ -24,16 +24,14 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
   control <- do.call('SuperLearner.control', control)
   cvControl <- do.call('SuperLearner.CV.control', cvControl)
   
-  if(control$saveFitLibrary) {
-    warning('saveFitLibrary = TRUE does not currently work with snowSuperLearner')
-  }
-  
   # put together the library
   # should this be in a new environment?
   library <- .createLibrary(SL.library)
 	.check.SL.library(library = c(unique(library$library$predAlgorithm), library$screenAlgorithm))
+	
 	call <- match.call(expand.dots = TRUE)
   # should we be checking X and newX for data.frame?
+  # data.frame not required, but most of the built-in wrappers assume a data.frame
   if(!inherits(X, 'data.frame')) message('X is not a data frame. Check the algorithms in SL.library to make sure they are compatible with non data.frame inputs')
   varNames <- colnames(X)
   N <- dim(X)[1L]
@@ -48,8 +46,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	assign('fitLibrary', vector('list', length = k), envir = fitLibEnv)
 	assign('libraryNames', libraryNames, envir = fitLibEnv)
 	evalq(names(fitLibrary) <- libraryNames, envir = fitLibEnv)
-  # fitLibrary <- vector("list", length = k)
-  # names(fitLibrary) <- libraryNames
+
   # errors* records if an algorithm stops either in the CV step and/or in full data
 	errorsInCVLibrary <- rep(0, k)
 	errorsInLibrary <- rep(0, k)
@@ -58,6 +55,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	if(is.null(newX)) {
 		newX <- X
 	}
+	# Are these checks still required?
 	if(!identical(colnames(X), colnames(newX))) {
 		stop("The variable names and order in newX must be identical to the variable names and order in X")
 	}
@@ -94,6 +92,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	if(!identical(length(obsWeights), N)) {
 		stop("obsWeights vector must have the same dimension as Y")
 	}
+	
   # create function for the cross-validation step:
 	.crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, kScreen, k, p, libraryNames) {
 	  tempLearn <- dataX[-valid, , drop = FALSE]
@@ -124,10 +123,11 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
         # errorsInCVLibrary[s] <<- 1
-        # '<<-' doesn't work with snow. might try environments or a different check.
+        # '<<-' doesn't work with snow.
 			} else {
 				out[, s] <- testAlg$pred
 			}
+			# verbose will not work in the GUI, but works in the terminal (test this)
 			if(verbose) message(paste("CV", libraryNames[s]))
 		} #end library
 	  invisible(out)
@@ -146,6 +146,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	if(all(Z == 0)) {
 		stop("All algorithms dropped from library")
 	}
+	
   # compute weights for each algorithm in library:
   getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
   coef <- getCoef$coef
@@ -185,14 +186,16 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
   #   }
   # }
   .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
+    out <- list(pred = NA, fitLibrary = NULL)
     testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
     if(inherits(testAlg, "try-error")) {
       warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
-      out <- rep.int(NA, times = nrow(newX))
+      out$pred <- rep.int(NA, times = nrow(newX))
     } else {
-      out <- testAlg$pred
+      out$pred <- testAlg$pred
       if(control$saveFitLibrary) {
-        eval(bquote(fitLibrary[[.(index)]] <- .(testAlg$fit)), envir = fitLibEnv)
+        # eval(bquote(fitLibrary[[.(index)]] <- .(testAlg$fit)), envir = fitLibEnv)
+        out$fitLibrary <- testAlg$fit
       }
     }
     if(verbose) {
@@ -200,7 +203,12 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
     }
     invisible(out)
   }
-  predY <- do.call('cbind', parLapply(cluster, seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
+  foo <- parLapply(cluster, seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames)
+  predY <- do.call('cbind', lapply(foo, '[[', 'pred'))
+  assign('fitLibrary', lapply(foo, '[[', 'fitLibrary'), envir = fitLibEnv)
+  rm(foo)
+  
+  # predY <- do.call('cbind', parLapply(cluster, seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
   
   # check for errors
   errorsInLibrary <- apply(predY, 2, function(xx) any(is.na(xx)))

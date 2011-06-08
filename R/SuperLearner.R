@@ -13,7 +13,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
     method <- method()
   }
   if(!is.list(method)) {
-    stop('method is not in the appropriate format. Check out ?method.template')
+    stop("method is not in the appropriate format. Check out help('method.template')")
   }
   if(!is.null(method$require)) {
 	  sapply(method$require, function(x) require(force(x), character.only = TRUE))
@@ -21,12 +21,15 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
   # get defaults for controls and make sure in correct format
   control <- do.call('SuperLearner.control', control)
   cvControl <- do.call('SuperLearner.CV.control', cvControl)
+  
   # put together the library
   # should this be in a new environment?
   library <- .createLibrary(SL.library)
 	.check.SL.library(library = c(unique(library$library$predAlgorithm), library$screenAlgorithm))
+	
 	call <- match.call(expand.dots = TRUE)
   # should we be checking X and newX for data.frame?
+  # data.frame not required, but most of the built-in wrappers assume a data.frame
   if(!inherits(X, 'data.frame')) message('X is not a data frame. Check the algorithms in SL.library to make sure they are compatible with non data.frame inputs')
   varNames <- colnames(X)
   N <- dim(X)[1L]
@@ -41,8 +44,6 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 	assign('fitLibrary', vector('list', length = k), envir = fitLibEnv)
 	assign('libraryNames', libraryNames, envir = fitLibEnv)
 	evalq(names(fitLibrary) <- libraryNames, envir = fitLibEnv)
-  # fitLibrary <- vector("list", length = k)
-  # names(fitLibrary) <- libraryNames
 	
   # errors* records if an algorithm stops either in the CV step and/or in full data
 	errorsInCVLibrary <- rep(0, k)
@@ -52,6 +53,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 	if(is.null(newX)) {
 		newX <- X
 	}
+  # Are these checks still required?
 	if(!identical(colnames(X), colnames(newX))) {
 		stop("The variable names and order in newX must be identical to the variable names and order in X")
 	}
@@ -88,6 +90,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 	if(!identical(length(obsWeights), N)) {
 		stop("obsWeights vector must have the same dimension as Y")
 	}
+	
   # create function for the cross-validation step:
 	.crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, kScreen, k, p, libraryNames) {
 	  tempLearn <- dataX[-valid, , drop = FALSE]
@@ -117,7 +120,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
-				errorsInCVLibrary[s] <<- 1
+        # errorsInCVLibrary[s] <<- 1
 			} else {
 				out[, s] <- testAlg$pred
 			}
@@ -132,12 +135,14 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', lapply(validRows, FUN = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
 	
   # check for errors. If any algorithms had errors, replace entire column with 0 even if error is only in one fold.
+  errorsInCVLibrary <- apply(Z, 2, function(x) any(is.na(x)))
   if(sum(errorsInCVLibrary) > 0) {
 		Z[, as.logical(errorsInCVLibrary)] <- 0 
 	}
 	if(all(Z == 0)) {
 		stop("All algorithms dropped from library")
 	}
+	
   # compute weights for each algorithm in library:
   getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
   coef <- getCoef$coef
