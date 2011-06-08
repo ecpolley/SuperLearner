@@ -1,5 +1,4 @@
 # ToDo: #
 
-* √ Make CV.SuperLearner parallel. Allow user to only make outer loop parallel, only inner loop parallel, or both. Should run a few tests to see how the options compare.
 * improve summary.CV.SuperLearner and summary.SuperLearner
-* Figure out a way to get verbose output when using mcSuperLearner and snowSuperLearner, maybe something like a progress bar.
+* Figure out a way to get verbose output when using mcSuperLearner and snowSuperLearner, maybe something like a progress bar. Currently the verbose option only work in the terminal, but not in the GUI.

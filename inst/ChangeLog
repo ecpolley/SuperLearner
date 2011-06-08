@@ -2,9 +2,10 @@
 
 * X and newX do not need to be data.frame class objects, the SuperLearner function does not force a conversion with as.data.frame(). Since the conversion does not take place, it is possible to create your own wrappers that use X and newX as a matrix without error. But most (if not all) of the built in wrappers assume they are data frames.
 * The check for factors in X has been dropped. You might run into problems with rare levels that might not be present in all V folds.
-* the user can now specify a list with the row numbers for the V-fold cross-validation step.  The name of the list is validRows and should be a list of length V with each element in the list containing a numeric vector with the row numbers for the corresponding validation fold.  
-* added write.SL.template() and write.screen.template(). These functions generate a new file containing the template text.
+* The user can now specify a list with the row numbers for the V-fold cross-validation step.  The name of the list is validRows and should be a list of length V with each element in the list containing a numeric vector with the row numbers for the corresponding validation fold.  
+* Added write.SL.template() and write.screen.template(). These functions generate a new file containing the template text.
 * The user can now create their own loss functions and methods to combine the individual learners. See write.method.template() for details on the required format and syntax.
 * Added functions mcSuperLearner and snowSuperLearner for parallel computations based on the multicore package and the snow package, respectively. Additionally, CV.SuperLearner has the new argument, parallel, for the same effect.
-* The syntax of the wrappers has changed. For example, Y.temp is now Y, X.temp is now X. Check out ?write.SL.template() for details
-* All cross-validation controls, like V, are now in the list cvControl. See ?SuperLearner for details
+* The syntax of the wrappers has changed. For example, Y.temp is now Y, X.temp is now X. Check out ?write.SL.template() for details.
+* All cross-validation controls, like V, are now in the list cvControl. See ?SuperLearner for details.
+* The package contains fewer built-in wrappers. The built-in wrappers are intended to be a starting guide to building your own wrappers. I've also created a new package called SuperLearnerExtra with helpful functions for creating more wrappers, available at https://github.com/ecpolley/SuperLearnerExtra
