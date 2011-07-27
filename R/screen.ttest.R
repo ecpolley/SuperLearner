@@ -1,8 +1,8 @@
 screen.ttest <- function(Y, X, family, obsWeights, id, rank = 2, ...) {
   # implemented with colttests from the genefilter package
-  require('genefilter')
+  .SL.require('genefilter')
   if (family$family == "gaussian") {
-	 stop('t-test screening undefined for gaussian family')
+	 stop('t-test screening undefined for gaussian family, look at screen.corP or screen.corRank')
   }
   if (family$family == "binomial") {
     listP <- colttests(x = as.matrix(X), fac = as.factor(Y), tstatOnly = FALSE)$p.value
