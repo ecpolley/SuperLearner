@@ -75,7 +75,7 @@ method.NNLS2 <- function() {
     cvRisk <- apply(Z, 2, function(x) mean(obsWeights * (x - Y)^2))
     names(cvRisk) <- libraryNames
     # compute coef
-    .NNLS <- function(x, y, wt=rep(1, length(y))) {
+    .NNLS <- function(x, y, wt) {
     	wX <- sqrt(wt) * x
     	wY <- sqrt(wt) * y
     	D <- t(wX) %*% wX
@@ -115,7 +115,7 @@ method.NNloglik <- function() {
     cvRisk <- apply(Z, 2, function(x) { -sum(2 * obsWeights * ifelse(Y, log(x), log(1-x))) } )
     names(cvRisk) <- libraryNames
     # compute coef
-    .NNloglik <- function(x, y, wt = rep(1, length(y)), start = rep(0, ncol(x))) {
+    .NNloglik <- function(x, y, wt, start = rep(0, ncol(x))) {
     	# adapted from MASS pg 445
     	fmin <- function(beta, X, y, w) {
     		p <- plogis(crossprod(t(X), beta))
