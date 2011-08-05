@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{SuperLearner manual}
+% \VignetteIndexEntry{SuperLearner Manual}
 % \VignetteDepends{SuperLearner}
 % \VignettePackage{SuperLearner}
 \documentclass[11pt, nojss]{jss}
@@ -54,10 +54,7 @@ This vignette explains how to use the \pkg{SuperLearner} \proglang{R} package. T
 
 \section{The Super Learner Algorithm}
 
-% \begin{table}[!htbp]
-%    \centering
-   % \topcaption{Table captions are better up top} % requires the topcapt package
-   \begin{longtable}{llll @{} } % @{} suppresses leading/trailing space
+   \begin{longtable}{llll @{} }
 	\caption{Details of prediction algorithm wrappers \label{tab:predAlg}} \\
 	   \toprule
 		\textbf{Function} & \textbf{Package} & \textbf{Tuning Parameters} & \textbf{Description} \tabularnewline
@@ -186,11 +183,8 @@ This vignette explains how to use the \pkg{SuperLearner} \proglang{R} package. T
 					&				& \code{tolerance}\\*
 					&				& \code{epsilon}\\*
 					&				& \code{cross}\tabularnewline
-      % \bottomrule
-   \end{longtable}
-   % \caption{Details of prediction algorithm wrappers}
-%    \label{tab:predAlg}
-% \end{table}
+\end{longtable}
+
 
 \section{Using the SuperLearner Package}
 <<>>=
@@ -224,9 +218,6 @@ write.method.template(file = '')
 \bibliography{SLrefs}
 
 \section{Computing Environment}
-% These analyses were done using the following versions of R\cite{Rsystem}, the
-% operating system, and add-on packages \code{Hmisc}\cite{Hmisc},
-% \code{Design}\cite{Design}, and others:
 <<echo=F, results=tex>>=
 s <- toLatex(sessionInfo())
 cat(s[-grep('Locale',s)], sep='\n')
