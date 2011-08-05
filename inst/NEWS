@@ -4,8 +4,11 @@
 Version: 2.0-2
 Date: 2011-06-07
 
-* fixed bug when one of the algorithms in SL.library has an error
-* fixed mcSuperLearner and snowSuperLearner not saving fitLibrary
+* fixed bug when one of the algorithms in SL.library has an error.
+* fixed mcSuperLearner and snowSuperLearner not saving fitLibrary.
+* added a placeholder Sweave vignette (SuperLearnerPresent.Rnw) to contain the SuperLearner presentation so the file can be found using the vignette() and browseVignettes() functions.
+* CV.SuperLearner now outputs `LibraryNames`, `SL.library` and `method`.
+* summary.CV.SuperLearner has returned
 
 ---
 Version: 2.0-1  

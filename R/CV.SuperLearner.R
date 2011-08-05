@@ -19,6 +19,20 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
 		stop("obsWeights vector must have the same dimension as Y")
 	}
 	
+	# check method:
+	if(is.character(method)) {
+    if(exists(method, mode = 'list')) {
+      method <- get(method, mode = 'list')
+    } else if(exists(method, mode = 'function')) {
+      method <- get(method, mode = 'function')()
+    }
+  } else if(is.function(method)) {
+    method <- method()
+  }
+  if(!is.list(method)) {
+    stop("method is not in the appropriate format. Check out help('method.template')")
+  }
+  
   # create placeholders:
   library <- .createLibrary(SL.library)
   libraryNames <- paste(library$library$predAlgorithm, library$screenAlgorithm[library$library$rowScreen], sep="_")
@@ -30,8 +44,6 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
 	whichDiscreteSL <- rep.int(NA, V)
 	library.predict <- matrix(NA, nrow = N, ncol = k)
 	colnames(library.predict) <- libraryNames
-  # coef <- matrix(NA, nrow = V, ncol = k)
-  # colnames(coef) <- libraryNames
   
   # run SuperLearner:
   .crossValFun <- function(valid, Y, dataX, family, id, obsWeights, SL.library, method, verbose, control, cvControl, saveAll) {
@@ -67,7 +79,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   colnames(coef) <- libraryNames
   
   # put together output
-  out <- list(call = call, AllSL = AllSL, SL.predict = SL.predict, discreteSL.predict = discreteSL.predict, whichDiscreteSL = whichDiscreteSL, library.predict = library.predict, coef = coef, folds = folds, V = V)
+  out <- list(call = call, AllSL = AllSL, SL.predict = SL.predict, discreteSL.predict = discreteSL.predict, whichDiscreteSL = whichDiscreteSL, library.predict = library.predict, coef = coef, folds = folds, V = V, libraryNames = libraryNames, SL.library = library, method = method)
   class(out) <- 'CV.SuperLearner'
   return(out)
 }

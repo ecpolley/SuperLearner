@@ -91,6 +91,15 @@ A list containing the row numbers for each validation fold.
 \item{V}{
 Number of folds for \code{CV.SuperLearner}.
 }
+  \item{libraryNames}{
+A character vector with the names of the algorithms in the library. The format is 'predictionAlgorithm_screeningAlgorithm' with '_All' used to denote the prediction algorithm run on all variables in X.
+}
+  \item{SL.library}{
+Returns \code{SL.library} in the same format as the argument with the same name above.
+}
+\item{method}{
+A list with the method functions.
+}
 }
 
 
@@ -115,6 +124,7 @@ SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
 test <- CV.SuperLearner(Y = Y, X = X, V = 10, SL.library = SL.library,
   verbose = TRUE, method = "method.NNLS")
 test
+summary(test)
 # Look at the coefficients across folds
 coef(test)
 }

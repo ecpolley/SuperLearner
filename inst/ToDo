@@ -1,4 +1,4 @@
 # ToDo: #
 
-* improve summary.CV.SuperLearner and summary.SuperLearner
+* Improve summary.CV.SuperLearner and summary.SuperLearner.
 * Figure out a way to get verbose output when using mcSuperLearner and snowSuperLearner, maybe something like a progress bar. Currently the verbose option only work in the terminal, but not in the GUI.
