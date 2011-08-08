@@ -100,6 +100,9 @@ Returns \code{SL.library} in the same format as the argument with the same name 
 \item{method}{
 A list with the method functions.
 }
+\item{Y}{
+The outcome
+}
 }
 
 

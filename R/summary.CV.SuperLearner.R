@@ -1,5 +1,4 @@
-summary.CV.SuperLearner <- function(object, Y, obsWeights = NULL, ...) {
-  if(missing(Y)) stop("Y must be specified")
+summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
   method <- as.list(object$call)[["method"]]
 	library.names <- colnames(coef(object))
 	V <- object$V
@@ -12,6 +11,7 @@ summary.CV.SuperLearner <- function(object, Y, obsWeights = NULL, ...) {
 	SL.predict <- object$SL.predict
 	discreteSL.predict <- object$discreteSL.predict
 	library.predict <- object$library.predict
+	Y <- object$Y
 	
 	# create placeholders
 	Risk.SL <- rep(NA, length = V)

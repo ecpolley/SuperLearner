@@ -79,7 +79,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   colnames(coef) <- libraryNames
   
   # put together output
-  out <- list(call = call, AllSL = AllSL, SL.predict = SL.predict, discreteSL.predict = discreteSL.predict, whichDiscreteSL = whichDiscreteSL, library.predict = library.predict, coef = coef, folds = folds, V = V, libraryNames = libraryNames, SL.library = library, method = method)
+  out <- list(call = call, AllSL = AllSL, SL.predict = SL.predict, discreteSL.predict = discreteSL.predict, whichDiscreteSL = whichDiscreteSL, library.predict = library.predict, coef = coef, folds = folds, V = V, libraryNames = libraryNames, SL.library = library, method = method, Y = Y)
   class(out) <- 'CV.SuperLearner'
   return(out)
 }

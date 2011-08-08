@@ -10,7 +10,7 @@ summary method for the \code{CV.SuperLearner} function
 }
 \usage{
 
-\method{summary}{CV.SuperLearner}(object, Y, obsWeights = NULL, \dots)
+\method{summary}{CV.SuperLearner}(object, obsWeights = NULL, \dots)
 
 \method{print}{summary.CV.SuperLearner}(x, digits, \dots)
 }
@@ -22,9 +22,6 @@ summary method for the \code{CV.SuperLearner} function
   \item{x}{
 	An object of class "summary.CV.SuperLearner", the result of a call to \code{summary.CV.SuperLearner}. 
 }
-  \item{Y}{
-  The outcome variable used for \code{CV.SuperLearner}
-  }
   \item{obsWeights}{
   Optional vector for observation weights.
   }
