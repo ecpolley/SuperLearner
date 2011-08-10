@@ -1,88 +1,45 @@
 \name{plot.CV.SuperLearner}
 \alias{plot.CV.SuperLearner}
-%- Also NEED an '\alias' for EACH other topic documented here.
+
 \title{
-%%  ~~function to do ... ~~
+Graphical display of the V-fold CV risk estimates
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+The function plots the V-fold cross-validated risk estimates for the super learner, the discrete super learner and each algorithm in the library. By default the estimates will be sorted and include an asymptotic 95\% confidence interval.
 }
 \usage{
-plot.CV.SuperLearner(x, package = "ggplot2", constant = qnorm(0.975), sort = TRUE, ...)
+\method{plot}{CV.SuperLearner}(x, package = "ggplot2", constant = qnorm(0.975), sort = TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+The output from \code{CV.SuperLearner}.
 }
   \item{package}{
-%%     ~~Describe \code{package} here~~
+Either "ggplot2" or "lattice". The package selected must be available.
 }
   \item{constant}{
-%%     ~~Describe \code{constant} here~~
+A numeric value. The confidence interval is defined as p +/- constant * se, where p is the point estimate and se is the standard error. The default is the quantile of the standard normal corresponding to a 95\% CI.
 }
   \item{sort}{
-%%     ~~Describe \code{sort} here~~
+Logical. Should the rows in the plot be sorted from the smallest to the largest point estimate. If FALSE, then the order is super learner, discrete super learner, then the estimators in \code{SL.library}.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+Additional arguments for \code{summary.CV.SuperLearner}
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+see \link{summary.CV.SuperLearner} for details on how the estimates are computed
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+Returns the plot (either a ggplot2 object (class \code{ggplot}) or a lattice object (class \code{trellis}))
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\author{ Eric C Polley \email{ecpolley@berkeley.edu} }
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{summary.CV.SuperLearner}} and \code{\link{CV.SuperLearner}}
 }
-\examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function(x, package = "ggplot2", constant = qnorm(0.975), sort = TRUE, ...) {
-  sumx <- summary(x, ...)
-  if(sort) sumx$Table$Algorithm <- reorder(sumx$Table$Algorithm, -sumx$Table$Ave)
-  Mean <- sumx$Table$Ave
-  se <- sumx$Table$se
-  Lower <- Mean - constant*se
-  Upper <- Mean + constant*se
-  d <- data.frame(Y = Mean, X = sumx$Table$Algorithm, Lower = Lower, Upper = Upper)
-  
-  if(package == "lattice") {
-    require(lattice)
-    p <- dotplot(X ~ Y, data = d, xlim = c(min(d$Lower) - 0.02, max(d$Upper) + 0.02), xlab = "V-fold CV Risk Estimate", ylab = "Method", panel = function(x, y){
-      panel.xyplot(x, y, pch = 16, cex = 1)
-      panel.segments(d$Lower, y, d$Upper, y, lty = 1)
-    })
-  } 
-  if(package == "ggplot2") {
-    require(ggplot2)
-    p <- ggplot(d, aes(x = X, y = Y, ymin = Lower, ymax = Upper)) + geom_pointrange() + coord_flip() + ylab("V-fold CV Risk Estimate") + xlab("Method")
-  }
-  return(p)
-  }
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{hplot}
+

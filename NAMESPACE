@@ -2,9 +2,14 @@ import(nnls)
 exportPattern("^[^\\.]")
 
 importFrom(stats, coef)
+importFrom(stats, predict)
+importFrom(graphics, plot)
 
 S3method(print, SuperLearner)
 S3method(coef, SuperLearner)
+S3method(predict, SuperLearner)
 
 S3method(print, CV.SuperLearner)
 S3method(coef, CV.SuperLearner)
+S3method(plot, CV.SuperLearner)
+S3method(summary, CV.SuperLearner)
