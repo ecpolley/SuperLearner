@@ -5,7 +5,8 @@ plot.CV.SuperLearner <- function(x, package = "ggplot2", constant = qnorm(0.975)
   se <- sumx$Table$se
   Lower <- Mean - constant*se
   Upper <- Mean + constant*se
-  d <- data.frame(Y = Mean, X = sumx$Table$Algorithm, Lower = Lower, Upper = Upper)
+  # d <- data.frame(Y = Mean, X = sumx$Table$Algorithm, Lower = Lower, Upper = Upper)
+  assign("d", data.frame(Y = Mean, X = sumx$Table$Algorithm, Lower = Lower, Upper = Upper))
   
   if(package == "lattice") {
     .SL.require("lattice")

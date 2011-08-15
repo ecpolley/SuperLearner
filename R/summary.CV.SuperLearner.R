@@ -4,7 +4,7 @@ summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
 	V <- object$V
 	n <- length(object$SL.predict)
 	if(is.null(obsWeights)) {
-		obsWeights <- rep(1, length(Y))
+		obsWeights <- rep(1, length(object$Y))
 	}
 	# copy objects locally
 	folds <- object$folds
