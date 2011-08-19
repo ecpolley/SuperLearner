@@ -1,5 +1,5 @@
 summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
-  method <- as.list(object$call)[["method"]]
+  method <- ifelse(is.null(as.list(object$call)[["method"]]), "method.NNLS", as.list(object$call)[["method"]])
 	library.names <- colnames(coef(object))
 	V <- object$V
 	n <- length(object$SL.predict)
@@ -27,7 +27,7 @@ summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
 			Risk.library[, ii] <- apply(library.predict[folds[[ii]], ], 2, function(x) mean(obsWeights[folds[[ii]]] * (Y[folds[[ii]]] - x)^2))	
 		}
 		se <- (1 / sqrt(n)) * c(sd(obsWeights * (Y - SL.predict)^2), sd(obsWeights * (Y - discreteSL.predict)^2), apply(library.predict, 2, function(x) sd(obsWeights * (Y - x)^2)))
-	} else if (method %in% c("method.NNLS")) {
+	} else if (method %in% c("method.NNloglik")) {
 		for (ii in seq_len(V)) {
 			Risk.SL[ii] <- -mean(obsWeights[folds[[ii]]] * ifelse(Y[folds[[ii]]], log(SL.predict[folds[[ii]]]), log(1 - SL.predict[folds[[ii]]])))
 			Risk.dSL[ii] <- -mean(obsWeights[folds[[ii]]] * ifelse(Y[folds[[ii]]], log(discreteSL.predict[folds[[ii]]]), log(1 - discreteSL.predict[folds[[ii]]])))
