@@ -120,7 +120,7 @@ A logical vector indicating if any algorithms experienced an error on the full d
 \author{ Eric C Polley \email{eric.polley@nih.gov} }
 
 \examples{
-
+\dontrun{
 ## simulate data
 set.seed(23432)
 ## training set
@@ -221,7 +221,6 @@ test <- SuperLearner(Y = DATA2$Y, X = DATA2[, -1], newX = newDATA2[, -1],
   SL.library = SL.library, verbose = TRUE, family = binomial())
 test
 
-\dontrun{
 ## examples with multicore
 set.seed(23432)
 ## training set
