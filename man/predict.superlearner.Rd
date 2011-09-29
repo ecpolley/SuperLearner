@@ -5,7 +5,7 @@
   Obtains predictions on a new data set from a SuperLearner fit.  May require the original data if one of the library algorithms uses the original data in its predict method.
 }
 \usage{
-predict.SuperLearner(object, newdata, family, X = NULL, Y = NULL, ...)
+\method{predict}{SuperLearner}(object, newdata, family, X = NULL, Y = NULL, ...)
 }
 \arguments{
   \item{object}{ Fitted object from \code{SuperLearner} }
