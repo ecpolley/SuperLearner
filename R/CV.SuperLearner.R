@@ -55,9 +55,11 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
     
     fit.SL <- SuperLearner(Y = cvOutcome, X = cvLearn, newX = cvValid, family = family, SL.library = SL.library, method = method, id = cvId, verbose = verbose, control = control, cvControl = cvControl, obsWeights = cvObsWeights)
     
-    out <- list(cvAllSL = ifelse(saveAll, fit.SL, NULL), cvSL.predict = fit.SL$SL.predict, cvdiscreteSL.predict = fit.SL$library.predict[, which.min(fit.SL$cvRisk)], cvwhichDiscreteSL = names(which.min(fit.SL$cvRisk)), cvlibrary.predict = fit.SL$library.predict, cvcoef = fit.SL$coef)
+    out <- list(cvAllSL = if(saveAll) fit.SL, cvSL.predict = fit.SL$SL.predict, cvdiscreteSL.predict = fit.SL$library.predict[, which.min(fit.SL$cvRisk)], cvwhichDiscreteSL = names(which.min(fit.SL$cvRisk)), cvlibrary.predict = fit.SL$library.predict, cvcoef = fit.SL$coef)
     return(out)
   }
+  ## Why is CV.SuperLearner not saving the output from SuperLearner, only the call name?
+  ## if we add something like force() will this eval multiple times?
   
   if(!parallel) {
     cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
