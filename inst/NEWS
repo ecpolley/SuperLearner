@@ -5,6 +5,7 @@ Version: 2.0-5
 Date: 2011-10-12
 
 * Fixed bug in CV.SuperLearner not saving SuperLearner objects (watch out for ifelse() statements)
+* Added minbucket to SL.rpart
 
 ---
 Version: 2.0-4
