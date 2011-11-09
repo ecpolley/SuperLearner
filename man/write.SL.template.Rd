@@ -39,6 +39,7 @@
 \alias{SL.randomForest}
 \alias{predict.SL.randomForest}
 \alias{SL.rpart}
+\alias{SL.rpartPrune}
 \alias{predict.SL.rpart}
 \alias{SL.step}
 \alias{predict.SL.step}

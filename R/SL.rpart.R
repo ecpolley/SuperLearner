@@ -16,9 +16,14 @@ SL.rpart <- function(Y, X, newX, family, obsWeights, cp = 0.01, minsplit = 20, x
 }
 
 # 
-predict.SL.rpart <- function(object, newdata, ...) {
-  .SL.require('rpart')
-	pred <- predict(object, newdata = newdata)
+predict.SL.rpart <- function(object, newdata, family, ...) {
+	.SL.require('rpart')
+	if(family$family=="gaussian") { 
+	  pred <- predict(object, newdata = newdata)
+  }
+  if(family$family=="binomial") {
+    pred <- predict(object, newdata = newdata)[, 2]
+  }
 	return(pred)
 }
 
