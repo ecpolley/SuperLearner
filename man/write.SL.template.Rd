@@ -53,6 +53,8 @@
 \alias{predict.SL.glmnet}
 \alias{SL.ridge}
 \alias{predict.SL.ridge}
+\alias{SL.leekasso}
+\alias{predict.SL.leekasso}
 
 \title{
 Wrapper functions for prediction algorithms in SuperLearner

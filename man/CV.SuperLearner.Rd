@@ -13,7 +13,7 @@ Function to get V-fold cross-validated risk estimate for super learner. This fun
 CV.SuperLearner(Y, X, V = 20, family = gaussian(), SL.library, 
   method = "method.NNLS", id = NULL, verbose = FALSE, 
   control = list(saveFitLibrary = FALSE), cvControl = list(), 
-  obsWeights = NULL, saveAll = TRUE, parallel = FALSE)
+  obsWeights = NULL, saveAll = TRUE, parallel = "seq")
 }
 
 \arguments{
@@ -54,7 +54,7 @@ Optional observation weights variable. As with \code{id} above, \code{obsWeights
 Logical; Should the entire \code{SuperLearner} object be saved for each fold?
 }
   \item{parallel}{
-Options for parallel computation of the V-fold step. Use FALSE (the default) for sequential computation. \code{parallel = 'multicore'} to use \code{mclapply} for the V-fold step (but note that \code{SuperLearner()} will still be sequential). Or \code{parallel} can be the name of a snow cluster and will use \code{parLapply} for the V-fold step. For both multicore and snow, the inner \code{SuperLearner} calls will be sequential.
+Options for parallel computation of the V-fold step. Use "seq" (the default) for sequential computation. \code{parallel = 'multicore'} to use \code{mclapply} for the V-fold step (but note that \code{SuperLearner()} will still be sequential). Or \code{parallel} can be the name of a snow cluster and will use \code{parLapply} for the V-fold step. For both multicore and snow, the inner \code{SuperLearner} calls will be sequential.
   }
 }
 
