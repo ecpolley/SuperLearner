@@ -1,6 +1,14 @@
 # News for the SuperLearner package. #
 
 ---
+Version: 2.0-6
+Date: 2012-02-29
+
+* Added SL.leekasso (see http://simplystatistics.tumblr.com/post/18132467723/prediction-the-lasso-vs-just-using-the-top-10 for details)
+* fixed parallel argument in CV.SuperLearner. Now always a character variable, no longer accepts FALSE.
+* fixed SL.gam to call gam::gam.control in case the mgcv package is also loaded after gam.
+
+---
 Version: 2.0-5
 Date: 2011-10-12
 
