@@ -61,7 +61,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   ## Why is CV.SuperLearner not saving the output from SuperLearner, only the call name?
   ## if we add something like force() will this eval multiple times?
   
-  if(!parallel) {
+  if(parallel == FALSE) {
     cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else if (parallel == 'multicore') {
     .SL.require('multicore')
