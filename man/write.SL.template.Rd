@@ -11,8 +11,8 @@
 \alias{SL.caret.rpart}
 \alias{SL.cforest}
 \alias{predict.SL.cforest}
-\alias{SL.DSA}
-\alias{predict.SL.DSA}
+% \alias{SL.DSA}
+% \alias{predict.SL.DSA}
 \alias{SL.earth}
 \alias{predict.SL.earth}
 \alias{SL.gam}

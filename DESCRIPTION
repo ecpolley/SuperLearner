@@ -9,5 +9,5 @@ Description: This package implements the super learner prediction method and con
 License: GPL-3
 URL: https://github.com/ecpolley/SuperLearner	 
 Depends: R (>= 2.10.0), nnls, quadprog
-Suggests: arm, BayesTree, caret, class, DSA, e1071, earth, gam, gbm, genefilter, glmnet, Hmisc, ipred, LogicReg, MASS, mda, mlbench, multicore, nnet, party, polspline, randomForest, rpart, SIS, snow, spls, stepPlr, lattice, ggplot2, sva
+Suggests: arm, BayesTree, caret, class, e1071, earth, gam, gbm, genefilter, glmnet, Hmisc, ipred, LogicReg, MASS, mda, mlbench, multicore, nnet, party, polspline, randomForest, rpart, SIS, snow, spls, stepPlr, lattice, ggplot2, sva
 LazyLoad: yes
