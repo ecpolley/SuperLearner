@@ -82,7 +82,7 @@ method.NNLS2 <- function() {
     	d <- t(t(wY) %*% wX)
     	A <- diag(ncol(wX))
     	b <- rep(0, ncol(wX))
-    	fit <- solve.QP(D=D, d=d, A=t(A), b=b, meq=0)
+    	fit <- solve.QP(Dmat = D, dvec = d, Amat = t(A), bvec = b, meq=0)
     	invisible(fit)
     }
     fit.nnls <- .NNLS(x = Z, y = Y, wt = obsWeights)
