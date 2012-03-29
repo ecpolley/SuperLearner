@@ -1,4 +1,4 @@
-predict.SuperLearner <- function(object, newdata, family, X = NULL, Y = NULL, ...) {
+predict.SuperLearner <- function(object, newdata, X = NULL, Y = NULL, ...) {
   if(missing(newdata)) {
     out <- list(pred = object$SL.predict, library.predict = object$library.predict)
     return(out)
@@ -8,10 +8,13 @@ predict.SuperLearner <- function(object, newdata, family, X = NULL, Y = NULL, ..
   predY <- matrix(NA, nrow = nrow(newdata), ncol = k)
   colnames(predY) <- object$libraryNames
   for(mm in seq(k)) {
+    newdataMM <- subset(newdata, select = object$whichScreen[object$SL.library$library[mm, 2], ])
+    family <- object$family
+    XMM <- if(is.null(X)) NULL else subset(X, select = object$whichScreen[object$SL.library$library[mm, 2], ])
     predY[, mm] <- do.call('predict', list(object = object$fitLibrary[[mm]], 
-                                    newdata = subset(newdata, select = object$whichScreen[object$SL.library$library[mm, 2], ]),
-                                    family = object$family,
-                                    X = if(is.null(X)) NULL else subset(X, select = object$whichScreen[object$SL.library$library[mm, 2], ]),
+                                    newdata = newdataMM,
+                                    family = family,
+                                    X = XMM,
                                     Y = Y,
                                     ...))
   }
