@@ -2,7 +2,7 @@ Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
 Version: 2.0-7
-Date: 2012-03-29
+Date: 2012-04-04
 Author: Eric Polley, Mark van der Laan
 Maintainer: Eric Polley <eric.polley@nih.gov>
 Description: This package implements the super learner prediction method and contains a library of prediction algorithms to be used in the super learner.

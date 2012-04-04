@@ -112,7 +112,7 @@ method.NNloglik <- function() {
   require = NULL,
   computeCoef = function(Z, Y, libraryNames, verbose, obsWeights, control, ...) {
     # compute cvRisk
-    cvRisk <- apply(Z, 2, function(x) { -sum(2 * obsWeights * ifelse(Y, log(x), log(1-x))) } )
+    cvRisk <- apply(Z, 2, function(x) { -mean(obsWeights * ifelse(Y, log(x), log(1-x))) } )
     names(cvRisk) <- libraryNames
     # compute coef
     .NNloglik <- function(x, y, wt, start = rep(0, ncol(x))) {
