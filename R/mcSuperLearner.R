@@ -3,7 +3,7 @@
 #  Created by Eric Polley on 2011-01-01.
 # 
 mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(), cvControl = list(), obsWeights = NULL) {
-  .SL.require('multicore')
+  .SL.require('parallel')
   if(is.character(method)) {
     if(exists(method, mode = 'list')) {
       method <- get(method, mode = 'list')

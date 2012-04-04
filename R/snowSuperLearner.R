@@ -3,7 +3,7 @@
 #  Created by Eric Polley on 2011-04-19.
 # 
 snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(), cvControl = list(), obsWeights = NULL) {
-  .SL.require('snow')
+  .SL.require('parallel')
   if(!inherits(cluster, 'cluster')) stop('\'cluster\' must be a cluster created using the makeCluster() function in the snow package')
   if(is.character(method)) {
     if(exists(method, mode = 'list')) {
@@ -94,7 +94,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	}
 	
   # create function for the cross-validation step:
-	.crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, kScreen, k, p, libraryNames) {
+	.crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, kScreen, k, p, libraryNames, verbose) {
 	  tempLearn <- dataX[-valid, , drop = FALSE]
 	  tempOutcome <- Y[-valid]
 	  tempValid <- dataX[valid, , drop = FALSE]
@@ -136,8 +136,8 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
   # additional steps to put things in the correct order
   # rbind unlists the output from lapply
   # need to unlist folds to put the rows back in the correct order
-	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', parLapply(cl = cluster, x = validRows, fun = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
-	
+	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', parLapply(cl = cluster, X = validRows, fun = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames, verbose = verbose))
+
   # check for errors. If any algorithms had errors, replace entire column with 0 even if error is only in one fold.
   errorsInCVLibrary <- apply(Z, 2, function(x) any(is.na(x)))
   if(sum(errorsInCVLibrary) > 0) {
@@ -167,8 +167,11 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
   	}
     return(out)
   }
-  whichScreen <- t(parSapply(cluster, library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
-	
+  if(length(library$screenAlgorithm) < 2) {
+   whichScreen <- t(sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights))) 
+  } else {
+    whichScreen <- t(parSapply(cl = cluster, X = library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
+	}
   # change to sapply?
   # for(s in 1:k) {
   #   testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = Y, X = subset(X, select = whichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(newX, select = whichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
@@ -203,7 +206,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
     }
     invisible(out)
   }
-  foo <- parLapply(cluster, seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames)
+  foo <- parLapply(cl = cluster, X = seq(k), fun = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames)
   predY <- do.call('cbind', lapply(foo, '[[', 'pred'))
   assign('fitLibrary', lapply(foo, '[[', 'fitLibrary'), envir = fitLibEnv)
   rm(foo)

@@ -247,9 +247,9 @@ testMC <- mcSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
 testMC
 
 ## examples with snow
-library(snow)
-cl <- makeCluster(2, type = 'MPI')
-clusterSetupRNG(cl, type = 'RNGstream')
+library(parallel)
+cl <- makeCluster(2, type = "MPI") # can use different types here
+clusterSetRNGStream(cl, iseed = 2343)
 testSNOW <- snowSuperLearner(cluster = cl, Y = Y, X = X, newX = newX,
   SL.library = SL.library, method = "method.NNLS")
 testSNOW

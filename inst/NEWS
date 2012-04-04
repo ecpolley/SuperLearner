@@ -1,5 +1,13 @@
 # News for the SuperLearner package. #
 
+
+---
+Version: 2.0-7
+Date: 2012-04-04
+* Switched from snow and multicore to parallel package
+* fixed bug in CV.SuperLearner for leave-one-out cross-validation
+* fixed bug in snowSuperLearner when only one screening algorithm is present
+
 ---
 Version: 2.0-6
 Date: 2012-02-29
