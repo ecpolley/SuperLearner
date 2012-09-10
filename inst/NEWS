@@ -2,6 +2,12 @@
 
 
 ---
+Version: 2.0-9
+Date: 2012-09-10
+* Updated help documents
+* Added links to SuperLearnerExtra on Github
+
+---
 Version: 2.0-7
 Date: 2012-04-04
 * Switched from snow and multicore to parallel package

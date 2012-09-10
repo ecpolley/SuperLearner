@@ -50,12 +50,11 @@ A list of parameters to control the cross-validation process. Parameters include
 }
 
 \details{
-  \code{SuperLearner} fit the super learner prediction algorithm.  The weights for each algorithm in \code{SL.library} is estimated, along with the fit of each algorithm.
+  \code{SuperLearner} fits the super learner prediction algorithm.  The weights for each algorithm in \code{SL.library} is estimated, along with the fit of each algorithm.
 
 The prescreen algorithms.  These algorithms first rank the variables in \code{X} based on either a univariate regression p-value of the \code{randomForest} variable importance.  A subset of the variables in \code{X} is selected based on a pre-defined cut-off.  With this subset of the X variables, the algorithms in \code{SL.library} are then fit.
 
-How to create a library...
-
+The SuperLearner package contains a few prediction and screening algorithm wrappers. The full list of wrappers can be viewed with \code{listWrappers()}. The design of the SuperLearner package is such that the user can easily add their own wrappers. We also maintain a website with additional examples of wrapper functions at \url{https://github.com/ecpolley/SuperLearnerExtra}.
 }
 \value{
   \item{call}{
