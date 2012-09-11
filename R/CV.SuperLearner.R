@@ -64,7 +64,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   if(parallel == "seq") {
     cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else if (parallel == 'multicore') {
-    .SL.require('multicore')
+    .SL.require('parallel')
     cvList <- mclapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll, mc.set.seed = FALSE)
   } else if (inherits(parallel, 'cluster')) {
     cvList <- parLapply(parallel, x = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)

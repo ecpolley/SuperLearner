@@ -2,6 +2,11 @@
 
 
 ---
+Version: 2.0-10
+Date:
+* fixed package requirement in CV.SuperLearner from multicore to parallel
+
+---
 Version: 2.0-9
 Date: 2012-09-10
 * Updated help documents
