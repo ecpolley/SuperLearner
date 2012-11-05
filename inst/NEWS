@@ -5,6 +5,7 @@
 Version: 2.0-10
 Date:
 * fixed package requirement in CV.SuperLearner from multicore to parallel
+* Fixed a conflict with the reorder function in plot.CV.SuperLearner (between the stats and gdata namespace)
 
 ---
 Version: 2.0-9
