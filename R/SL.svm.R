@@ -11,7 +11,7 @@ SL.svm <- function(Y, X, newX, family, type.reg = "nu-regression", type.class = 
 	}
 	if(family$family == "binomial") {
 		fit.svm <- svm(y = as.factor(Y), x = X, nu = nu, type = type.class, fitted = FALSE, probability = TRUE)
-		pred <- attr(predict(fit.svm, newdata = newX, probability = TRUE), "prob")[, 2]
+		pred <- attr(predict(fit.svm, newdata = newX, probability = TRUE), "prob")[, "1"] # assumes Y is 0/1 numeric
 		fit <- list(object = fit.svm)
 	}
 	out <- list(pred = pred, fit = fit)
@@ -25,7 +25,7 @@ predict.SL.svm <- function(object, newdata, family,...){
 		pred <- predict(object$object, newdata = newdata)
 	}
 	if(family$family == "binomial") {
-		pred <- attr(predict(object$object, newdata = newdata, probability = TRUE), "prob")[, 2]
+		pred <- attr(predict(object$object, newdata = newdata, probability = TRUE), "prob")[, "1"]
 	}
 	return(pred)
 }

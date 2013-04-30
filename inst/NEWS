@@ -6,6 +6,7 @@ Version: 2.0-10
 Date:
 * fixed package requirement in CV.SuperLearner from multicore to parallel
 * Fixed a conflict with the reorder function in plot.CV.SuperLearner (between the stats and gdata namespace)
+* Fixed a bug in SL.svm when family is binomial to grab the correct predicted probabilities (thanks to Jeremy Coyle)
 
 ---
 Version: 2.0-9
