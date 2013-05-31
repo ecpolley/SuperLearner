@@ -254,6 +254,20 @@ testSNOW <- snowSuperLearner(cluster = cl, Y = Y, X = X, newX = newX,
 testSNOW
 stopCluster(cl)
 
+## snow example with user-generated wrappers
+# If you write your own wrappers and are using snowSuperLearner()
+# These new wrappers need to be added to the SuperLearner namespace and exported to the clusters
+my.SL.wrapper <- function(...) SL.glm(...)  # Using a simple example here, but can define any new SuperLearner wrapper
+environment(my.SL.wrapper) <-asNamespace("SuperLearner") # assign function into SuperLearner namespace
+
+cl <- makeCluster(2, type = "MPI") # can use different types here
+clusterSetRNGStream(cl, iseed = 2343)
+clusterExport(cl, c("my.SL.wrapper"))  # copy the function to all clusters
+testSNOW <- snowSuperLearner(cluster = cl, Y = Y, X = X, newX = newX,
+  SL.library = c("SL.glm", "SL.mean", "my.SL.wrapper"), method = "method.NNLS")
+testSNOW
+stopCluster(cl)
+
 ## timing
 replicate(5, system.time(SuperLearner(Y = Y, X = X, newX = newX, 
   SL.library = SL.library, method = "method.NNLS")))
