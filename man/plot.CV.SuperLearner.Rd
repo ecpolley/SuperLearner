@@ -35,7 +35,7 @@ see \link{summary.CV.SuperLearner} for details on how the estimates are computed
 Returns the plot (either a ggplot2 object (class \code{ggplot}) or a lattice object (class \code{trellis}))
 }
 
-\author{ Eric C Polley \email{ecpolley@berkeley.edu} }
+\author{ Eric C Polley \email{eric.polley@nih.gov} }
 
 \seealso{
 \code{\link{summary.CV.SuperLearner}} and \code{\link{CV.SuperLearner}}

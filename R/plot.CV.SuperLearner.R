@@ -17,7 +17,7 @@ plot.CV.SuperLearner <- function(x, package = "ggplot2", constant = qnorm(0.975)
   } 
   if(package == "ggplot2") {
     .SL.require("ggplot2")
-    p <- ggplot(d, aes(x = X, y = Y, ymin = Lower, ymax = Upper)) + geom_pointrange() + coord_flip() + ylab("V-fold CV Risk Estimate") + xlab("Method")
+    p <- ggplot(d, aes_string(x = "X", y = "Y", ymin = "Lower", ymax = "Upper")) + geom_pointrange() + coord_flip() + ylab("V-fold CV Risk Estimate") + xlab("Method")
   }
   return(p)
 }

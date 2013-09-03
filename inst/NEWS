@@ -7,6 +7,8 @@ Date:
 * fixed package requirement in CV.SuperLearner from multicore to parallel
 * Fixed a conflict with the reorder function in plot.CV.SuperLearner (between the stats and gdata namespace)
 * Fixed a bug in SL.svm when family is binomial to grab the correct predicted probabilities (thanks to Jeremy Coyle)
+* Added .Rbuildignore to not include the README.md file from GitHub on CRAN
+* Removed SuperLearner.Rnw
 
 ---
 Version: 2.0-9

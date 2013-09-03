@@ -58,7 +58,7 @@ Summary method for \code{CV.SuperLearner}.  Calculates the V-fold cross-validate
 }
 }
 
-\author{ Eric C Polley \email{ecpolley@berkeley.edu} }
+\author{ Eric C Polley \email{eric.polley@nih.gov} }
 
 \seealso{
 \code{\link{CV.SuperLearner}}
