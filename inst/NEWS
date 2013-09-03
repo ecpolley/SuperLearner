@@ -2,13 +2,17 @@
 
 
 ---
-Version: 2.0-10
+Version: 2.0-11
 Date:
 * fixed package requirement in CV.SuperLearner from multicore to parallel
 * Fixed a conflict with the reorder function in plot.CV.SuperLearner (between the stats and gdata namespace)
 * Fixed a bug in SL.svm when family is binomial to grab the correct predicted probabilities (thanks to Jeremy Coyle)
 * Added .Rbuildignore to not include the README.md file from GitHub on CRAN
 * Removed SuperLearner.Rnw
+* Moved vignettes to vignettes folder
+* Changed cluster example to use PSOCK instead of MPI in SuperLearner.Rd
+* removed the ":::" in plot.CV.SuperLearner
+* moved quadprog from depends to suggests as it is only called if the user uses method = "method.NNLS2" not the default.
 
 ---
 Version: 2.0-9
