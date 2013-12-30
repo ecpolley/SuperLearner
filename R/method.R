@@ -154,3 +154,90 @@ method.NNloglik <- function() {
   )
   invisible(out)
 }
+
+
+method.CC_LS <- function() {
+  computeCoef = function(Z, Y, libraryNames, verbose, obsWeights, ...) {
+    # compute cvRisk
+    cvRisk <- apply(Z, 2, function(x) mean(obsWeights * (x - Y)^2))
+    names(cvRisk) <- libraryNames
+    # compute coef
+    compute <- function(x, y, wt=rep(1, length(y))) {
+      wX <- sqrt(wt) * x
+      wY <- sqrt(wt) * y
+      D <- crossprod(wX)
+      d <- crossprod(wX, wY)
+      A <- cbind(rep(1, ncol(wX)), diag(ncol(wX)))
+      bvec <- c(1, rep(0, ncol(wX)))
+      fit <- solve.QP(Dmat=D, dvec=d, Amat=A, bvec=bvec, meq=1)
+      invisible(fit)
+    }
+    fit <- compute(x = Z, y = Y, wt = obsWeights)
+    coef <- fit$solution
+    if (any(is.na(coef))) {
+      warning("Some algorithms have weights of NA, setting to 0.")
+      coef[is.na(coef)] = 0 
+    }
+    if(!sum(coef) > 0) warning("All algorithms have zero weight", call. = FALSE)
+    list(cvRisk = cvRisk, coef = coef)
+  }
+
+  computePred = function(predY, coef, ...) {
+   predY %*% matrix(coef)
+  }
+
+  out <- list(require = "quadprog",
+              computeCoef=computeCoef,
+              computePred=computePred)
+  invisible(out)
+}
+
+
+
+method.CC_nloglik <- function() {
+
+  computePred = function(predY, coef, control, ...) {
+    plogis(trimLogit(predY, trim = control$trimLogit) %*% matrix(coef))
+  }
+  computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
+    cvRisk <- apply(Z, 2, function(x) { -sum(2 * obsWeights * ifelse(Y, log(x), log(1-x))) } )
+    names(cvRisk) <- libraryNames
+    obj_and_grad <- function(y,x, w=NULL) {
+        y <- y
+        x <- x
+      function(beta) {
+        xB <- x %*% cbind(beta) 
+        loglik <- y * plogis(xB, log.p=TRUE) + (1-y) * plogis(xB, log.p=TRUE, lower.tail=FALSE)
+        if (!is.null(w)) loglik <- loglik * w
+        obj <- -2 * sum(loglik)
+
+        p <- plogis(xB)
+        grad <- if (is.null(w)) 2 * crossprod(x, cbind(p - y))
+        else 2 * crossprod(x, w*cbind(p - y))
+        list(objective=obj, gradient=grad)
+      }
+    }    
+
+    r <- nloptr(x0=rep(1/ncol(Z), ncol(Z)),
+            eval_f=obj_and_grad(Y, Z),
+            lb=rep(0, ncol(Z)),
+            ub=rep(1, ncol(Z)),
+            eval_g_eq = function(beta) (sum(beta)-1),
+            eval_jac_g_eq = function(beta) rep(1, length(beta)),
+            opts=list("algorithm"="NLOPT_LD_SLSQP","ftol_rel"=1.0e-8))
+    if (r$status < 1 || r$status > 4) { 
+      warning(r$messate)
+    }
+    coef <- r$solution
+    if (any(is.na(coef))) {
+      warning("Some algorithms have weights of NA, setting to 0.")
+      coef[is.na(coef)] <- 0
+    }
+    out <- list(cvRisk = cvRisk, coef = coef)
+    return(out)
+  }
+
+  list(require = "nloptr",
+       computeCoef=computeCoef,
+       computePred=computePred)
+}
