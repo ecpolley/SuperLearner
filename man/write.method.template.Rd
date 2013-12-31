@@ -4,6 +4,9 @@
 \alias{method.NNLS}
 \alias{method.NNLS2}
 \alias{method.NNloglik}
+\alias{method.CC_LS}
+\alias{method.CC_nloglik}
+
 
 \title{
 Method to estimate the coefficients for the super learner
@@ -18,6 +21,8 @@ write.method.template(file = "", ...)
 method.NNLS()
 method.NNLS2()
 method.NNloglik()
+method.CC_LS()
+method.CC_nloglik()
 }
 
 \arguments{
