@@ -155,7 +155,6 @@ method.NNloglik <- function() {
   invisible(out)
 }
 
-
 method.CC_LS <- function() {
   computeCoef = function(Z, Y, libraryNames, verbose, obsWeights, ...) {
     # compute cvRisk
@@ -191,8 +190,6 @@ method.CC_LS <- function() {
               computePred=computePred)
   invisible(out)
 }
-
-
 
 method.CC_nloglik <- function() {
 
@@ -240,4 +237,35 @@ method.CC_nloglik <- function() {
   list(require = "nloptr",
        computeCoef=computeCoef,
        computePred=computePred)
+}
+
+method.AUC <- function(optim_method="Nelder-Mead") {
+  out <- list(
+    require = 'cvAUC',
+    computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
+      .cvRisk_AUC <- function(par, Z, Y, folds=NULL){
+        # Calculate cvRisk, which is 1-cvAUC (Rank Loss)
+        # This is the loss function that gets fed into optim as the "fn" argument 
+        # par is the weight/coef vector for the ensemble in Super Learner
+        predictions <- crossprod(t(Z), par)  #cv predicted SL values
+        cvRisk <- 1 - cvAUC(predictions=predictions, labels=Y, folds=folds)$cvAUC
+        return(cvRisk)
+      }
+      coef_init <- rep(1/ncol(Z),ncol(Z))
+      names(coef_init) <- libraryNames
+      # optim function selects the value for par that minimizes cvRisk_AUC (aka Rank Loss)
+      res <- optim(par=coef_init, fn=.cvRisk_AUC, Z=Z, Y=Y, folds=NULL, method=optim_method)
+      coef <- res$par
+      auc <- apply(Z, 2, function(x) cvAUC(x, labels=Y)$cvAUC)
+      cvRisk <- 1 - auc  # Rank Loss
+      names(coef) <- libraryNames
+      out <- list(cvRisk = cvRisk, coef = coef)
+      return(out)
+    },
+    computePred = function(predY, coef, control, ...) {
+      out <- crossprod(t(predY), coef)
+      return(out)
+    }
+  )
+  invisible(out)
 }

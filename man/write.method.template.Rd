@@ -6,7 +6,7 @@
 \alias{method.NNloglik}
 \alias{method.CC_LS}
 \alias{method.CC_nloglik}
-
+\alias{method.AUC}
 
 \title{
 Method to estimate the coefficients for the super learner
@@ -23,6 +23,7 @@ method.NNLS2()
 method.NNloglik()
 method.CC_LS()
 method.CC_nloglik()
+method.AUC()
 }
 
 \arguments{
