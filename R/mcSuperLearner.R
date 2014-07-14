@@ -74,6 +74,10 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 		stop("'family' not recognized")
 	}
 	
+	if (family$family != "binomial" & method$require == "cvAUC"){
+		stop("'method.AUC' is designed for the 'binomial' family only")
+	}
+	
   # create CV folds
 	validRows <- CVFolds(N = N, id = id, Y = Y, cvControl = cvControl)
 	

@@ -6,6 +6,7 @@
 \alias{method.NNloglik}
 \alias{method.CC_LS}
 \alias{method.CC_nloglik}
+\alias{method.AUC}
 
 
 \title{
@@ -23,6 +24,7 @@ method.NNLS2()
 method.NNloglik()
 method.CC_LS()
 method.CC_nloglik()
+method.AUC()
 }
 
 \arguments{
