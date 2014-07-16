@@ -172,6 +172,11 @@ test.NNloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library,
   verbose = TRUE, method = "method.NNloglik", family = binomial())
 test.NNloglik
 
+# 1 - AUC loss function
+test.AUC <- SuperLearner(Y = Y, X = X, SL.library = SL.library,
+  verbose = TRUE, method = "method.AUC", family = binomial())
+test.AUC
+
 # 2
 # adapted from library(SIS)
 set.seed(1)

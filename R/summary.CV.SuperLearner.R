@@ -63,7 +63,7 @@ print.summary.CV.SuperLearner <- function(x, digits = max(2, getOption("digits")
 	} else if (x$method %in% c("method.NNLS", "method.CC_nloglik")) {
 		cat("Negative Log Likelihood (-2*log(L))")
 	} else if (x$method %in% c("method.AUC")) {
-		cat("1 - AUC")
+		cat("Area under ROC curve (AUC)")
 	} else {
 		stop("summary method not available")
 	}

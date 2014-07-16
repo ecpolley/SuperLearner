@@ -243,7 +243,7 @@ method.CC_nloglik <- function() {
 method.AUC <- function(optim_method="Nelder-Mead") {
 	# Contributed by Erin Ledell
 	out <- list(
-		require = 'cvAUC',
+		require = c('cvAUC', 'ROCR'),
 		computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
 			.cvRisk_AUC <- function(par, Z, Y, folds=NULL){
 				# Calculate cvRisk, which is 1-cvAUC (Rank Loss)

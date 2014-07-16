@@ -74,7 +74,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 		stop("'family' not recognized")
 	}
 	
-	if (family$family != "binomial" & method$require == "cvAUC"){
+	if (family$family != "binomial" & isTRUE("cvAUC" %in% method$require)){
 		stop("'method.AUC' is designed for the 'binomial' family only")
 	}
 	

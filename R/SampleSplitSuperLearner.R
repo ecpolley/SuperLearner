@@ -85,6 +85,10 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
 		stop("'family' not recognized")
 	}
 	
+	if (family$family != "binomial" & isTRUE("cvAUC" %in% method$require)){
+		stop("'method.AUC' is designed for the 'binomial' family only")
+	}
+	
   # test id
 	if(is.null(id)) {
 		id <- seq(N)
