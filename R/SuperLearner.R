@@ -73,7 +73,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 		stop("'family' not recognized")
 	}
 	
-	if (family$family != "binomial" & method$require == "cvAUC"){
+	if (family$family != "binomial" & ifelse(is.null(method$require), FALSE, method$require == "cvAUC")){
 		stop("'method.AUC' is designed for the 'binomial' family only")
 	}
 	 
