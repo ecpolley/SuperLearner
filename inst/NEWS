@@ -4,8 +4,8 @@
 Version: 2.0-15
 Date: 2014-07-16
 * Fixed check for method.AUC and family
+* Moved SL.bart over to SuperLearneExtra because BayesTree package no longer on CRAN
 
----
 ---
 Version: 2.0-14
 Date: 2014-07-14

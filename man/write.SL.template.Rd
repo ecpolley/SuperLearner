@@ -2,8 +2,8 @@
 \alias{write.SL.template}
 \alias{SL.template}
 \alias{predict.SL.template}
-\alias{SL.bart}
-\alias{predict.SL.bart}
+% \alias{SL.bart}
+% \alias{predict.SL.bart}
 \alias{SL.bayesglm}
 \alias{predict.SL.bayesglm}
 \alias{SL.caret}
