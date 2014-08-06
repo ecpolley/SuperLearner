@@ -186,7 +186,9 @@ method.CC_LS <- function() {
   computePred = function(predY, coef, ...) {
    predY %*% matrix(coef)
   }
-
+  #set very small coefficients to 0 and renormalize
+  coef[coef < 1.0e-4] <- 0
+  coef <- coef/sum(coef)
   out <- list(require = "quadprog",
               computeCoef=computeCoef,
               computePred=computePred)
@@ -200,7 +202,7 @@ method.CC_nloglik <- function() {
   }
   computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
     logitZ = trimLogit(Z, control$trimLogit)
-    cvRisk <- apply(logitZ, 2, function(x) -sum(2 * obsWeights * 
+    cvRisk <- apply(logitZ, 2, function(x) -sum(2 * obsWeights *
                                        ifelse(Y, plogis(x, log.p=TRUE),
                                                  plogis(x, log.p=TRUE, lower.tail=FALSE))))
     names(cvRisk) <- libraryNames
@@ -225,7 +227,7 @@ method.CC_nloglik <- function() {
             ub=rep(1, ncol(Z)),
             eval_g_eq = function(beta) (sum(beta)-1),
             eval_jac_g_eq = function(beta) rep(1, length(beta)),
-            opts=list("algorithm"="NLOPT_LD_SLSQP","ftol_rel"=1.0e-8))
+            opts=list("algorithm"="NLOPT_LD_SLSQP","xtol_abs"=1.0e-8))
     if (r$status < 1 || r$status > 4) {
       warning(r$message)
     }
@@ -234,6 +236,9 @@ method.CC_nloglik <- function() {
       warning("Some algorithms have weights of NA, setting to 0.")
       coef[is.na(coef)] <- 0
     }
+    #set very small coefficients to 0 and renormalize
+    coef[coef < 1.0e-4] <- 0
+    coef <- coef/sum(coef)
     out <- list(cvRisk = cvRisk, coef = coef)
     return(out)
   }
