@@ -1,6 +1,11 @@
 # News for the SuperLearner package. #
 
 ---
+Version: 2.0-16
+Date: 2014-08-07
+* Fixed error when computeCoef was re-run because of algorithms failing on full data
+
+---
 Version: 2.0-15
 Date: 2014-07-16
 * Fixed check for method.AUC and family
