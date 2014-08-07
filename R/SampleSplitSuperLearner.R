@@ -205,7 +205,7 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
 			if(all(Z == 0)) {
 				stop("All algorithms dropped from library")
 			}
-      getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, trim = control$trimLogit, verbose = verbose)
+      getCoef <- method$computeCoef(Z = Z, Y = tempValidOutcome, libraryNames = libraryNames, obsWeights = obsWeights[validRows], control = control, verbose = verbose)
       coef <- getCoef$coef
       names(coef) <- libraryNames
 		} else {

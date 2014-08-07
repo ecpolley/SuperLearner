@@ -226,7 +226,7 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 			if(all(Z == 0)) {
 				stop("All algorithms dropped from library")
 			}
-      getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, trim = control$trimLogit, verbose = verbose)
+      getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
       coef <- getCoef$coef
       names(coef) <- libraryNames
 		} else {
