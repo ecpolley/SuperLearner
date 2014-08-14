@@ -60,7 +60,7 @@ print.summary.CV.SuperLearner <- function(x, digits = max(2, getOption("digits")
 	cat("Risk is based on: ")
 	if(x$method %in% c("method.NNLS", "method.NNLS2", "method.CC_LS")) {
 		cat("Mean Squared Error")
-	} else if (x$method %in% c("method.NNLS", "method.CC_nloglik")) {
+	} else if (x$method %in% c("method.NNloglik", "method.CC_nloglik")) {
 		cat("Negative Log Likelihood (-2*log(L))")
 	} else if (x$method %in% c("method.AUC")) {
 		cat("Area under ROC curve (AUC)")
