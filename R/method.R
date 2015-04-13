@@ -257,7 +257,7 @@ method.AUC <- function(optim_method="Nelder-Mead") {
 				# This is the loss function that gets fed into optim as the "fn" argument 
 				# par is the weight/coef vector for the ensemble in Super Learner
 				predictions <- crossprod(t(Z), par)  #cv predicted SL values
-				cvRisk <- 1 - cvAUC(predictions=predictions, labels=Y, folds=folds)$cvAUC
+				cvRisk <- 1 - cvAUC::cvAUC(predictions=predictions, labels=Y, folds=folds)$cvAUC
 				return(cvRisk)
 			}
 			coef_init <- rep(1/ncol(Z),ncol(Z))
