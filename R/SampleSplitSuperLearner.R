@@ -132,7 +132,21 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
     Z <- matrix(NA, nrow = nrow(tempValid), ncol = k) # k is the number of algorithms in the library
 		# should we replace the subset() call below?
 		for(s in seq(k)) {
-			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
+		  testAlg <- try({
+		    select <- tempWhichScreen[library$library$rowScreen[s], ]
+		    if (all(select)) {
+		      tempX <- tempLearn
+		      tempnewX <- tempValid
+		    } else {
+		      tempX <- subset(tempLearn, select = which(select), drop=FALSE)
+		      tempnewX <- subset(tempValid, select = which(select), drop=FALSE)
+		    }
+		    do.call(library$library$predAlgorithm[s], list(
+		      Y = tempOutcome,
+		      X = tempX,
+		      newX = tempnewX,
+		      family = family, id = tempId, obsWeights = tempObsWeights))
+		  })
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
         # errorsInCVLibrary[s] <<- 1
@@ -178,7 +192,21 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
   whichScreen <- t(sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
 	
   .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
-    testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
+    testAlg <- try({
+      select <- whichScreen[lib$rowScreen[index], ]
+      if (all(select)) {
+        tempX <- dataX
+        tempnewX <- newX
+      } else {
+        tempX <- subset(dataX, select = which(select), drop=FALSE)
+        tempnewX <- subset(newX, select = which(select), drop=FALSE)
+      }
+      do.call(lib$predAlgorithm[index], list(
+        Y = Y,
+        X = tempX,
+        newX = tempnewX,
+        family = family, id = id, obsWeights = obsWeights))
+    })
     # testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = dataX[, whichScreen[lib$rowScreen[index], drop = FALSE]], newX = newX[, whichScreen[lib$rowScreen[index], drop = FALSE]], family = family, id = id, obsWeights = obsWeights)))
     if(inherits(testAlg, "try-error")) {
       warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
