@@ -3,7 +3,7 @@ screen.glmnet <- function(Y, X, family, alpha = 1, minscreen = 2, nfolds = 10, n
   if(!is.matrix(X)) {
     X <- model.matrix(~ -1 + ., X)
   }
-  fitCV <- cv.glmnet(x = X, y = Y, lambda = NULL, type.measure = 'deviance', nfolds = nfolds, family = family$family, alpha = alpha, nlambda = nlambda)
+  fitCV <- glmnet::cv.glmnet(x = X, y = Y, lambda = NULL, type.measure = 'deviance', nfolds = nfolds, family = family$family, alpha = alpha, nlambda = nlambda)
   whichVariable <- (as.numeric(coef(fitCV$glmnet.fit, s = fitCV$lambda.min))[-1] != 0)
   # the [-1] removes the intercept
   if (sum(whichVariable) < minscreen) {

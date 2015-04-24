@@ -2,11 +2,11 @@
 SL.rpart <- function(Y, X, newX, family, obsWeights, cp = 0.01, minsplit = 20, xval = 10, maxdepth = 30, minbucket = round(minsplit/3), ...) {
   .SL.require('rpart')
 	if(family$family == "gaussian"){
-		fit.rpart <- rpart(Y~., data = data.frame(Y, X), control = rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "anova", weights = obsWeights)
+		fit.rpart <- rpart::rpart(Y~., data = data.frame(Y, X), control = rpart::rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "anova", weights = obsWeights)
 		pred <- predict(fit.rpart, newdata = newX)
 	}
 	if(family$family == "binomial") {
-		fit.rpart <- rpart(Y ~ ., data = data.frame(Y, X), control = rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "class", weights = obsWeights)
+		fit.rpart <- rpart::rpart(Y ~ ., data = data.frame(Y, X), control = rpart::rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "class", weights = obsWeights)
 		pred <- predict(fit.rpart, newdata = newX)[, 2]
 	}
 	fit <- list(object = fit.rpart)

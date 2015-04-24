@@ -3,7 +3,7 @@
 
 SL.bayesglm <- function(Y, X, newX, family, obsWeights, ...){
   .SL.require('arm')
-  fit.glm <- bayesglm(Y ~ ., data = X, family = family, weights = obsWeights)
+  fit.glm <- arm::bayesglm(Y ~ ., data = X, family = family, weights = obsWeights)
   pred <- predict(fit.glm, newdata = newX, type = "response")
   fit <- list(object = fit.glm)
   out <- list(pred = pred, fit = fit)

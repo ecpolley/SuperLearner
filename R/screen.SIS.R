@@ -6,10 +6,10 @@ screen.SIS <- function (Y, X, family, nsis = NULL, tune.method = "bic", type.mea
 		Xmat <- as.matrix(X)
   }
 	if (family$family == "gaussian") {
-		fitSIS <- SIS(x = Xmat, y = Y, family = family$family, nsis = nsis, tune = tune.method, type.measure = type.measure)
+		fitSIS <- SIS::SIS(x = Xmat, y = Y, family = family$family, nsis = nsis, tune = tune.method, type.measure = type.measure)
     }
     if (family$family == "binomial") {
-		fitSIS <- SIS(x = Xmat, y = Y, family = family$family, nsis = nsis, tune = tune.method, type.measure = type.measure)
+		fitSIS <- SIS::SIS(x = Xmat, y = Y, family = family$family, nsis = nsis, tune = tune.method, type.measure = type.measure)
 	}
 	whichVariable <- (1:ncol(X) %in% fitSIS$ix)
 	# check more than minScreen in screened set

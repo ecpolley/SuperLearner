@@ -82,7 +82,7 @@ method.NNLS2 <- function() {
     	d <- t(t(wY) %*% wX)
     	A <- diag(ncol(wX))
     	b <- rep(0, ncol(wX))
-    	fit <- solve.QP(Dmat = D, dvec = d, Amat = t(A), bvec = b, meq=0)
+    	fit <- quadprog::solve.QP(Dmat = D, dvec = d, Amat = t(A), bvec = b, meq=0)
     	invisible(fit)
     }
     fit.nnls <- .NNLS(x = Z, y = Y, wt = obsWeights)
@@ -170,7 +170,7 @@ method.CC_LS <- function() {
       d <- crossprod(wX, wY)
       A <- cbind(rep(1, ncol(wX)), diag(ncol(wX)))
       bvec <- c(1, rep(0, ncol(wX)))
-      fit <- solve.QP(Dmat=D, dvec=d, Amat=A, bvec=bvec, meq=1)
+      fit <- quadprog::solve.QP(Dmat=D, dvec=d, Amat=A, bvec=bvec, meq=1)
       invisible(fit)
     }
     fit <- compute(x = Z, y = Y, wt = obsWeights)
@@ -221,7 +221,7 @@ method.CC_nloglik <- function() {
       }
     }
 
-    r <- nloptr(x0=rep(1/ncol(Z), ncol(Z)),
+    r <- nloptr::nloptr(x0=rep(1/ncol(Z), ncol(Z)),
             eval_f=obj_and_grad(Y, logitZ),
             lb=rep(0, ncol(Z)),
             ub=rep(1, ncol(Z)),
@@ -265,7 +265,7 @@ method.AUC <- function(optim_method="Nelder-Mead") {
 			# optim function selects the value for par that minimizes cvRisk_AUC (aka Rank Loss)
 			res <- optim(par=coef_init, fn=.cvRisk_AUC, Z=Z, Y=Y, folds=NULL, method=optim_method)
 			coef <- res$par
-			auc <- apply(Z, 2, function(x) cvAUC(x, labels=Y)$cvAUC)
+			auc <- apply(Z, 2, function(x) cvAUC::cvAUC(x, labels=Y)$cvAUC)
 			cvRisk <- 1 - auc  # Rank Loss
 			names(coef) <- libraryNames
 			out <- list(cvRisk = cvRisk, coef = coef)

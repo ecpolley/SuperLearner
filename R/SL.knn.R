@@ -8,7 +8,7 @@ SL.knn <- function(Y, X, newX, family, k = 10, ...) {
 	if(family$family=="gaussian") {  
 		stop("SL.knn only available for family = binomial()")
 	}
-	fit.knn <- knn(train = X, test = newX, k = k, cl = Y, prob = TRUE)
+	fit.knn <- class::knn(train = X, test = newX, k = k, cl = Y, prob = TRUE)
 	pred <- (as.numeric(fit.knn) - 1) * attr(fit.knn, "prob") + (1 - (as.numeric(fit.knn) - 1)) * (1 - attr(fit.knn, "prob"))
 	fit <- list(k = k)
 	out <- list(pred = pred, fit=fit)
@@ -19,7 +19,7 @@ SL.knn <- function(Y, X, newX, family, k = 10, ...) {
 # will need original Y and X data for this
 predict.SL.knn <- function(object, newdata, X, Y, ...){
   .SL.require('class')
-  fit.knn <- knn(train = X, test = newdata, k = object$k, cl = Y, prob = TRUE)
+  fit.knn <- class::knn(train = X, test = newdata, k = object$k, cl = Y, prob = TRUE)
   pred <- (as.numeric(fit.knn) - 1) * attr(fit.knn, "prob") + (1 - (as.numeric(fit.knn) - 1)) * (1 - attr(fit.knn, "prob"))
   return(pred)
 }

@@ -1,4 +1,4 @@
-SL.caret <- function(Y, X, newX, family, obsWeights, method = "rf", tuneLength = 3, trControl = trainControl(method = "cv", number = 10, verboseIter = TRUE), metric = ifelse(family$family == 'gaussian', 'RMSE', 'Accuracy'), ...) {
+SL.caret <- function(Y, X, newX, family, obsWeights, method = "rf", tuneLength = 3, trControl = caret::trainControl(method = "cv", number = 10, verboseIter = TRUE), metric = ifelse(family$family == 'gaussian', 'RMSE', 'Accuracy'), ...) {
 	.SL.require('caret')
   if (family$family == "gaussian") {
 		fit.train <- caret::train(x = X, y = Y, weights = obsWeights, metric = metric, method = method, tuneLength = tuneLength, trControl = trControl)

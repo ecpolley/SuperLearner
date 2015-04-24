@@ -3,13 +3,13 @@
 SL.polymars <- function(Y, X, newX, family, obsWeights, ...){
   .SL.require('polspline')
 	if(family$family == "gaussian") { 
-		fit.mars <- polymars(Y, X, weights = obsWeights)
+		fit.mars <- polspline::polymars(Y, X, weights = obsWeights)
  		pred <- predict(fit.mars, x = newX)
 		fit <- list(object = fit.mars)
 	}
 	if(family$family == "binomial") {
-		fit.mars <- polyclass(Y, X, cv = 5, weight = obsWeights)
-		pred <- ppolyclass(cov = newX, fit = fit.mars)[, 2]
+		fit.mars <- polspline::polyclass(Y, X, cv = 5, weight = obsWeights)
+		pred <- polspline::ppolyclass(cov = newX, fit = fit.mars)[, 2]
 		fit <- list(fit = fit.mars)
 	}
 	out <- list(pred = pred, fit = fit)
@@ -23,7 +23,7 @@ predict.SL.polymars <- function(object, newdata, family, ...) {
  		pred <- predict(object = object$object, x = newdata)
 	}
 	if(family$family=="binomial"){
-		pred <- ppolyclass(cov=newdata, fit=object$fit)[, 2]
+		pred <- polspline::ppolyclass(cov=newdata, fit=object$fit)[, 2]
 	}
 	return(pred)
 }

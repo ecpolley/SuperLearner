@@ -6,7 +6,7 @@ SL.ridge <- function(Y, X, newX, family, lambda = seq(1, 20, .1), ...) {
 	if(family$family=="binomial"){
 		stop("Currently only works with gaussian data")
 	}
-	fit.ridge <- lm.ridge(Y ~ ., data = X, lambda = lambda)
+	fit.ridge <- MASS::lm.ridge(Y ~ ., data = X, lambda = lambda)
 	bestCoef <- as.matrix(coef(fit.ridge)[which.min(fit.ridge$GCV), ])
 	m <- dim(newX)[1]
 	newx.ridge <- as.matrix(cbind(rep(1, m), newX))

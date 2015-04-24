@@ -2,15 +2,15 @@ SL.rpartPrune <- function (Y, X, newX, family, obsWeights, cp = 0.001, minsplit 
 {
     .SL.require("rpart")
     if (family$family == "gaussian") {
-        fit.rpart <- rpart(Y ~ ., data = data.frame(Y, X), control = rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "anova", weights = obsWeights)
+        fit.rpart <- rpart::rpart(Y ~ ., data = data.frame(Y, X), control = rpart::rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "anova", weights = obsWeights)
 		    CP <- fit.rpart$cptable[which.min(fit.rpart$cptable[, "xerror"]), "CP"]
-		    fitPrune <- prune(fit.rpart, cp = CP)
+		    fitPrune <- rpart::prune(fit.rpart, cp = CP)
         pred <- predict(fitPrune, newdata = newX)
     }
     if (family$family == "binomial") {
-        fit.rpart <- rpart(Y ~ ., data = data.frame(Y, X), control = rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "class", weights = obsWeights)
+        fit.rpart <- rpart::rpart(Y ~ ., data = data.frame(Y, X), control = rpart::rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "class", weights = obsWeights)
 		    CP <- fit.rpart$cptable[which.min(fit.rpart$cptable[, "xerror"]), "CP"]
-		    fitPrune <- prune(fit.rpart, cp = CP)
+		    fitPrune <- rpart::prune(fit.rpart, cp = CP)
         pred <- predict(fitPrune, newdata = newX)[, 2]
     }
     fit <- list(object = fitPrune, fit = fit.rpart, cp = CP)

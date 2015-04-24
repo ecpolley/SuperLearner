@@ -190,10 +190,10 @@ recombineCVSL <- function(object, method = "method.NNloglik", verbose = FALSE, s
   } else if (parallel == 'multicore') {
     # not tested
     .SL.require('parallel')
-    cvList <- mclapply(vlist, FUN = .crossValFun, folds = folds, oldAllSL = oldAllSL, Y = Y, method = method, verbose = verbose, saveAll = saveAll)
+    cvList <- parallel::mclapply(vlist, FUN = .crossValFun, folds = folds, oldAllSL = oldAllSL, Y = Y, method = method, verbose = verbose, saveAll = saveAll)
   } else if (inherits(parallel, 'cluster')) {
     # not tested
-    cvList <- parLapply(parallel, x = vlist, fun = .crossValFun, folds = folds, oldAllSL = oldAllSL, Y = Y, method = method, verbose = verbose, saveAll = saveAll)
+    cvList <- parallel::parLapply(parallel, x = vlist, fun = .crossValFun, folds = folds, oldAllSL = oldAllSL, Y = Y, method = method, verbose = verbose, saveAll = saveAll)
   } else {
     stop('parallel option was not recognized, use parallel = "seq" for sequential computation.')
   }

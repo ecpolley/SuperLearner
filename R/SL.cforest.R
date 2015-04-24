@@ -2,7 +2,7 @@
 SL.cforest <- function(Y, X, newX, family, ...){
   .SL.require('party')
 	if(family$family == "gaussian") {
-		fit.cforest <- cforest(Y ~ ., data = data.frame(Y, X), controls = cforest_unbiased(ntree = 1000, mtry = max(floor(ncol(X)/3), 1)))
+		fit.cforest <- party::cforest(Y ~ ., data = data.frame(Y, X), controls = party::cforest_unbiased(ntree = 1000, mtry = max(floor(ncol(X)/3), 1)))
 	}
 	if(family$family == "binomial"){
 		stop("Currently only works with gaussian data \ncforest can not return predicted probabilities")

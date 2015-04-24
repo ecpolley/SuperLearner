@@ -139,7 +139,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # additional steps to put things in the correct order
   # rbind unlists the output from lapply
   # need to unlist folds to put the rows back in the correct order
-	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', mclapply(validRows, FUN = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
+	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', parallel::mclapply(validRows, FUN = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
 	
   # check for errors. If any algorithms had errors, replace entire column with 0 even if error is only in one fold.
   errorsInCVLibrary <- apply(Z, 2, function(x) any(is.na(x)))
@@ -208,7 +208,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
     }
     invisible(out)
   }
-  foo <- mclapply(seq(k), FUN = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames)
+  foo <- parallel::mclapply(seq(k), FUN = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames)
   predY <- do.call('cbind', lapply(foo, '[[', 'pred'))
   assign('fitLibrary', lapply(foo, '[[', 'fitLibrary'), envir = fitLibEnv)
   rm(foo)

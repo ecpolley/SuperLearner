@@ -11,14 +11,14 @@ plot.CV.SuperLearner <- function(x, package = "ggplot2", constant = qnorm(0.975)
   
   if(package == "lattice") {
     .SL.require("lattice")
-    p <- dotplot(X ~ Y, data = d, xlim = c(min(d$Lower) - 0.02, max(d$Upper) + 0.02), xlab = "V-fold CV Risk Estimate", ylab = "Method", panel = function(x, y){
-      panel.xyplot(x, y, pch = 16, cex = 1)
-      panel.segments(d$Lower, y, d$Upper, y, lty = 1)
+    p <- lattice::dotplot(X ~ Y, data = d, xlim = c(min(d$Lower) - 0.02, max(d$Upper) + 0.02), xlab = "V-fold CV Risk Estimate", ylab = "Method", panel = function(x, y){
+      lattice::panel.xyplot(x, y, pch = 16, cex = 1)
+      lattice::panel.segments(d$Lower, y, d$Upper, y, lty = 1)
     })
   } 
   if(package == "ggplot2") {
     .SL.require("ggplot2")
-    p <- ggplot(d, aes_string(x = "X", y = "Y", ymin = "Lower", ymax = "Upper")) + geom_pointrange() + coord_flip() + ylab("V-fold CV Risk Estimate") + xlab("Method")
+    p <- ggplot2::ggplot(d, ggplot2::aes_string(x = "X", y = "Y", ymin = "Lower", ymax = "Upper")) + ggplot2::geom_pointrange() + ggplot2::coord_flip() + ggplot2::ylab("V-fold CV Risk Estimate") + ggplot2::xlab("Method")
   }
   return(p)
 }

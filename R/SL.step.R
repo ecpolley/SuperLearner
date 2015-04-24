@@ -39,7 +39,7 @@ SL.stepAIC <- function(Y, X, newX, family, direction = "both", steps = 30, k = l
 	g0 <- glm(Y ~ 1, data = X, family = family)
 	upper <- formula(paste("~", paste(colnames(X), collapse="+")))
 	lower <- formula("~1")
-	fit.step <- stepAIC(g0, scope = list(upper = upper, lower = lower), direction = direction, k = k, trace = 0, steps = steps)
+	fit.step <- MASS::stepAIC(g0, scope = list(upper = upper, lower = lower), direction = direction, k = k, trace = 0, steps = steps)
 	pred <- predict(fit.step, newdata = newX, type = "response")
 	fit <- list(object = fit.step)
 	out <- list(pred = pred, fit=fit)

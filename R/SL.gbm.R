@@ -6,12 +6,12 @@ SL.gbm <- function(Y, X, newX, family, obsWeights, gbm.trees = 10000, interactio
   .SL.require('gbm')
   gbm.model <- as.formula(paste("Y~", paste(colnames(X), collapse="+")))
 	if(family$family == "gaussian") {  
-		fit.gbm <- gbm(formula = gbm.model, data = X, distribution = "gaussian", n.trees = gbm.trees, interaction.depth = interaction.depth, cv.folds = 5, keep.data = TRUE, weights = obsWeights, verbose = FALSE)
+		fit.gbm <- gbm::gbm(formula = gbm.model, data = X, distribution = "gaussian", n.trees = gbm.trees, interaction.depth = interaction.depth, cv.folds = 5, keep.data = TRUE, weights = obsWeights, verbose = FALSE)
 	}
 	if(family$family == "binomial") {
-		fit.gbm <- gbm(formula = gbm.model, data = X, distribution = "bernoulli", n.trees = gbm.trees, interaction.depth = interaction.depth, cv.folds = 5, keep.data = TRUE, verbose = FALSE, weights = obsWeights)
+		fit.gbm <- gbm::gbm(formula = gbm.model, data = X, distribution = "bernoulli", n.trees = gbm.trees, interaction.depth = interaction.depth, cv.folds = 5, keep.data = TRUE, verbose = FALSE, weights = obsWeights)
 	}
-	best.iter <- gbm.perf(fit.gbm, method = "cv", plot.it = FALSE)
+	best.iter <- gbm::gbm.perf(fit.gbm, method = "cv", plot.it = FALSE)
 	pred <- predict(fit.gbm, newdata = newX, best.iter, type = "response")
 	fit <- list(object = fit.gbm, n.trees = best.iter)
 	out <- list(pred = pred, fit = fit)

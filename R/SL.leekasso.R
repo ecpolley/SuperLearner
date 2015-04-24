@@ -4,7 +4,7 @@ SL.leekasso <- function (Y, X, newX, family, obsWeights, id, ...)
 	N <- length(Y)
 	mod <- cbind(rep.int(1, N), Y)
   mod0 <- cbind(rep.int(1, N))
-  pValues <- f.pvalue(t(X), mod, mod0)
+  pValues <- sva::f.pvalue(t(X), mod, mod0)
   index <- which(rank(pValues) <= 10) # always 10!
 
   lm1 <- lm(Y ~ ., data = X[, index])

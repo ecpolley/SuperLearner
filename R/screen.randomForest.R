@@ -2,10 +2,10 @@ screen.randomForest <- function (Y, X, family, nVar = 10, ntree = 1000, mtry = i
 {
   .SL.require('randomForest')
   if (family$family == "gaussian") {
-	  rank.rf.fit <- randomForest(Y ~ ., data = X, ntree = ntree, mtry = mtry, nodesize = nodesize, keep.forest = FALSE)
+	  rank.rf.fit <- randomForest::randomForest(Y ~ ., data = X, ntree = ntree, mtry = mtry, nodesize = nodesize, keep.forest = FALSE)
   }
   if (family$family == "binomial") {
-    rank.rf.fit <- randomForest(as.factor(Y) ~ ., data=X, ntree=ntree, mtry = mtry, nodesize = nodesize, keep.forest = FALSE)
+    rank.rf.fit <- randomForest::randomForest(as.factor(Y) ~ ., data=X, ntree=ntree, mtry = mtry, nodesize = nodesize, keep.forest = FALSE)
   }
   whichVariable <- (rank(-rank.rf.fit$importance) <= nVar)
   return(whichVariable)

@@ -65,9 +65,9 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
     cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else if (parallel == 'multicore') {
     .SL.require('parallel')
-    cvList <- mclapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll, mc.set.seed = FALSE)
+    cvList <- parallel::mclapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll, mc.set.seed = FALSE)
   } else if (inherits(parallel, 'cluster')) {
-    cvList <- parLapply(parallel, x = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+    cvList <- parallel::parLapply(parallel, x = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else {
     stop('parallel option was not recognized, use parallel = "seq" for sequential computation.')
   }

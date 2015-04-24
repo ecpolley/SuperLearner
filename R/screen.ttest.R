@@ -5,7 +5,7 @@ screen.ttest <- function(Y, X, family, obsWeights, id, rank = 2, ...) {
 	 stop('t-test screening undefined for gaussian family, look at screen.corP or screen.corRank')
   }
   if (family$family == "binomial") {
-    listP <- colttests(x = as.matrix(X), fac = as.factor(Y), tstatOnly = FALSE)$p.value
+    listP <- genefilter::colttests(x = as.matrix(X), fac = as.factor(Y), tstatOnly = FALSE)$p.value
   }
   whichVariable <- (rank(listP) <= rank)
   return(whichVariable)
