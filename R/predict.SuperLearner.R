@@ -3,6 +3,9 @@ predict.SuperLearner <- function(object, newdata, X = NULL, Y = NULL, onlySL = F
     out <- list(pred = object$SL.predict, library.predict = object$library.predict)
     return(out)
   }
+  if (!object$control$saveFitLibrary) {
+    stop("This SuperLearner fit was created using control$saveFitLibrary = FALSE, so new predictions cannot be made.")
+  }
   
   k <- length(object$libraryNames)
   predY <- matrix(NA, nrow = nrow(newdata), ncol = k)
