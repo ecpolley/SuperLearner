@@ -1,11 +1,13 @@
 # News for the SuperLearner package. #
 
+
 ---
 Version: 2.0-18
-Date: 2014-04-24
+Date: 2014-04-25
 * Added recombineSL and recombineCVSL functions to re-fit the ensemble using a new metalearner in a computationally efficient manner
 * For all wrappers, converted to format package::function when calling functions from other namespaces
-* added S3 method declarations for all predict.SL.* functions
+* Added S3 method declarations for all predict.SL.* functions
+* Added a `SL.nnls` and `predict.SL.nnls` functions
 
 ---
 Version: 2.0-17

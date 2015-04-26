@@ -55,6 +55,8 @@
 \alias{predict.SL.ridge}
 \alias{SL.leekasso}
 \alias{predict.SL.leekasso}
+\alias{SL.nnls}
+\alias{predict.SL.nnls}
 
 \title{
 Wrapper functions for prediction algorithms in SuperLearner
