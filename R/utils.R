@@ -30,7 +30,7 @@
 # 
 # SL.library <- c("SL.glmnet", "SL.loess")
 # 
-# ctrl=SuperLearner.CV.control(V = 10,validRows = test$validRows)
+# ctrl=SuperLearner.CV.control(V = 10,validRows = test1$validRows)
 # test2 <- SuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,cvControl = ctrl,
 #                      verbose = TRUE, method = "method.NNLS")
 # test2
