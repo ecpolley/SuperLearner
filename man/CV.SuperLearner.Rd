@@ -54,7 +54,7 @@ Optional observation weights variable. As with \code{id} above, \code{obsWeights
 Logical; Should the entire \code{SuperLearner} object be saved for each fold?
 }
   \item{parallel}{
-Options for parallel computation of the V-fold step. Use "seq" (the default) for sequential computation. \code{parallel = 'multicore'} to use \code{mclapply} for the V-fold step (but note that \code{SuperLearner()} will still be sequential). Or \code{parallel} can be the name of a snow cluster and will use \code{parLapply} for the V-fold step. For both multicore and snow, the inner \code{SuperLearner} calls will be sequential.
+Options for parallel computation of the V-fold step. Use "seq" (the default) for sequential computation. \code{parallel = 'multicore'} to use \code{mclapply} for the V-fold step (but note that \code{SuperLearner()} will still be sequential). The default for mclapply is to check the \code{mc.cores} option, and if not set to default to 2 cores. Be sure to set \code{options()$mc.cores} to the desired number of cores if you don't want the default. Or \code{parallel} can be the name of a snow cluster and will use \code{parLapply} for the V-fold step. For both multicore and snow, the inner \code{SuperLearner} calls will be sequential.
   }
 }
 
