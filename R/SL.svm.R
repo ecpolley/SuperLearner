@@ -3,7 +3,7 @@
 # two types for classification: "nu-classification" and "C-classification"
 # many other tuning parameters to consider
 SL.svm <- function(Y, X, newX, family, type.reg = "nu-regression", type.class = "nu-classification", kernel =
-"radial", nu = 0.5, degree = 3...) {
+"radial", nu = 0.5, degree = 3, ...) {
   .SL.require('e1071')
 	if(family$family == "gaussian") {
 		fit.svm <- e1071::svm(y = Y, x = X, nu = nu, type = type.reg, fitted = FALSE, kernel = kernel, degree = degree)
