@@ -2,15 +2,16 @@
 # two types for regression: "nu-regression" and "eps-regression".
 # two types for classification: "nu-classification" and "C-classification"
 # many other tuning parameters to consider
-SL.svm <- function(Y, X, newX, family, type.reg = "nu-regression", type.class = "nu-classification", nu = 0.5, ...) {
+SL.svm <- function(Y, X, newX, family, type.reg = "nu-regression", type.class = "nu-classification", kernel =
+"radial", nu = 0.5, degree = 3...) {
   .SL.require('e1071')
 	if(family$family == "gaussian") {
-		fit.svm <- e1071::svm(y = Y, x = X, nu = nu, type = type.reg, fitted = FALSE)
+		fit.svm <- e1071::svm(y = Y, x = X, nu = nu, type = type.reg, fitted = FALSE, kernel = kernel, degree = degree)
 		pred <- predict(fit.svm, newdata = newX)
 		fit <- list(object = fit.svm)
 	}
 	if(family$family == "binomial") {
-		fit.svm <- e1071::svm(y = as.factor(Y), x = X, nu = nu, type = type.class, fitted = FALSE, probability = TRUE)
+		fit.svm <- e1071::svm(y = as.factor(Y), x = X, nu = nu, type = type.class, fitted = FALSE, probability = TRUE, kernel = kernel, degree = degree)
 		pred <- attr(predict(fit.svm, newdata = newX, probability = TRUE), "prob")[, "1"] # assumes Y is 0/1 numeric
 		fit <- list(object = fit.svm)
 	}
