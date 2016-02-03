@@ -106,7 +106,7 @@ The outcome
 }
 
 
-\author{ Eric C Polley \email{eric.polley@nih.gov} }
+\author{ Eric C Polley \email{polley.eric@mayo.edu} }
 
 \seealso{
 \code{\link{SuperLearner}}
