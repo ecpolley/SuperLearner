@@ -1,5 +1,9 @@
 # News for the SuperLearner package. #
 
+---
+Version: 2.0-20
+Date: 2016-04-06
+* Added shrinkage parameter to SL.gbm
 
 ---
 Version: 2.0-19
