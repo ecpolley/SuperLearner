@@ -1,6 +1,6 @@
 # randomForest{randomForest}
 
-SL.randomForest <- function(Y, X, newX, family, mtry = ifelse(family$family=="gaussian", floor(sqrt(ncol(X))), max(floor(ncol(X)/3), 1)), ntree=1000, nodesize = ifelse(family$family=="gaussian", 5, 1), ...) {
+SL.randomForest <- function(Y, X, newX, family, mtry = ifelse(family$family=="gaussian", max(floor(ncol(X)/3), 1), floor(sqrt(ncol(X)))), ntree=1000, nodesize = ifelse(family$family=="gaussian", 5, 1), ...) {
 	.SL.require('randomForest')
 	if(family$family=="gaussian"){
 		fit.rf <- randomForest::randomForest(Y ~ ., data = X, ntree = ntree, xtest = newX, keep.forest = TRUE, mtry = mtry, nodesize = nodesize)
