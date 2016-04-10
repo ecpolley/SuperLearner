@@ -62,7 +62,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   ## if we add something like force() will this eval multiple times?
 
   if (inherits(parallel, 'cluster')) {
-    cvList <- parallel::parLapply(parallel, x = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+    cvList <- parallel::parLapply(parallel, X = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else if (parallel == "seq") {
     cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else if (parallel == 'multicore') {
