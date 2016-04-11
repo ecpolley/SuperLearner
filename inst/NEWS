@@ -5,6 +5,7 @@ Version: 2.0-20
 Date: 2016-04-06
 * Added shrinkage parameter to SL.gbm
 * fixed mtry default in SL.randomForest
+* in CV.SuperLearner, fixed order for checking parallel options and folds argument in parLapply (thank Chris Kennedy)
 
 ---
 Version: 2.0-19
