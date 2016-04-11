@@ -61,13 +61,14 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   ## Why is CV.SuperLearner not saving the output from SuperLearner, only the call name?
   ## if we add something like force() will this eval multiple times?
   
-  if(parallel == "seq") {
-    cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+  if (inherits(parallel, 'cluster')) {
+    .SL.require('parallel')
+    cvList <- parallel::parLapply(parallel, X = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else if (parallel == 'multicore') {
     .SL.require('parallel')
     cvList <- parallel::mclapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll, mc.set.seed = FALSE)
-  } else if (inherits(parallel, 'cluster')) {
-    cvList <- parallel::parLapply(parallel, x = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+  } else if (parallel == "seq") {
+    cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
   } else {
     stop('parallel option was not recognized, use parallel = "seq" for sequential computation.')
   }
