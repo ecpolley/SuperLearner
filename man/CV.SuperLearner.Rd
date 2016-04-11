@@ -113,6 +113,7 @@ The outcome
 }
 
 \examples{
+\dontrun{
 set.seed(23432)
 ## training set
 n <- 500
@@ -124,13 +125,21 @@ Y <- X[, 1] + sqrt(abs(X[, 2] * X[, 3])) + X[, 2] - X[, 3] + rnorm(n)
   
 # build Library and run Super Learner
 SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
-\dontrun{
+
 test <- CV.SuperLearner(Y = Y, X = X, V = 10, SL.library = SL.library,
   verbose = TRUE, method = "method.NNLS")
 test
 summary(test)
 # Look at the coefficients across folds
 coef(test)
+
+## examples with snow
+library(parallel)
+cl <- makeCluster(2, type = "PSOCK") # can use different types here
+clusterSetRNGStream(cl, iseed = 2343)
+testSNOW <- CV.SuperLearner(Y = Y, X = X, SL.library = SL.library, method = "method.NNLS", parallel = cl)
+summary(testSNOW)
+stopCluster(cl)
 }
 }
 
