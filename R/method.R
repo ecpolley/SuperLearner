@@ -264,7 +264,7 @@ method.AUC <- function(optim_method="Nelder-Mead") {
 			names(coef_init) <- libraryNames
 			# optim function selects the value for par that minimizes cvRisk_AUC (aka Rank Loss)
 			res <- optim(par=coef_init, fn=.cvRisk_AUC, Z=Z, Y=Y, folds=NULL, method=optim_method)
-			if(res$convergence != 0) warning("optim didn't converge when estimating the super learner coefficients")
+			if(res$convergence != 0) warning(paste("optim didn't converge when estimating the super learner coefficients: ", res$convergence))
 			coef <- res$par
 			auc <- apply(Z, 2, function(x) cvAUC::cvAUC(x, labels=Y)$cvAUC)
 			cvRisk <- 1 - auc  # Rank Loss
