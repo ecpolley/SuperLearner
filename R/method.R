@@ -287,7 +287,7 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
                      method = optim_method, 
                      lower = bounds[1], 
                      upper = bounds[2])
-		if(res$convergence != 0) warning(paste("optim didn't converge when estimating the super learner coefficients, reason (see ?optim): ", res$convergence))
+		if(res$convergence != 0) warning(paste("optim didn't converge when estimating the super learner coefficients, reason (see ?optim): ", res$convergence, " optim message: ", res$message))
         coef <- res$par
         if (any(is.na(coef))) {
           warning("Some algorithms have weights of NA, setting to 0.")
