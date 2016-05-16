@@ -254,8 +254,6 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
     stop("Please supply either a nlopt or optim method; one of these must be set to NULL.")
   }
   
-  #if (length(optim_method) > 0) {
-  #  if (length(intersect(optim_method, c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN"))) == 0) {
   if (!is.null(optim_method)) {
     if (!(optim_method %in% c("Nelder-Mead", "BFGS", "CG", "L-BFGS-B", "SANN"))) {
       stop("supplied 'optim_method' value not supported")
