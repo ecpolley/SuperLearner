@@ -1,7 +1,7 @@
 #  mcSuperLearner
-#  
+#
 #  Created by Eric Polley on 2011-01-01.
-# 
+#
 mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(), cvControl = list(), obsWeights = NULL) {
   .SL.require('parallel')
   if(is.character(method)) {
@@ -27,7 +27,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # should this be in a new environment?
   library <- .createLibrary(SL.library)
 	.check.SL.library(library = c(unique(library$library$predAlgorithm), library$screenAlgorithm))
-	
+
 	call <- match.call(expand.dots = TRUE)
   # should we be checking X and newX for data.frame?
   # data.frame not required, but most of the built-in wrappers assume a data.frame
@@ -39,7 +39,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 	kScreen <- length(library$screenAlgorithm)
 	Z <- matrix(NA, N, k)
 	libraryNames <- paste(library$library$predAlgorithm, library$screenAlgorithm[library$library$rowScreen], sep="_")
-	
+
 	# put fitLibrary in it's own environment to locate later
 	fitLibEnv <- new.env()
 	assign('fitLibrary', vector('list', length = k), envir = fitLibEnv)
@@ -49,7 +49,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # errors* records if an algorithm stops either in the CV step and/or in full data
 	errorsInCVLibrary <- rep(0, k)
 	errorsInLibrary <- rep(0, k)
-	
+
   # if newX is missing, use X
 	if(is.null(newX)) {
 		newX <- X
@@ -73,14 +73,14 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 		print(family)
 		stop("'family' not recognized")
 	}
-	
+
 	if (family$family != "binomial" & isTRUE("cvAUC" %in% method$require)){
 		stop("'method.AUC' is designed for the 'binomial' family only")
 	}
-	
+
   # create CV folds
 	validRows <- CVFolds(N = N, id = id, Y = Y, cvControl = cvControl)
-	
+
   # test id
 	if(is.null(id)) {
 		id <- seq(N)
@@ -95,7 +95,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 	if(!identical(length(obsWeights), N)) {
 		stop("obsWeights vector must have the same dimension as Y")
 	}
-	
+
   # create function for the cross-validation step:
 	.crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, kScreen, k, p, libraryNames) {
 	  tempLearn <- dataX[-valid, , drop = FALSE]
@@ -104,12 +104,12 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 	  tempWhichScreen <- matrix(NA, nrow = kScreen, ncol = p)
 	  tempId <- id[-valid]
 	  tempObsWeights <- obsWeights[-valid]
-	  
+
     # should this be converted to a lapply also?
 		for(s in seq(kScreen)) {
 			testScreen <- try(do.call(library$screenAlgorithm[s], list(Y = tempOutcome, X = tempLearn, family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testScreen, "try-error")) {
-				warning(paste("replacing failed screening algorithm,", library$screenAlgorithm[s], ", with All()", "\n ")) 
+				warning(paste("replacing failed screening algorithm,", library$screenAlgorithm[s], ", with All()", "\n "))
 				tempWhichScreen[s, ] <- TRUE
 			} else {
 				tempWhichScreen[s, ] <- testScreen
@@ -118,13 +118,13 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 				message(paste("Number of covariates in ", library$screenAlgorithm[s], " is: ", sum(tempWhichScreen[s, ]), sep = ""))
 			}
 		} #end screen
-		
+
     # should this be converted to a lapply also?
     out <- matrix(NA, nrow = nrow(tempValid), ncol = k)
 		for(s in seq(k)) {
 			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testAlg, "try-error")) {
-				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
+				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
         # errorsInCVLibrary[s] <<- 1
         # '<<-' doesn't work with mclapply.
 			} else {
@@ -140,30 +140,30 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # rbind unlists the output from lapply
   # need to unlist folds to put the rows back in the correct order
 	Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', parallel::mclapply(validRows, FUN = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
-	
+
   # check for errors. If any algorithms had errors, replace entire column with 0 even if error is only in one fold.
   errorsInCVLibrary <- apply(Z, 2, function(x) any(is.na(x)))
   if(sum(errorsInCVLibrary) > 0) {
-		Z[, as.logical(errorsInCVLibrary)] <- 0 
+		Z[, as.logical(errorsInCVLibrary)] <- 0
 	}
 	if(all(Z == 0)) {
 		stop("All algorithms dropped from library")
 	}
-	
+
   # compute weights for each algorithm in library:
   getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
   coef <- getCoef$coef
   names(coef) <- libraryNames
-  
+
   # now fit all algorithms in library on entire learning data set and predict on newX
   m <- dim(newX)[1L]
   predY <- matrix(NA, nrow = m, ncol = k)
   # whichScreen <- matrix(NA, nrow = kScreen, ncol = p)
-  
+
   .screenFun <- function(fun, list) {
     testScreen <- try(do.call(fun, list))
     if(inherits(testScreen, "try-error")) {
-  		warning(paste("replacing failed screening algorithm,", fun, ", with All() in full data", "\n ")) 
+  		warning(paste("replacing failed screening algorithm,", fun, ", with All() in full data", "\n "))
   		out <- rep(TRUE, ncol(list$X))
   	} else {
   		out <- testScreen
@@ -171,12 +171,12 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
     return(out)
   }
   whichScreen <- t(sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
-	
+
   # change to sapply?
   # for(s in 1:k) {
   #   testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = Y, X = subset(X, select = whichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(newX, select = whichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
   #   if(inherits(testAlg, "try-error")) {
-  #     warning(paste("Error in algorithm", library$library$predAlgorithm[s], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
+  #     warning(paste("Error in algorithm", library$library$predAlgorithm[s], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
   #     errorsInLibrary[s] <- 1
   #   } else {
   #     predY[, s] <- testAlg$pred
@@ -188,13 +188,13 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   #     message(paste("full", libraryNames[s]))
   #   }
   # }
-  
+
   # assign in envirnoments doesn't work with mc and snow, change .predFun to return a list with both pred and fitLibrary elements and then parse the two.
   .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
     out <- list(pred = NA, fitLibrary = NULL)
     testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
     if(inherits(testAlg, "try-error")) {
-      warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" )) 
+      warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
       out$pred <- rep.int(NA, times = nrow(newX))
     } else {
       out$pred <- testAlg$pred
@@ -213,7 +213,7 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   assign('fitLibrary', lapply(foo, '[[', 'fitLibrary'), envir = fitLibEnv)
   rm(foo)
   # predY <- do.call('cbind', mclapply(seq(k), FUN = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
-  
+
   # check for errors
   errorsInLibrary <- apply(predY, 2, function(xx) any(is.na(xx)))
 	if(sum(errorsInLibrary) > 0) {
@@ -230,19 +230,19 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 			warning("coefficients already 0 for all failed algorithm(s)")
 		}
 	}
-	
+
   # compute super learner predictions on newX
 	getPred <- method$computePred(predY = predY, coef = coef, control = control)
-	
+
 	# add names of algorithms to the predictions
 	colnames(predY) <- libraryNames
 	# clean up when errors in library
 	if(sum(errorsInCVLibrary) > 0) {
 		getCoef$cvRisk[as.logical(errorsInCVLibrary)] <- NA
 	}
-	
+
   # put everything together in a list
-  out <- list(call = call, libraryNames = libraryNames, SL.library = library, SL.predict = getPred, coef = coef, library.predict = predY, Z = Z, cvRisk = getCoef$cvRisk, family = family, fitLibrary = get('fitLibrary', envir = fitLibEnv), id = id, varNames = varNames, validRows = validRows, method = method, whichScreen = whichScreen, control = control, errorsInCVLibrary = errorsInCVLibrary, errorsInLibrary = errorsInLibrary, obsWeights = obsWeights)
+  out <- list(call = call, libraryNames = libraryNames, SL.library = library, SL.predict = getPred, coef = coef, library.predict = predY, Z = Z, cvRisk = getCoef$cvRisk, family = family, fitLibrary = get('fitLibrary', envir = fitLibEnv), id = id, varNames = varNames, validRows = validRows, method = method, whichScreen = whichScreen, control = control, errorsInCVLibrary = errorsInCVLibrary, errorsInLibrary = errorsInLibrary, obsWeights = obsWeights, metaOptimizer = getCoef$optimizer)
 	class(out) <- c("SuperLearner")
 	return(out)
 }
