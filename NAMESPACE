@@ -7,6 +7,7 @@ importFrom(graphics, plot)
 
 importFrom("stats", "as.formula", "binomial", "cor.test", "dlogis", "formula", "gaussian", "glm", "lm", "loess", "loess.control", "model.matrix", "optim", "plogis", "predict.lm", "qnorm", "reorder", "sd", "step", "var", "weighted.mean")
 importFrom("utils", "RShowDoc")
+import("xgboost")
 
 S3method(print, SuperLearner)
 S3method(coef, SuperLearner)
@@ -42,4 +43,5 @@ S3method(predict, SL.step)
 S3method(predict, SL.stepAIC)
 S3method(predict, SL.svm)
 S3method(predict, SL.template)
+S3method(predict, SL.xgboost)
 S3method(predict, SuperLearner)
