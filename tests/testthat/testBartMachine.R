@@ -24,6 +24,5 @@ sl <- SuperLearner(Y = Y_bin, X = X, SL.library = SL.library, family = binomial(
 sl
 
 # Test bartMachine - regression.
-
 sl <- SuperLearner(Y = Y_reg, X = X, SL.library = SL.library, family = gaussian())
 sl
