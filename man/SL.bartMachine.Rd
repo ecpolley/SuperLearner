@@ -19,7 +19,7 @@ SL.bartMachine(Y, X, newX, family, obsWeights, id, num_trees = 50,
 
 \item{beta}{Power hyperparameter in tree prior for whether a node is nonterminal or not.}
 
-\item{k}{For regression, k determines the prior probability that E(Y|X) is contained in the interval (y_{min}, y_{max}), based on a normal distribution. For example, when k=2, the prior probability is 95%. For classification, k determines the prior probability that E(Y|X) is between (-3,3). Note that a larger value of k results in more shrinkage and a more conservative fit.}
+\item{k}{For regression, k determines the prior probability that E(Y|X) is contained in the interval (y_{min}, y_{max}), based on a normal distribution. For example, when k=2, the prior probability is 95\%. For classification, k determines the prior probability that E(Y|X) is between (-3,3). Note that a larger value of k results in more shrinkage and a more conservative fit.}
 
 \item{q}{Quantile of the prior on the error variance at which the data-based estimate is placed. Note that the larger the value of q, the more aggressive the fit as you are placing more prior weight on values lower than the data-based estimate. Not used for classification.}
 
