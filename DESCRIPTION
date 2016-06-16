@@ -44,6 +44,8 @@ Suggests:
     SIS,
     spls,
     stepPlr,
-    sva
+    sva,
+    testthat,
+    xgboost
 LazyLoad: yes
 RoxygenNote: 5.0.1
