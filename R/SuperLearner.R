@@ -152,6 +152,11 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
   coef <- getCoef$coef
   names(coef) <- libraryNames
 
+  # Set a default in case the method does not return the optimizer result.
+  if(!("optimizer" %in% names(getCoef))) {
+    getCoef["optimizer"] <- NA
+  }
+
   # now fit all algorithms in library on entire learning data set and predict on newX
   m <- dim(newX)[1L]
   predY <- matrix(NA, nrow = m, ncol = k)
