@@ -180,6 +180,11 @@ method.CC_LS <- function() {
       warning("Some algorithms have weights of NA, setting to 0.")
       coef[is.na(coef)] = 0
     }
+
+    # Set very small coefficients to 0 and renormalize.
+    coef[coef < 1.0e-4] <- 0
+    coef <- coef / sum(coef)
+
     if(!sum(coef) > 0) warning("All algorithms have zero weight", call. = FALSE)
     list(cvRisk = cvRisk, coef = coef, optimizer = fit)
   }
@@ -187,9 +192,7 @@ method.CC_LS <- function() {
   computePred = function(predY, coef, ...) {
    predY %*% matrix(coef)
   }
-  #set very small coefficients to 0 and renormalize
-  coef[coef < 1.0e-4] <- 0
-  coef <- coef/sum(coef)
+
   out <- list(require = "quadprog",
               computeCoef=computeCoef,
               computePred=computePred)
