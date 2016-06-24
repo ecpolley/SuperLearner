@@ -19,6 +19,7 @@ S3method(plot, CV.SuperLearner)
 S3method(summary, CV.SuperLearner)
 S3method(print, summary.CV.SuperLearner)
 
+S3method(predict, SL.bartMachine)
 S3method(predict, SL.bayesglm)
 S3method(predict, SL.caret)
 S3method(predict, SL.cforest)

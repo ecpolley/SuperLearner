@@ -16,6 +16,7 @@ Imports:
     cvAUC
 Suggests:
     arm,
+    bartMachine,
     caret,
     class,
     e1071,
