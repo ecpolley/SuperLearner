@@ -226,7 +226,7 @@ test <- SuperLearner(Y = DATA2$Y, X = DATA2[, -1], newX = newDATA2[, -1],
 test
 
 ## examples with multicore
-set.seed(23432)
+set.seed(23432, "L'Ecuyer-CMRG")  # use L'Ecuyer for multicore seeds. see ?set.seed for details
 ## training set
 n <- 500
 p <- 50
