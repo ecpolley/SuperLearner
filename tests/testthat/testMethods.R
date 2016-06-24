@@ -43,7 +43,6 @@ expect_lte(max(test.NNloglik$SL.predict), 1)
 
 ########################
 # Test method.CC_LS
-# This will trigger an error currently - looks like a bug in method.CC_LS.
 test.CC_LS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F, method = "method.CC_LS", family = binomial())
 
 # Check that predictions >= 0
