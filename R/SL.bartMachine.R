@@ -18,6 +18,7 @@ SL.bartMachine <- function(Y, X, newX, family, obsWeights, id,
                    alpha = 0.95, beta = 2, k = 2, q = 0.9, nu = 3,
                    num_iterations_after_burn_in = 1000,
                            ...) {
+  .SL.require("bartMachine")
   model = bartMachine::bartMachine(X, Y, num_trees = num_trees,
                         num_burn_in = num_burn_in, verbose = verbose,
                         alpha = alpha, beta = beta, k = k, q = q, nu = nu,
