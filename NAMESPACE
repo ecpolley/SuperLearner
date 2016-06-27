@@ -7,6 +7,7 @@ importFrom(graphics, plot)
 
 importFrom("stats", "as.formula", "binomial", "cor.test", "dlogis", "formula", "gaussian", "glm", "lm", "loess", "loess.control", "model.matrix", "optim", "plogis", "predict.lm", "qnorm", "reorder", "sd", "step", "var", "weighted.mean")
 importFrom("utils", "RShowDoc")
+importFrom("xgboost", "predict")
 
 
 S3method(print, SuperLearner)
