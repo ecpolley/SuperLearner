@@ -3,8 +3,7 @@
 #' Create multiple configurations of RandomForest learners based on the desired
 #' combinations of hyperparameters.
 #'
-#' @param tune List of hyperparameter settings to test. If specified, each
-#'   hyperparameter will need to be defined.
+#' @param tune List of hyperparameter settings that will define custom learners.
 #' @param detailed_names Set to T to have the function names include the
 #'   parameter configurations.
 #' @param env Environment in which to create the SL.xgboost functions. Defaults
@@ -44,7 +43,7 @@
 create.SL.randomForest <- function(tune = list(mtry = c(1, 5, 10), nodesize = c(1, 5, 10),
                                                maxnodes = "NULL"),
                                    env = .GlobalEnv, name_prefix = "SL.randomForest",
-                                   detailed_names = F, verbose=F) {
+                                   detailed_names = F, verbose = F) {
   tuneGrid <- expand.grid(tune, stringsAsFactors = FALSE)
 
   names = rep("", nrow(tuneGrid))

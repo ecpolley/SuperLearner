@@ -9,8 +9,7 @@ create.SL.randomForest(tune = list(mtry = c(1, 5, 10), nodesize = c(1, 5, 10),
   detailed_names = F, verbose = F)
 }
 \arguments{
-\item{tune}{List of hyperparameter settings to test. If specified, each
-hyperparameter will need to be defined.}
+\item{tune}{List of hyperparameter settings that will define custom learners.}
 
 \item{env}{Environment in which to create the SL.xgboost functions. Defaults
 to the global environment.}
