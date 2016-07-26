@@ -35,6 +35,7 @@
 #'   parallelization.
 #' @param verbose Verbosity of XGB fitting.
 #' @param ... Any remaining arguments (not supported though).
+#'
 #' @export
 SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
                       max_depth=4, shrinkage=0.1, minobspernode=10, params = list(),
