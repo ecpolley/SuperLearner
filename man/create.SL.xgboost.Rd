@@ -24,7 +24,7 @@ Create multiple configurations of XGBoost learners based on the desired combinat
 
 # Create a new environment to store the learner functions.
 # This keeps the global environment organized.
-sl_env = new.environment()
+sl_env = new.env()
 # Create 2 * 2 * 1 * 3 = 12 combinations of hyperparameters.
 tune = list(ntrees = c(100, 500), max_depth = c(1, 2), minobspernode = 10,
             shrinkage = c(0.1, 0.01, 0.001))
@@ -34,7 +34,9 @@ xgb_grid = create.SL.xgboost(tune = tune, env = sl_env)
 xgb_grid
 # Attach the environment so that the custom learner functions can be accessed.
 attach(sl_env)
+\dontrun{
 sl = SuperLearner(Y = Y, X = X, SL.library = xgb_grid$names)
+}
 detach(sl_env)
 }
 

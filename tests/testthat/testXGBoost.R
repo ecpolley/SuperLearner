@@ -1,5 +1,6 @@
 library(testthat)
 library(xgboost)
+library(SuperLearner)
 
 context("Learner: XGBoost")
 
