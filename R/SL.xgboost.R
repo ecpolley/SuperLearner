@@ -1,22 +1,40 @@
 #' XGBoost SuperLearner wrapper
 #'
-#' Supports the Extreme Gradient Boosting package for SuperLearnering, which is a
-#' variant of gradient boosted machines (GBM).
+#' Supports the Extreme Gradient Boosting package for SuperLearnering, which is
+#' a variant of gradient boosted machines (GBM).
 #'
-#' The performance of XGBoost, like GBM, is sensitive to the configuration settings.
-#' Therefore it is best to create multiple configurations using create.SL.xgboost
-#' and allow the SuperLearner to choose the best weights based on cross-validated
-#' performance.
+#' The performance of XGBoost, like GBM, is sensitive to the configuration
+#' settings. Therefore it is best to create multiple configurations using
+#' create.SL.xgboost and allow the SuperLearner to choose the best weights based
+#' on cross-validated performance.
 #'
-#' @param family "gaussian" for regression, "binomial" for binary classification, "multinomial"
-#' for multiple classification.
-#' @param ntrees How many trees to fit. Low numbers may underfit but high numbers may overfit, depending also on the shrinkage.
-#' @param max_depth How deep each tree can be. 1 means no interactions, aka tree stubs.
-#' @param shrinkage How much to shrink the predictions, in order to reduce overfitting.
-#' @param minobspernode Minimum observations allowed per tree node, after which no more splitting will occur.
-#' @param params Many other parameters can be customized. See \url{https://github.com/dmlc/xgboost/blob/master/doc/parameter.md}
-#' @param nthread How many threads (cores) should xgboost use. Generally we want to keep this to 1 so that XGBoost does not compete with SuperLearner parallelization.
+#' If you run into errors please first try installing the latest version of
+#' XGBoost from drat as described here:
+#' https://github.com/dmlc/xgboost/blob/master/doc/build.md#r-package-installation
+#'
+#' @param Y Outcome variable
+#' @param X Covariate dataframe
+#' @param newX Optional dataframe to predict the outcome
+#' @param obsWeights Optional observation-level weights (supported but not tested)
+#' @param id Optional id to group observations from the same unit (not used
+#'   currently).
+#' @param family "gaussian" for regression, "binomial" for binary
+#'   classification, "multinomial" for multiple classification.
+#' @param ntrees How many trees to fit. Low numbers may underfit but high
+#'   numbers may overfit, depending also on the shrinkage.
+#' @param max_depth How deep each tree can be. 1 means no interactions, aka tree
+#'   stubs.
+#' @param shrinkage How much to shrink the predictions, in order to reduce
+#'   overfitting.
+#' @param minobspernode Minimum observations allowed per tree node, after which
+#'   no more splitting will occur.
+#' @param params Many other parameters can be customized. See
+#'   \url{https://github.com/dmlc/xgboost/blob/master/doc/parameter.md}
+#' @param nthread How many threads (cores) should xgboost use. Generally we want
+#'   to keep this to 1 so that XGBoost does not compete with SuperLearner
+#'   parallelization.
 #' @param verbose Verbosity of XGB fitting.
+#' @param ... Any remaining arguments (not supported though).
 #' @export
 SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
                       max_depth=4, shrinkage=0.1, minobspernode=10, params = list(),
@@ -53,6 +71,10 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
 }
 
 #' XGBoost prediction on new data
+#' @param object Model fit object from SuperLearner
+#' @param newdata Dataframe that will be converted to an xgb.DMatrix
+#' @param family Binomial or gaussian
+#' @param ... Any remaining arguments (not supported though).
 predict.SL.xgboost <- function(object, newdata, family, ...) {
   .SL.require("xgboost")
   pred <- predict(object$object, xgboost::xgb.DMatrix(newdata))
@@ -72,7 +94,7 @@ predict.SL.xgboost <- function(object, newdata, family, ...) {
 #'
 #' # Create a new environment to store the learner functions.
 #' # This keeps the global environment organized.
-#' sl_env = new.environment()
+#' sl_env = new.env()
 #' # Create 2 * 2 * 1 * 3 = 12 combinations of hyperparameters.
 #' tune = list(ntrees = c(100, 500), max_depth = c(1, 2), minobspernode = 10,
 #'             shrinkage = c(0.1, 0.01, 0.001))
@@ -82,7 +104,9 @@ predict.SL.xgboost <- function(object, newdata, family, ...) {
 #' xgb_grid
 #' # Attach the environment so that the custom learner functions can be accessed.
 #' attach(sl_env)
+#' \dontrun{
 #' sl = SuperLearner(Y = Y, X = X, SL.library = xgb_grid$names)
+#' }
 #' detach(sl_env)
 #' @export
 create.SL.xgboost = function(tune = list(ntrees = c(1000), max_depth = c(4), shrinkage = c(0.1),
