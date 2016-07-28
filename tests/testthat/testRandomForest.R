@@ -30,11 +30,11 @@ sl = SuperLearner(Y = Y, X = X, SL.library = sl_lib, family = binomial())
 sl
 
 #############################
-# test create.SL.randomForest
+# test create.Learner with randomForest
 
 ######
 # Test default call.
-create_rf = create.SL.randomForest()
+create_rf = create.Learner("SL.randomForest")
 create_rf
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
@@ -47,7 +47,7 @@ do.call(rm, as.list(create_rf$names))
 sl_env = new.env()
 
 # Specify an environment and test verbose.
-create_rf = create.SL.randomForest(env = sl_env, verbose=T)
+create_rf = create.Learner("SL.randomForest", env = sl_env, verbose=T)
 create_rf
 ls(sl_env)
 length(sl_env)
@@ -60,7 +60,8 @@ detach(sl_env)
 
 # Test a custom tune list but only specify mtry.
 tune_rf = list(mtry = c(4, 8))
-create_rf = create.SL.randomForest(tune = tune_rf, detailed_names = T, env = sl_env)
+create_rf = create.Learner("SL.randomForest", tune = tune_rf, detailed_names = T,
+                           env = sl_env)
 create_rf
 
 attach(sl_env)
@@ -69,7 +70,8 @@ sl
 detach(sl_env)
 
 # Test with detailed_names = F.
-create_rf = create.SL.randomForest(tune = tune_rf, detailed_names = F, env = sl_env)
+create_rf = create.Learner("SL.randomForest", tune = tune_rf, detailed_names = F,
+                           env = sl_env)
 create_rf
 
 attach(sl_env)
@@ -79,7 +81,8 @@ detach(sl_env)
 
 # Test another version where we specify NULL as a string so that its incorporated into names.
 tune_rf = list(mtry = c(4, 8), nodesize = "NULL", maxnodes = "NULL")
-create_rf = create.SL.randomForest(tune = tune_rf, detailed_names = T, env = sl_env)
+create_rf = create.Learner("SL.randomForest", tune = tune_rf, detailed_names = T,
+                           env = sl_env)
 create_rf
 
 attach(sl_env)
@@ -89,7 +92,8 @@ detach(sl_env)
 
 # Test maxnode specification, including one version that uses the default.
 tune_rf = list(mtry = c(4, 8), maxnodes = c(5, 10, "NULL"))
-create_rf = create.SL.randomForest(tune = tune_rf, detailed_names = T, env = sl_env)
+create_rf = create.Learner("SL.randomForest", tune = tune_rf, detailed_names = T,
+                           env = sl_env)
 create_rf
 
 attach(sl_env)
@@ -104,8 +108,11 @@ detach(sl_env)
 
 #######
 # Test multicore.
-doMC::registerDoMC()
-attach(sl_env)
-sl = mcSuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
-sl
-detach(sl_env)
+# Only run in RStudio so that automated CRAN checks don't give errors.
+if (.Platform$GUI == "RStudio") {
+  doMC::registerDoMC()
+  attach(sl_env)
+  sl = mcSuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
+  sl
+  detach(sl_env)
+}
