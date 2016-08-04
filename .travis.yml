@@ -1,0 +1,11 @@
+# .travis.yml for R projects.
+# See https://docs.travis-ci.com/user/languages/r/
+
+language: r
+cache: packages
+sudo: false
+
+r_github_packages:
+ - jimhester/covr
+after_success:
+ - Rscript -e 'covr::codecov()'
