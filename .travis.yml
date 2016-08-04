@@ -6,6 +6,10 @@ r: bioc-release
 cache: packages
 sudo: false
 
+bioc_packages:
+ - sva
+ - genefilter
+
 r_github_packages:
  - jimhester/covr
 after_success:
