@@ -4,7 +4,16 @@
 \alias{predict.SL.xgboost}
 \title{XGBoost prediction on new data}
 \usage{
-predict.SL.xgboost(object, newdata, family, ...)
+\method{predict}{SL.xgboost}(object, newdata, family, ...)
+}
+\arguments{
+\item{object}{Model fit object from SuperLearner}
+
+\item{newdata}{Dataframe that will be converted to an xgb.DMatrix}
+
+\item{family}{Binomial or gaussian}
+
+\item{...}{Any remaining arguments (not supported though).}
 }
 \description{
 XGBoost prediction on new data

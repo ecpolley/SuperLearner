@@ -9,31 +9,55 @@ SL.xgboost(Y, X, newX, family, obsWeights, id, ntrees = 1000, max_depth = 4,
   verbose = 0, ...)
 }
 \arguments{
-\item{family}{"gaussian" for regression, "binomial" for binary classification, "multinomial"
-for multiple classification.}
+\item{Y}{Outcome variable}
 
-\item{ntrees}{How many trees to fit. Low numbers may underfit but high numbers may overfit, depending also on the shrinkage.}
+\item{X}{Covariate dataframe}
 
-\item{max_depth}{How deep each tree can be. 1 means no interactions, aka tree stubs.}
+\item{newX}{Optional dataframe to predict the outcome}
 
-\item{shrinkage}{How much to shrink the predictions, in order to reduce overfitting.}
+\item{family}{"gaussian" for regression, "binomial" for binary
+classification, "multinomial" for multiple classification.}
 
-\item{minobspernode}{Minimum observations allowed per tree node, after which no more splitting will occur.}
+\item{obsWeights}{Optional observation-level weights (supported but not tested)}
 
-\item{params}{Many other parameters can be customized. See \url{https://github.com/dmlc/xgboost/blob/master/doc/parameter.md}}
+\item{id}{Optional id to group observations from the same unit (not used
+currently).}
 
-\item{nthread}{How many threads (cores) should xgboost use. Generally we want to keep this to 1 so that XGBoost does not compete with SuperLearner parallelization.}
+\item{ntrees}{How many trees to fit. Low numbers may underfit but high
+numbers may overfit, depending also on the shrinkage.}
+
+\item{max_depth}{How deep each tree can be. 1 means no interactions, aka tree
+stubs.}
+
+\item{shrinkage}{How much to shrink the predictions, in order to reduce
+overfitting.}
+
+\item{minobspernode}{Minimum observations allowed per tree node, after which
+no more splitting will occur.}
+
+\item{params}{Many other parameters can be customized. See
+\url{https://github.com/dmlc/xgboost/blob/master/doc/parameter.md}}
+
+\item{nthread}{How many threads (cores) should xgboost use. Generally we want
+to keep this to 1 so that XGBoost does not compete with SuperLearner
+parallelization.}
 
 \item{verbose}{Verbosity of XGB fitting.}
+
+\item{...}{Any remaining arguments (not supported though).}
 }
 \description{
-Supports the Extreme Gradient Boosting package for SuperLearnering, which is a
-variant of gradient boosted machines (GBM).
+Supports the Extreme Gradient Boosting package for SuperLearnering, which is
+a variant of gradient boosted machines (GBM).
 }
 \details{
-The performance of XGBoost, like GBM, is sensitive to the configuration settings.
-Therefore it is best to create multiple configurations using create.SL.xgboost
-and allow the SuperLearner to choose the best weights based on cross-validated
-performance.
+The performance of XGBoost, like GBM, is sensitive to the configuration
+settings. Therefore it is best to create multiple configurations using
+create.SL.xgboost and allow the SuperLearner to choose the best weights based
+on cross-validated performance.
+
+If you run into errors please first try installing the latest version of
+XGBoost from drat as described here:
+https://github.com/dmlc/xgboost/blob/master/doc/build.md#r-package-installation
 }
 
