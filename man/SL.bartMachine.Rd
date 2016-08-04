@@ -25,7 +25,7 @@ SL.bartMachine(Y, X, newX, family, obsWeights, id, num_trees = 50,
 
 \item{nu}{Degrees of freedom for the inverse χ^2 prior. Not used for classification.}
 
-\item{num_iterations_after_burn_in}{Number of MCMC samples to draw from the posterior distribution of \hat{f}(x).}
+\item{num_iterations_after_burn_in}{Number of MCMC samples to draw from the posterior distribution of f(x).}
 }
 \description{
 Support bayesian additive regression trees via the bartMachine package.
