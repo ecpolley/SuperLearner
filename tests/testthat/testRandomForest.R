@@ -53,10 +53,13 @@ ls(sl_env)
 length(sl_env)
 
 # Attach the environment with the learner functions so SL can access them.
-attach(sl_env)
+# attach(sl_env)  # what about assign to .GlobalEnv instead of attach to search space?
+mapply(assign, ls(sl_env, all.names = TRUE), mget(ls(sl_env, all.names = TRUE), sl_env), list(.GlobalEnv), SIMPLIFY = FALSE, USE.NAMES = FALSE)
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
-detach(sl_env)
+# Clean up global environment.
+do.call(rm, as.list(create_rf$names))
+# detach(sl_env)
 
 # Test a custom tune list but only specify mtry.
 tune_rf = list(mtry = c(4, 8))
