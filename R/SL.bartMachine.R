@@ -28,7 +28,7 @@
 #'   estimate is placed. Note that the larger the value of q, the more
 #'   aggressive the fit as you are placing more prior weight on values lower
 #'   than the data-based estimate. Not used for classification.
-#' @param nu Degrees of freedom for the inverse χ^2 prior. Not used for
+#' @param nu Degrees of freedom for the inverse chi^2 prior. Not used for
 #'   classification.
 #' @param verbose Prints information about progress of the algorithm to the
 #'   screen.

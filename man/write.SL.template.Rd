@@ -9,7 +9,7 @@
 \alias{SL.caret}
 \alias{predict.SL.caret}
 \alias{SL.caret.rpart}
-\alias{SL.cforest}
+%\alias{SL.cforest}
 \alias{predict.SL.cforest}
 % \alias{SL.DSA}
 % \alias{predict.SL.DSA}
@@ -62,7 +62,7 @@
 Wrapper functions for prediction algorithms in SuperLearner
 }
 \description{
-Template function for SuperLearner prediction wrappers and built in options. 
+Template function for SuperLearner prediction wrappers and built in options.
 }
 \usage{
 write.SL.template(file = "", ...)
