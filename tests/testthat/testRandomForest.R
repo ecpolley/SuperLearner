@@ -28,6 +28,7 @@ sl_lib = c("SL.randomForest", "SL.mean", "SL.glmnet")
 
 sl = SuperLearner(Y = Y, X = X, SL.library = sl_lib, family = binomial())
 sl
+rm(sl_lib)
 
 #############################
 # test create.Learner with randomForest
@@ -42,7 +43,10 @@ sl
 # Clean up global environment.
 do.call(rm, as.list(create_rf$names))
 
-#####
+
+
+###########
+
 # Create an environment to store the learners.
 sl_env = new.env()
 
@@ -53,13 +57,17 @@ ls(sl_env)
 length(sl_env)
 
 # Attach the environment with the learner functions so SL can access them.
-# attach(sl_env)  # what about assign to .GlobalEnv instead of attach to search space?
-mapply(assign, ls(sl_env, all.names = TRUE), mget(ls(sl_env, all.names = TRUE), sl_env), list(.GlobalEnv), SIMPLIFY = FALSE, USE.NAMES = FALSE)
+attach(sl_env)
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
-# Clean up global environment.
-do.call(rm, as.list(create_rf$names))
-# detach(sl_env)
+detach(sl_env)
+
+
+
+############
+
+# Create a new environment to start this test from scratch.
+sl_env = new.env()
 
 # Test a custom tune list but only specify mtry.
 tune_rf = list(mtry = c(4, 8))
@@ -72,6 +80,12 @@ sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial(
 sl
 detach(sl_env)
 
+
+############
+
+# Create a new environment to start this test from scratch.
+sl_env = new.env()
+
 # Test with detailed_names = F.
 create_rf = create.Learner("SL.randomForest", tune = tune_rf, detailed_names = F,
                            env = sl_env)
@@ -81,6 +95,11 @@ attach(sl_env)
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
 detach(sl_env)
+
+############
+
+# Create a new environment to start this test from scratch.
+sl_env = new.env()
 
 # Test another version where we specify NULL as a string so that its incorporated into names.
 tune_rf = list(mtry = c(4, 8), nodesize = "NULL", maxnodes = "NULL")
@@ -92,6 +111,13 @@ attach(sl_env)
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
 detach(sl_env)
+
+
+
+############
+
+# Create a new environment to start this test from scratch.
+sl_env = new.env()
 
 # Test maxnode specification, including one version that uses the default.
 tune_rf = list(mtry = c(4, 8), maxnodes = c(5, 10, "NULL"))
@@ -109,10 +135,18 @@ detach(sl_env)
 #   sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 # })
 
-#######
+
+
+
+################
 # Test multicore.
+
 # Only run in RStudio so that automated CRAN checks don't give errors.
 if (.Platform$GUI == "RStudio") {
+
+  # Note we don't create a new sl_env here, because we are using the env from the
+  # previous test.
+
   doMC::registerDoMC()
   attach(sl_env)
   sl = mcSuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())

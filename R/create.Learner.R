@@ -55,7 +55,7 @@
 #'
 #' @export
 create.Learner = function(base_learner, params = list(), tune = list(),
-                                   env = .GlobalEnv, name_prefix = base_learner,
+                                   env = parent.frame(), name_prefix = base_learner,
                                    detailed_names = F, verbose = F) {
 
   if (length(tune) > 0) {

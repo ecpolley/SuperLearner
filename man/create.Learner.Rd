@@ -5,7 +5,7 @@
 \title{Factory for learner wrappers}
 \usage{
 create.Learner(base_learner, params = list(), tune = list(),
-  env = .GlobalEnv, name_prefix = base_learner, detailed_names = F,
+  env = parent.frame(), name_prefix = base_learner, detailed_names = F,
   verbose = F)
 }
 \arguments{

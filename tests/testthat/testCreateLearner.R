@@ -22,7 +22,10 @@ table(Y)
 
 ###########################
 # Begin tests.
+###########################
 
+
+########################
 # Create a randomForest learner with ntree set to 1000 rather than the default of 500.
 create_rf = create.Learner("SL.randomForest", list(ntree = 1000))
 create_rf
@@ -31,6 +34,9 @@ sl
 # Clean up global environment.
 do.call(rm, as.list(create_rf$names))
 
+
+
+########################
 # Create a randomForest learner that optimizes over mtry
 create_rf = create.Learner("SL.randomForest",
                          tune = list(mtry = round(c(1, sqrt(ncol(X)), ncol(X)))))
@@ -40,7 +46,10 @@ sl
 # Clean up global environment.
 do.call(rm, as.list(create_rf$names))
 
+
+########################
 # Optimize elastic net over alpha, with a custom environment and detailed names.
+
 learners = new.env()
 create_enet = create.Learner("SL.glmnet", env = learners, detailed_names = T,
                                   tune = list(alpha = seq(0, 1, length.out=5)))
