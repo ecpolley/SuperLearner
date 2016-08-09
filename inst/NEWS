@@ -2,7 +2,7 @@
 
 ---
 Version: 2.0-20
-Date: 2016-08-04
+Date: 2016-08-09
 * Added shrinkage parameter to SL.gbm
 * fixed mtry default in SL.randomForest
 * in CV.SuperLearner, fixed order for checking parallel options and folds argument in parLapply (thanks Chris Kennedy)
@@ -10,6 +10,7 @@ Date: 2016-08-04
 * Added wrapper for xgboost (thanks Chris Kennedy)
 * Added wrapper for bartMachine (thanks Chris Kennedy)
 * Added travis.ci checks
+* Added environments for SuperLearner() wrappers search path (includes SL.*, screen.*, and method.* wrappers)
 
 ---
 Version: 2.0-19
