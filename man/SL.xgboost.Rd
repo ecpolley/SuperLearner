@@ -16,7 +16,7 @@ SL.xgboost(Y, X, newX, family, obsWeights, id, ntrees = 1000, max_depth = 4,
 \item{newX}{Optional dataframe to predict the outcome}
 
 \item{family}{"gaussian" for regression, "binomial" for binary
-classification, "multinomial" for multiple classification.}
+classification, "multinomial" for multiple classification (not yet supported).}
 
 \item{obsWeights}{Optional observation-level weights (supported but not tested)}
 

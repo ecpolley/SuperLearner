@@ -9,13 +9,13 @@
 \description{A Prediction Function for the Super Learner.  The \code{SuperLearner} function takes a training set pair (X,Y) and returns the predicted values based on a validation set.}
 
 \usage{
-SuperLearner(Y, X, newX = NULL, family = gaussian(), SL.library, 
-  method = "method.NNLS", id = NULL, verbose = FALSE, 
-  control = list(), cvControl = list(), obsWeights = NULL)
+SuperLearner(Y, X, newX = NULL, family = gaussian(), SL.library,
+  method = "method.NNLS", id = NULL, verbose = FALSE,
+  control = list(), cvControl = list(), obsWeights = NULL, env = parent.frame())
 }
 
 \arguments{
-  \item{Y}{ 
+  \item{Y}{
 The outcome in the training data set. Must be a numeric vector.
 }
   \item{X}{
@@ -29,7 +29,7 @@ Either a character vector of prediction algorithms or a list containing characte
   \item{verbose}{
 logical; TRUE for printing progress during the computation (helpful for debugging).
 }
-  \item{family}{ 
+  \item{family}{
 Currently allows \code{gaussian} or \code{binomial} to describe the error distribution. Link function information will be ignored and should be contained in the method argument below.
 }
   \item{method}{
@@ -47,6 +47,10 @@ A list of parameters to control the estimation process. Parameters include \code
   \item{cvControl}{
 A list of parameters to control the cross-validation process. Parameters include \code{V}, \code{stratifyCV}, \code{shuffle} and \code{validRows}. See \code{\link{SuperLearner.CV.control}} for details.
 }
+
+  \item{env}{
+  Environment containing the learner functions. Defaults to the calling environment.
+  }
 }
 
 \details{
@@ -111,10 +115,13 @@ A logical vector indicating if any algorithms experienced an error within the CV
   \item{errorsInLibrary}{
 A logical vector indicating if any algorithms experienced an error on the full data.
 }
+  \item{env}{
+  Environment passed into function which will be searched to find the learner functions. Defaults to the calling environment.
+  }
 }
 
-\references{ 
-	van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2008) Super Learner, \emph{Statistical Applications of Genetics and Molecular Biology}, \bold{6}, article 25. \url{http://www.bepress.com/sagmb/vol6/iss1/art25}  
+\references{
+	van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2008) Super Learner, \emph{Statistical Applications of Genetics and Molecular Biology}, \bold{6}, article 25. \url{http://www.bepress.com/sagmb/vol6/iss1/art25}
 }
 \author{ Eric C Polley \email{polley.eric@mayo.edu} }
 
@@ -157,13 +164,13 @@ set.seed(1)
 N <- 200
 X <- matrix(rnorm(N*10), N, 10)
 X <- as.data.frame(X)
-Y <- rbinom(N, 1, plogis(.2*X[, 1] + .1*X[, 2] - .2*X[, 3] + 
+Y <- rbinom(N, 1, plogis(.2*X[, 1] + .1*X[, 2] - .2*X[, 3] +
   .1*X[, 3]*X[, 4] - .2*abs(X[, 4])))
 
 SL.library <- c("SL.glmnet", "SL.glm", "SL.knn", "SL.gam", "SL.mean")
 
 # least squares loss function
-test.NNLS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, 
+test.NNLS <- SuperLearner(Y = Y, X = X, SL.library = SL.library,
   verbose = TRUE, method = "method.NNLS", family = binomial())
 test.NNLS
 
@@ -219,7 +226,7 @@ create.SL.knn(c(20, 30, 40, 50, 60, 70))
 # library with screening
 SL.library <- list(c("SL.glmnet", "All"), c("SL.glm", "screen.randomForest"),
   "SL.randomForest", "SL.knn", "SL.knn.20", "SL.knn.30", "SL.knn.40",
-  "SL.knn.50", "SL.knn.60", "SL.knn.70", 
+  "SL.knn.50", "SL.knn.60", "SL.knn.70",
   c("SL.polymars", "screen.randomForest"))
 test <- SuperLearner(Y = DATA2$Y, X = DATA2[, -1], newX = newDATA2[, -1],
   SL.library = SL.library, verbose = TRUE, family = binomial())
@@ -243,7 +250,7 @@ newX <- data.frame(newX)
 newY <- newX[, 1] + sqrt(abs(newX[, 2] * newX[, 3])) + newX[, 2] - newX[, 3] + rnorm(m)
 
 # generate Library and run Super Learner
-SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", 
+SL.library <- c("SL.glm", "SL.randomForest", "SL.gam",
   "SL.polymars", "SL.mean")
 
 testMC <- mcSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
@@ -276,10 +283,10 @@ testSNOW
 stopCluster(cl)
 
 ## timing
-replicate(5, system.time(SuperLearner(Y = Y, X = X, newX = newX, 
+replicate(5, system.time(SuperLearner(Y = Y, X = X, newX = newX,
   SL.library = SL.library, method = "method.NNLS")))
 
-replicate(5, system.time(mcSuperLearner(Y = Y, X = X, newX = newX, 
+replicate(5, system.time(mcSuperLearner(Y = Y, X = X, newX = newX,
   SL.library = SL.library, method = "method.NNLS")))
 
 cl <- makeCluster(2, type = 'PSOCK')

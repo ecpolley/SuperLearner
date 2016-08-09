@@ -10,9 +10,9 @@ Function to get V-fold cross-validated risk estimate for super learner
 Function to get V-fold cross-validated risk estimate for super learner. This function simply splits the data into V folds and then calls SuperLearner. Most of the arguments are passed directly to SuperLearner.
 }
 \usage{
-CV.SuperLearner(Y, X, V = 20, family = gaussian(), SL.library, 
-  method = "method.NNLS", id = NULL, verbose = FALSE, 
-  control = list(saveFitLibrary = FALSE), cvControl = list(), 
+CV.SuperLearner(Y, X, V = 20, family = gaussian(), SL.library,
+  method = "method.NNLS", id = NULL, verbose = FALSE,
+  control = list(saveFitLibrary = FALSE), cvControl = list(),
   obsWeights = NULL, saveAll = TRUE, parallel = "seq")
 }
 
@@ -122,7 +122,7 @@ X <- matrix(rnorm(n*p), nrow = n, ncol = p)
 colnames(X) <- paste("X", 1:p, sep="")
 X <- data.frame(X)
 Y <- X[, 1] + sqrt(abs(X[, 2] * X[, 3])) + X[, 2] - X[, 3] + rnorm(n)
-  
+
 # build Library and run Super Learner
 SL.library <- c("SL.glm", "SL.randomForest", "SL.gam", "SL.polymars", "SL.mean")
 
@@ -137,7 +137,8 @@ coef(test)
 library(parallel)
 cl <- makeCluster(2, type = "PSOCK") # can use different types here
 clusterSetRNGStream(cl, iseed = 2343)
-testSNOW <- CV.SuperLearner(Y = Y, X = X, SL.library = SL.library, method = "method.NNLS", parallel = cl)
+testSNOW <- CV.SuperLearner(Y = Y, X = X, SL.library = SL.library, method = "method.NNLS",
+  parallel = cl)
 summary(testSNOW)
 stopCluster(cl)
 }

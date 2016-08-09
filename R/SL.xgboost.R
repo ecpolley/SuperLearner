@@ -19,7 +19,7 @@
 #' @param id Optional id to group observations from the same unit (not used
 #'   currently).
 #' @param family "gaussian" for regression, "binomial" for binary
-#'   classification, "multinomial" for multiple classification.
+#'   classification, "multinomial" for multiple classification (not yet supported).
 #' @param ntrees How many trees to fit. Low numbers may underfit but high
 #'   numbers may overfit, depending also on the shrinkage.
 #' @param max_depth How deep each tree can be. 1 means no interactions, aka tree

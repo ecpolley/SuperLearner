@@ -24,7 +24,7 @@ method.NNLS2()
 method.NNloglik()
 method.CC_LS()
 method.CC_nloglik()
-method.AUC(optim_method = "Nelder-Mead")
+method.AUC(optim_method = "L-BFGS-B")
 }
 
 \arguments{
