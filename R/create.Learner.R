@@ -10,7 +10,7 @@
 #' @param detailed_names Set to T to have the function names include the
 #'   parameter configurations.
 #' @param env Environment in which to create the functions. Defaults
-#'   to the global environment.
+#'   to the current environment (e.g. often the global environment).
 #' @param name_prefix The prefix string for the name of each function that is
 #'   generated.
 #' @param verbose Display extra details.
@@ -27,7 +27,7 @@
 #' sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 #' sl
 #' # Clean up global environment.
-#' do.call(rm, as.list(create_rf$names))
+#' rm(list = create_rf$names)
 
 #' # Create a randomForest learner that optimizes over mtry
 #' create_rf = create.Learner("SL.randomForest",
@@ -36,7 +36,7 @@
 #' sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 #' sl
 #' # Clean up global environment.
-#' do.call(rm, as.list(create_rf$names))
+#' rm(list = create_rf$names)
 #'
 #' # Optimize elastic net over alpha, with a custom environment and detailed names.
 #' learners = new.env()
@@ -45,19 +45,15 @@
 #' create_enet
 #' # List the environment to review what functions were created.
 #' ls(learners)
-#' # Attach the learners environment so that SuperLearner can access the functions.
-#' attach(learners)
 #' # We can simply list the environment to specify the library.
-#' sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners), family = binomial())
+#' sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners), family = binomial(), env = learners)
 #' sl
-#' detach(learners)
 #' }
 #'
 #' @export
 create.Learner = function(base_learner, params = list(), tune = list(),
                                    env = parent.frame(), name_prefix = base_learner,
                                    detailed_names = F, verbose = F) {
-
   if (length(tune) > 0) {
     tuneGrid = expand.grid(tune, stringsAsFactors = FALSE)
     names = rep("", nrow(tuneGrid))

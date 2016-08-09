@@ -2,7 +2,10 @@
 #
 #  Created by Eric Polley on 2011-01-01.
 #
-mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(), cvControl = list(), obsWeights = NULL) {
+mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
+                           method = 'method.NNLS', id = NULL, verbose = FALSE,
+                           control = list(), cvControl = list(), obsWeights = NULL,
+                           env = parent.frame()) {
   .SL.require('parallel')
   if(is.character(method)) {
     if(exists(method, mode = 'list')) {
@@ -65,9 +68,9 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 		stop("the outcome Y must be a numeric vector")
 	}
   # family can be either character or function, so these lines put everything together (code from glm())
-	if(is.character(family))
-		family <- get(family, mode="function", envir=parent.frame())
-	if(is.function(family))
+	if (is.character(family))
+		family <- get(family, mode="function", envir=env)
+	if (is.function(family))
 		family <- family()
 	if (is.null(family$family)) {
 		print(family)
@@ -107,7 +110,8 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
 
     # should this be converted to a lapply also?
 		for(s in seq(kScreen)) {
-			testScreen <- try(do.call(library$screenAlgorithm[s], list(Y = tempOutcome, X = tempLearn, family = family, id = tempId, obsWeights = tempObsWeights)))
+		  screen_fn = get(library$screenAlgorithm[s], envir = env)
+			testScreen <- try(do.call(screen_fn, list(Y = tempOutcome, X = tempLearn, family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testScreen, "try-error")) {
 				warning(paste("replacing failed screening algorithm,", library$screenAlgorithm[s], ", with All()", "\n "))
 				tempWhichScreen[s, ] <- TRUE
@@ -122,7 +126,8 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
     # should this be converted to a lapply also?
     out <- matrix(NA, nrow = nrow(tempValid), ncol = k)
 		for(s in seq(k)) {
-			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
+		  pred_fn = get(library$library$predAlgorithm[s], envir = env)
+			testAlg <- try(do.call(pred_fn, list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
         # errorsInCVLibrary[s] <<- 1
@@ -166,7 +171,8 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # whichScreen <- matrix(NA, nrow = kScreen, ncol = p)
 
   .screenFun <- function(fun, list) {
-    testScreen <- try(do.call(fun, list))
+    screen_fn = get(fun, envir = env)
+    testScreen <- try(do.call(screen_fn, list))
     if(inherits(testScreen, "try-error")) {
   		warning(paste("replacing failed screening algorithm,", fun, ", with All() in full data", "\n "))
   		out <- rep(TRUE, ncol(list$X))
@@ -197,7 +203,8 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, m
   # assign in envirnoments doesn't work with mc and snow, change .predFun to return a list with both pred and fitLibrary elements and then parse the two.
   .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
     out <- list(pred = NA, fitLibrary = NULL)
-    testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
+    pred_fn = get(lib$predAlgorithm[index], envir = env)
+    testAlg <- try(do.call(pred_fn, list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
     if(inherits(testAlg, "try-error")) {
       warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
       out$pred <- rep.int(NA, times = nrow(newX))

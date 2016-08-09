@@ -17,7 +17,7 @@ customized.}
 \item{tune}{List of hyperparameter settings that will define custom learners.}
 
 \item{env}{Environment in which to create the functions. Defaults
-to the global environment.}
+to the current environment (e.g. often the global environment).}
 
 \item{name_prefix}{The prefix string for the name of each function that is
 generated.}
@@ -44,7 +44,7 @@ create_rf
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
 # Clean up global environment.
-do.call(rm, as.list(create_rf$names))
+rm(list = create_rf$names)
 # Create a randomForest learner that optimizes over mtry
 create_rf = create.Learner("SL.randomForest",
                      tune = list(mtry = round(c(1, sqrt(ncol(X)), ncol(X)))))
@@ -52,7 +52,7 @@ create_rf
 sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
 sl
 # Clean up global environment.
-do.call(rm, as.list(create_rf$names))
+rm(list = create_rf$names)
 
 # Optimize elastic net over alpha, with a custom environment and detailed names.
 learners = new.env()
@@ -61,12 +61,9 @@ create_enet = create.Learner("SL.glmnet", env = learners, detailed_names = T,
 create_enet
 # List the environment to review what functions were created.
 ls(learners)
-# Attach the learners environment so that SuperLearner can access the functions.
-attach(learners)
 # We can simply list the environment to specify the library.
-sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners), family = binomial())
+sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners), family = binomial(), env = learners)
 sl
-detach(learners)
 }
 
 }

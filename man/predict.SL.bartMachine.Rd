@@ -4,7 +4,8 @@
 \alias{predict.SL.bartMachine}
 \title{bartMachine prediction}
 \usage{
-predict.SL.bartMachine(object, newdata, family, X = NULL, Y = NULL, ...)
+\method{predict}{SL.bartMachine}(object, newdata, family, X = NULL,
+  Y = NULL, ...)
 }
 \description{
 bartMachine prediction

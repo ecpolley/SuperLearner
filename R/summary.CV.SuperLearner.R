@@ -1,9 +1,15 @@
 summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
+
+  if ("env" %in% names(object)) {
+    env = object$env
+  } else {
+    env = parent.frame()
+  }
   # Default is "method.NNLS".
   method <- if (is.null(as.list(object$call)[["method"]])) {
     method <- "method.NNLS"
   } else if (is.symbol(as.list(object$call)[["method"]])) {
-    method <- get(paste(as.list(object$call)[["method"]]))
+    method <- get(paste(as.list(object$call)[["method"]]), envir = env)
   } else {
     method <- as.list(object$call)[["method"]]
   }
