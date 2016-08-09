@@ -49,7 +49,7 @@ estimate is placed. Note that the larger the value of q, the more
 aggressive the fit as you are placing more prior weight on values lower
 than the data-based estimate. Not used for classification.}
 
-\item{nu}{Degrees of freedom for the inverse χ^2 prior. Not used for
+\item{nu}{Degrees of freedom for the inverse chi^2 prior. Not used for
 classification.}
 
 \item{num_iterations_after_burn_in}{Number of MCMC samples to draw from the
