@@ -2,14 +2,17 @@
 #
 #  Created by Eric Polley on 2011-01-01.
 #
-SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(), cvControl = list(), obsWeights = NULL) {
-  if(is.character(method)) {
-    if(exists(method, mode = 'list')) {
+SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
+                         method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(),
+                         cvControl = list(), obsWeights = NULL, env = parent.frame()) {
+
+  if (is.character(method)) {
+    if (exists(method, mode = 'list')) {
       method <- get(method, mode = 'list')
-    } else if(exists(method, mode = 'function')) {
+    } else if (exists(method, mode = 'function')) {
       method <- get(method, mode = 'function')()
     }
-  } else if(is.function(method)) {
+  } else if (is.function(method)) {
     method <- method()
   }
   if(!is.list(method)) {
@@ -106,7 +109,8 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 
     # should this be converted to a lapply also?
 		for(s in seq(kScreen)) {
-			testScreen <- try(do.call(library$screenAlgorithm[s], list(Y = tempOutcome, X = tempLearn, family = family, id = tempId, obsWeights = tempObsWeights)))
+		  screen_fn = get(library$screenAlgorithm[s], envir = env)
+			testScreen <- try(do.call(screen_fn, list(Y = tempOutcome, X = tempLearn, family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testScreen, "try-error")) {
 				warning(paste("replacing failed screening algorithm,", library$screenAlgorithm[s], ", with All()", "\n "))
 				tempWhichScreen[s, ] <- TRUE
@@ -121,7 +125,8 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
     # should this be converted to a lapply also?
     out <- matrix(NA, nrow = nrow(tempValid), ncol = k)
 		for(s in seq(k)) {
-			testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
+		  pred_fn = get(library$library$predAlgorithm[s], envir = env)
+			testAlg <- try(do.call(pred_fn, list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
 			if(inherits(testAlg, "try-error")) {
 				warning(paste("Error in algorithm", library$library$predAlgorithm[s], "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
         # errorsInCVLibrary[s] <<- 1
@@ -163,7 +168,8 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
   # whichScreen <- matrix(NA, nrow = kScreen, ncol = p)
 
   .screenFun <- function(fun, list) {
-    testScreen <- try(do.call(fun, list))
+    screen_fn = get(fun, envir = env)
+    testScreen <- try(do.call(screen_fn, list))
     if(inherits(testScreen, "try-error")) {
   		warning(paste("replacing failed screening algorithm,", fun, ", with All() in full data", "\n "))
   		out <- rep(TRUE, ncol(list$X))
@@ -172,6 +178,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
   	}
     return(out)
   }
+
   whichScreen <- t(sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
 
   # change to sapply?
@@ -191,7 +198,8 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
   #   }
   # }
   .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
-    testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
+    pred_fn = get(lib$predAlgorithm[index], envir = env)
+    testAlg <- try(do.call(pred_fn, list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
     # testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = dataX[, whichScreen[lib$rowScreen[index], drop = FALSE]], newX = newX[, whichScreen[lib$rowScreen[index], drop = FALSE]], family = family, id = id, obsWeights = obsWeights)))
     if(inherits(testAlg, "try-error")) {
       warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
@@ -207,6 +215,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
     }
     invisible(out)
   }
+
   predY <- do.call('cbind', lapply(seq(k), FUN = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
 
   # check for errors
@@ -231,13 +240,14 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, met
 
 	# add names of algorithms to the predictions
 	colnames(predY) <- libraryNames
+
 	# clean up when errors in library
 	if(sum(errorsInCVLibrary) > 0) {
 		getCoef$cvRisk[as.logical(errorsInCVLibrary)] <- NA
 	}
 
   # put everything together in a list
-  out <- list(call = call, libraryNames = libraryNames, SL.library = library, SL.predict = getPred, coef = coef, library.predict = predY, Z = Z, cvRisk = getCoef$cvRisk, family = family, fitLibrary = get('fitLibrary', envir = fitLibEnv), varNames = varNames, validRows = validRows, method = method, whichScreen = whichScreen, control = control,  cvControl = cvControl, errorsInCVLibrary = errorsInCVLibrary, errorsInLibrary = errorsInLibrary, metaOptimizer = getCoef$optimizer)
+  out <- list(call = call, libraryNames = libraryNames, SL.library = library, SL.predict = getPred, coef = coef, library.predict = predY, Z = Z, cvRisk = getCoef$cvRisk, family = family, fitLibrary = get('fitLibrary', envir = fitLibEnv), varNames = varNames, validRows = validRows, method = method, whichScreen = whichScreen, control = control,  cvControl = cvControl, errorsInCVLibrary = errorsInCVLibrary, errorsInLibrary = errorsInLibrary, metaOptimizer = getCoef$optimizer, env = env)
 	class(out) <- c("SuperLearner")
 	return(out)
 }

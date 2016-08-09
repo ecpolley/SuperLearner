@@ -2,3 +2,5 @@
 ^\.git
 ^\.git/*
 ^\.travis\.yml$
+^.*\.Rproj$
+^\.Rproj\.user$

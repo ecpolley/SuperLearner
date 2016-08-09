@@ -275,7 +275,7 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
           predictions <- crossprod(t(Z), par)  #cv predicted SL values
           # Now calculate cv risk (this is what we want to minimize)
           # Might change this to AUC only since we are currently not using folds arg...
-          cvRisk <- 1 - cvAUC(predictions = predictions, labels = Y, folds = folds)$cvAUC
+          cvRisk <- 1 - cvAUC::cvAUC(predictions = predictions, labels = Y, folds = folds)$cvAUC
           return(cvRisk)
         }
         coef_init <- rep(1/ncol(Z),ncol(Z))
@@ -298,7 +298,7 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
         if (!sum(coef) > 0) warning("All algorithms have zero weight", call. = FALSE)
         if (normalize) coef <- coef/sum(coef)
         #print(coef)
-        auc <- apply(Z, 2, function(x) AUC(predictions = x, labels = Y))
+        auc <- apply(Z, 2, function(x) cvAUC::AUC(predictions = x, labels = Y))
         # If we update the getCoef function in SL to include 'folds' we can use the below auc instead
         # auc <- apply(Z, 2, function(x) cvAUC(x, labels=Y, folds=validRows)$cvAUC)
         cvRisk <- 1 - auc  # rank loss
@@ -346,13 +346,13 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
           # par is the weight/coef vector for ensemble in Super Learner
           predictions <- crossprod(t(Z), par)  #cv predicted SL values
           # Now calculate cv risk (this is what we want to minimize)
-          cvRisk <- 1 - cvAUC(predictions = predictions, labels = Y, folds = NULL)$cvAUC
+          cvRisk <- 1 - cvAUC::cvAUC(predictions = predictions, labels = Y, folds = NULL)$cvAUC
           return(cvRisk)
         }
         coef_init <- rep(1/ncol(Z), ncol(Z))
         names(coef_init) <- libraryNames
         # nloptr function selects the value for par that minimizes .cvRisk_AUC (ie. rank loss)
-        res <- nloptr(x0 = coef_init,
+        res <- nloptr::nloptr(x0 = coef_init,
                       eval_f = .cvRisk_AUC,
                       lb = rep(bounds[1], ncol(Z)),
                       ub = rep(bounds[2], ncol(Z)),
@@ -371,7 +371,7 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
         }
         if (!sum(coef) > 0) warning("All algorithms have zero weight", call. = FALSE)
         if (normalize) coef <- coef/sum(coef)
-        auc <- apply(Z, 2, function(x) AUC(predictions = x, labels = Y))
+        auc <- apply(Z, 2, function(x) cvAUC::AUC(predictions = x, labels = Y))
         ## If we update the getCoef function in SL to include 'folds' we can use the below auc instead
         ## auc <- apply(Z, 2, function(x) cvAUC(x, labels=Y, folds=validRows)$cvAUC)
         cvRisk <- 1 - auc  # rank loss

@@ -4,7 +4,22 @@
 \alias{predict.SL.bartMachine}
 \title{bartMachine prediction}
 \usage{
-predict.SL.bartMachine(object, newdata, family, X = NULL, Y = NULL, ...)
+\method{predict}{SL.bartMachine}(object, newdata, family, X = NULL,
+  Y = NULL, ...)
+}
+\arguments{
+\item{object}{SuperLearner object}
+
+\item{newdata}{Dataframe to predict the outcome}
+
+\item{family}{"gaussian" for regression, "binomial" for binary
+classification. (Not used)}
+
+\item{X}{Covariate dataframe (not used)}
+
+\item{Y}{Outcome variable (not used)}
+
+\item{...}{Additional arguments (not used)}
 }
 \description{
 bartMachine prediction
