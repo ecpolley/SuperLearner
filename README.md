@@ -10,10 +10,11 @@ This is the current version of the SuperLearner R package (version 2.*).
 **Features**
 * Automatic optimal model averaging via cross-validation.
 * Dozens of algorithms including Random Forest, GBM, XGBoost, BART, Elastic Net, and Neural Networks.
+* Integrates with [caret](http://github.com/topepo/caret) to support even more models.
 * Visualize the performance of each algorithm using built-in plotting.
 * Easily incorporate multiple hyperparameter configurations for each algorithm into the ensemble.
 * Add new algorithms or change the default parameters for existing ones.
-* Seemlessly screen variables based on univariate association, Random Forest, Elastic Net, et al. or a custom screener.
+* Screen variables based on univariate association, Random Forest, Elastic Net, et al. or a custom screener.
 * Multi-core and multi-node parallelization for scalability.
 * External cross-validation to estimate the performance of the ensembling procedure.
 * Ensemble can minimize any loss function: mean-squared error, AUC, log likelihood, etc.
