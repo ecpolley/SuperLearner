@@ -1,4 +1,4 @@
-# SuperLearner: automatic optimal model ensembling
+# SuperLearner: Prediction model ensembling method
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SuperLearner)](http://cran.r-project.org/web/packages/SuperLearner)
 [![Downloads](http://cranlogs.r-pkg.org/badges/SuperLearner)](http://cran.rstudio.com/package=SuperLearner)
@@ -8,17 +8,18 @@
 This is the current version of the SuperLearner R package (version 2.*).
 
 **Features**
-* Automatic optimal model averaging via cross-validation.
-* Dozens of algorithms including Random Forest, GBM, XGBoost, BART, Elastic Net, and Neural Networks.
-* Integrates with [caret](http://github.com/topepo/caret) to support even more models.
+* Automatic optimal predictor ensembling via cross-validation.
+* Includes dozens of algorithms including Random Forest, GBM, XGBoost, BART, Elastic Net, and Neural Networks.
+* Integrates with [caret](http://github.com/topepo/caret) to support even more algorithms.
+* Includes framework to quickly add custom algorithms to the ensemble
 * Visualize the performance of each algorithm using built-in plotting.
 * Easily incorporate multiple hyperparameter configurations for each algorithm into the ensemble.
 * Add new algorithms or change the default parameters for existing ones.
-* Screen variables based on univariate association, Random Forest, Elastic Net, et al. or a custom screener.
+* Screen variables (feature selection) based on univariate association, Random Forest, Elastic Net, et al. or a custom screening algorithms.
 * Multi-core and multi-node parallelization for scalability.
-* External cross-validation to estimate the performance of the ensembling procedure.
+* External cross-validation to estimate the performance of the ensembling predictor.
 * Ensemble can optimize for any target metric: mean-squared error, AUC, log likelihood, etc.
-* Proven to produce an optimal ensemble through semi-parametric asymptotic statistics.
+* Includes framework to provide custom loss functions and stacking algorithms
 
 ### Install the development version from GitHub:
 
@@ -37,6 +38,8 @@ install.packages("SuperLearner")
 
 ## References
 
-van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2008) Super Learner, Statistical Applications of Genetics and Molecular Biology, 6, article 25. http://www.bepress.com/sagmb/vol6/iss1/art25
+Polley EC, van der Laan MJ (2010) Super Learner in Prediction. U.C. Berkeley Division of Biostatistics Working Paper Series. Paper 226. <http://biostats.bepress.com/ucbbiostat/paper266/>
+
+van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2008) Super Learner. Statistical Applications of Genetics and Molecular Biology, 6, article 25. <http://www.bepress.com/sagmb/vol6/iss1/art25>
 
 van der Laan, M. J., & Rose, S. (2011). Targeted learning: causal inference for observational and experimental data. Springer Science & Business Media.
