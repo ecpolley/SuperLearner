@@ -17,7 +17,7 @@ This is the current version of the SuperLearner R package (version 2.*).
 * Screen variables based on univariate association, Random Forest, Elastic Net, et al. or a custom screener.
 * Multi-core and multi-node parallelization for scalability.
 * External cross-validation to estimate the performance of the ensembling procedure.
-* Ensemble can minimize any loss function: mean-squared error, AUC, log likelihood, etc.
+* Ensemble can optimize for any target metric: mean-squared error, AUC, log likelihood, etc.
 * Proven to produce an optimal ensemble through semi-parametric asymptotic statistics.
 
 ### Install the development version from GitHub:
