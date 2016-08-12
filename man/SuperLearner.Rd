@@ -118,6 +118,9 @@ A logical vector indicating if any algorithms experienced an error on the full d
   \item{env}{
   Environment passed into function which will be searched to find the learner functions. Defaults to the calling environment.
   }
+  \item{times}{
+  A list that contains the execution time of the SuperLearner, plus separate times for model fitting and prediction.
+  }
 }
 
 \references{
