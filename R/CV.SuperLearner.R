@@ -1,6 +1,6 @@
 # V-fold Cross-validation wrapper for SuperLearner
 
-CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), obsWeights = NULL, saveAll = TRUE, parallel = "seq") {
+CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), obsWeights = NULL, saveAll = TRUE, parallel = "seq", env = parent.frame()) {
   call <- match.call()
   N <- dim(X)[1L]
   
@@ -53,7 +53,7 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
     cvId <- id[-valid]
     cvObsWeights <- obsWeights[-valid]
     
-    fit.SL <- SuperLearner(Y = cvOutcome, X = cvLearn, newX = cvValid, family = family, SL.library = SL.library, method = method, id = cvId, verbose = verbose, control = control, cvControl = cvControl, obsWeights = cvObsWeights)
+    fit.SL <- SuperLearner(Y = cvOutcome, X = cvLearn, newX = cvValid, family = family, SL.library = SL.library, method = method, id = cvId, verbose = verbose, control = control, cvControl = cvControl, obsWeights = cvObsWeights, env = env)
     
     out <- list(cvAllSL = if(saveAll) fit.SL, cvSL.predict = fit.SL$SL.predict, cvdiscreteSL.predict = fit.SL$library.predict[, which.min(fit.SL$cvRisk)], cvwhichDiscreteSL = names(which.min(fit.SL$cvRisk)), cvlibrary.predict = fit.SL$library.predict, cvcoef = fit.SL$coef)
     return(out)
