@@ -1,5 +1,5 @@
 # rpart {rpart}
-SL.rpart <- function(Y, X, newX, family, obsWeights, cp = 0.01, minsplit = 20, xval = 10, maxdepth = 30, minbucket = round(minsplit/3), ...) {
+SL.rpart <- function(Y, X, newX, family, obsWeights, cp = 0.01, minsplit = 20, xval = 0L, maxdepth = 30, minbucket = round(minsplit/3), ...) {
   .SL.require('rpart')
 	if(family$family == "gaussian"){
 		fit.rpart <- rpart::rpart(Y~., data = data.frame(Y, X), control = rpart::rpart.control(cp = cp, minsplit = minsplit, xval = xval, maxdepth = maxdepth, minbucket = minbucket), method = "anova", weights = obsWeights)
