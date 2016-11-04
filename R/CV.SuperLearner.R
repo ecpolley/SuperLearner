@@ -1,15 +1,41 @@
 # V-fold Cross-validation wrapper for SuperLearner
 
-CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), obsWeights = NULL, saveAll = TRUE, parallel = "seq", env = parent.frame()) {
+CV.SuperLearner <- function(Y, X, V = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(saveFitLibrary = FALSE), cvControl = list(), innerCvControl = list(), obsWeights = NULL, saveAll = TRUE, parallel = "seq", env = parent.frame()) {
   call <- match.call()
   N <- dim(X)[1L]
   
   # create CV folds:
+  if(any(names(cvControl) == "V") & !is.null(V)) {
+	  stop(paste0("You specified a value for V and a value in the cvControl, please only use one, preferably the cvControl"))
+  }
+
   cvControl <- do.call('SuperLearner.CV.control', cvControl)
-  insideV <- cvControl$V
-  cvControl$V <- V
+  if(!is.null(V)) {
+	  # if the user specified V in the function call, override the default in cvControl
+	  # backward compatibility to not remove the V
+	  cvControl$V <- V
+  }
   folds <- CVFolds(N = N, id = id, Y = Y, cvControl = cvControl)
-	cvControl$V <- insideV
+  V <- cvControl$V  # save this because it appears in the output value
+  
+  if(length(innerCvControl) > 0) {
+	  if(length(innerCvControl) == 1) {
+		  warning("Only a single innerCvControl is given, will be replicated across all cross-validation split calls to SuperLearner")
+		  newInnerCvControl <- vector("list", cvControl$V)
+		  for(ii in seq(cvControl$V)) {
+			  newInnerCvControl[[ii]] <- innerCvControl
+		  }
+		  innerCvControl <- newInnerCvControl  # write over previous with replicated list
+	  }
+	  if(length(innerCvControl) != cvControl$V) stop("innerCvControl must be a list with V cvControl lists")
+  } else {
+  	innerCvControl <- vector("list", cvControl$V)  # if no innerCvControl is given, generate an empty list
+  	for(ii in seq(cvControl$V)) {
+	  innerCvControl[[ii]] <- list()
+  	}
+  }
+  # put together folds and cvControl (inner loop one) into a list to loop over
+  foldsList <- Map(list, folds = folds, cvControl = innerCvControl)
   
   # check input:
   if(is.null(obsWeights)) {
@@ -46,14 +72,14 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
 	colnames(library.predict) <- libraryNames
   
   # run SuperLearner:
-  .crossValFun <- function(valid, Y, dataX, family, id, obsWeights, SL.library, method, verbose, control, cvControl, saveAll) {
-    cvLearn <- dataX[-valid, , drop = FALSE]
-    cvOutcome <- Y[-valid]
-    cvValid <- dataX[valid, , drop = FALSE]
-    cvId <- id[-valid]
-    cvObsWeights <- obsWeights[-valid]
+  .crossValFun <- function(valid, Y, dataX, family, id, obsWeights, SL.library, method, verbose, control, saveAll) {
+    cvLearn <- dataX[-valid[[1]], , drop = FALSE]
+    cvOutcome <- Y[-valid[[1]]]
+    cvValid <- dataX[valid[[1]], , drop = FALSE]
+    cvId <- id[-valid[[1]]]
+    cvObsWeights <- obsWeights[-valid[[1]]]
     
-    fit.SL <- SuperLearner(Y = cvOutcome, X = cvLearn, newX = cvValid, family = family, SL.library = SL.library, method = method, id = cvId, verbose = verbose, control = control, cvControl = cvControl, obsWeights = cvObsWeights, env = env)
+    fit.SL <- SuperLearner(Y = cvOutcome, X = cvLearn, newX = cvValid, family = family, SL.library = SL.library, method = method, id = cvId, verbose = verbose, control = control, cvControl = valid[[2]], obsWeights = cvObsWeights, env = env)
     
     out <- list(cvAllSL = if(saveAll) fit.SL, cvSL.predict = fit.SL$SL.predict, cvdiscreteSL.predict = fit.SL$library.predict[, which.min(fit.SL$cvRisk)], cvwhichDiscreteSL = names(which.min(fit.SL$cvRisk)), cvlibrary.predict = fit.SL$library.predict, cvcoef = fit.SL$coef)
     return(out)
@@ -63,12 +89,12 @@ CV.SuperLearner <- function(Y, X, V = 20, family = gaussian(), SL.library, metho
   
   if (inherits(parallel, 'cluster')) {
     .SL.require('parallel')
-    cvList <- parallel::parLapply(parallel, X = folds, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+    cvList <- parallel::parLapply(parallel, X = foldsList, fun = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, saveAll = saveAll)
   } else if (parallel == 'multicore') {
     .SL.require('parallel')
-    cvList <- parallel::mclapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll, mc.set.seed = FALSE)
+    cvList <- parallel::mclapply(foldsList, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, saveAll = saveAll, mc.set.seed = FALSE)
   } else if (parallel == "seq") {
-    cvList <- lapply(folds, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control, cvControl = cvControl, saveAll = saveAll)
+    cvList <- lapply(foldsList, FUN = .crossValFun, Y = Y, dataX = X, family = family, SL.library = SL.library, method = method, id = id, obsWeights = obsWeights, verbose = verbose, control = control,  saveAll = saveAll)
   } else {
     stop('parallel option was not recognized, use parallel = "seq" for sequential computation.')
   }
