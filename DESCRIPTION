@@ -2,7 +2,7 @@ Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
 Version: 2.0-21
-Date: 2016-10-04
+Date: 2016-10-10
 Author: Eric Polley, Erin LeDell, Mark van der Laan
 Maintainer: Eric Polley <polley.eric@mayo.edu>
 Description: Implements the super learner prediction method and contains a
