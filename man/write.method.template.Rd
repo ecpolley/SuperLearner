@@ -24,7 +24,7 @@ method.NNLS2()
 method.NNloglik()
 method.CC_LS()
 method.CC_nloglik()
-method.AUC(nlopt_method = NULL, optim_method = "L-BFGS-B", bounds = c(0, Inf), normalize = TRUE)
+method.AUC(nlopt_method=NULL, optim_method="L-BFGS-B", bounds=c(0, Inf), normalize=TRUE)
 }
 
 \arguments{
