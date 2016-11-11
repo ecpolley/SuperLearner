@@ -46,6 +46,6 @@ Suggests:
     stepPlr,
     sva,
     testthat,
-    xgboost
+    xgboost (>=0.6-0)
 LazyLoad: yes
 RoxygenNote: 5.0.1
