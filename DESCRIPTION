@@ -3,7 +3,7 @@ Type: Package
 Title: Super Learner Prediction
 Version: 2.0-21
 Date: 2016-10-10
-Author@R: c(person("Eric", "Polley", email = "polley.eric@mayo.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Mark", "van der Laan", role = c("ths")))
+Authors@R: c(person("Eric", "Polley", email = "polley.eric@mayo.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Mark", "van der Laan", role = c("ths")))
 Maintainer: Eric Polley <polley.eric@mayo.edu>
 Description: Implements the super learner prediction method and contains a
     library of prediction algorithms to be used in the super learner.
