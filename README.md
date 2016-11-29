@@ -37,7 +37,7 @@ install.packages("SuperLearner")
 [devtools]: https://github.com/hadley/devtools
 [CRAN]: https://cran.r-project.org/web/packages/SuperLearner/index.html
 
-## References
+## References 
 
 Polley EC, van der Laan MJ (2010) Super Learner in Prediction. U.C. Berkeley Division of Biostatistics Working Paper Series. Paper 226. <http://biostats.bepress.com/ucbbiostat/paper266/>
 
