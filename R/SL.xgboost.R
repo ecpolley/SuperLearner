@@ -78,7 +78,8 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
 #' @param ... Any remaining arguments (not supported though).
 predict.SL.xgboost <- function(object, newdata, family, ...) {
   .SL.require("xgboost")
-  pred <- predict(object$object, xgboost::xgb.DMatrix(newdata))
+  # Newdata needs to be converted to a matrix first, then an xgb.DMatrix.
+  pred <- predict(object$object, xgboost::xgb.DMatrix(as.matrix(newdata)))
   return(pred)
 }
 
