@@ -10,6 +10,15 @@ bioc_packages:
  - sva
  - genefilter
 
+# Install survival directly, to get the latest version and avoid
+# a build error from using an older version.
+r_packages: survival
+
+# Install custom version of xgboost since CRAN is out of date as of 2016-12-09.
+before_install:
+  - Rscript -e 'install.packages("xgboost", repos=c("http://dmlc.ml/drat/", getOption("repos")), type="source")'
+
+
 r_github_packages:
  - jimhester/covr
 after_success:
