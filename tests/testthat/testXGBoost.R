@@ -18,11 +18,19 @@ SL.library <- c("SL.glmnet", "SL.stepAIC", "SL.xgboost")
 sl <- SuperLearner(Y = Y_bin, X = X, SL.library = SL.library, family = binomial())
 sl
 
+# Prediction after classification.
+pred = predict(sl, X)
+summary(pred$pred)
+
 # Test xgboost - regression
 Y_reg <- .2*X[, 1] + .1*X[, 2] - .2*X[, 3] + .1*X[, 3]*X[, 4] - .2*abs(X[, 4]) + rnorm(N)
 summary(Y_reg)
 sl <- SuperLearner(Y = Y_reg, X = X, SL.library = SL.library, family = gaussian())
 sl
+
+# Prediction after regression, using a dataframe.
+pred = predict(sl, X)
+summary(pred$pred)
 
 # Test xgboost - multi-classification
 # TODO: add test here.
