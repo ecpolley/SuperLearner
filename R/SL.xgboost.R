@@ -43,28 +43,41 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
                       ...) {
   .SL.require("xgboost")
 
+  # X needs to be converted to a matrix first, then an xgb.DMatrix.
+  if (!is.matrix(X)) {
+    X = model.matrix(~ . - 1, X)
+  }
+
   # Convert to an xgboost compatible data matrix, using the sample weights.
-  xgmat = xgboost::xgb.DMatrix(data=as.matrix(X), label=Y, weight = obsWeights)
+  xgmat = xgboost::xgb.DMatrix(data = X, label = Y, weight = obsWeights)
 
   # TODO: support early stopping, which requires a "watchlist". See ?xgb.train
 
   if (family$family == "gaussian") {
-    model = xgboost::xgboost(data=xgmat, objective="reg:linear", nround = ntrees,
-                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage, verbose=verbose,
-                nthread = nthread, params = params)
+    model = xgboost::xgboost(data = xgmat, objective="reg:linear", nround = ntrees,
+                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
+                verbose = verbose, nthread = nthread, params = params)
   }
   if (family$family == "binomial") {
-    model = xgboost::xgboost(data=xgmat, objective="binary:logistic", nround = ntrees,
-                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage, verbose=verbose,
-                nthread = nthread, params = params)
+    model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nround = ntrees,
+                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
+                verbose = verbose, nthread = nthread, params = params)
   }
   if (family$family == "multinomial") {
     # TODO: test this.
-    model = xgboost::xgboost(data=xgmat, objective="multi:softmax", nround = ntrees,
-                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage, verbose=verbose,
-                num_class=length(unique(Y)), nthread = nthread, params = params)
+    model = xgboost::xgboost(data = xgmat, objective="multi:softmax", nround = ntrees,
+                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
+                verbose = verbose, num_class = length(unique(Y)), nthread = nthread,
+                params = params)
   }
-  pred = predict(model, newdata=data.matrix(newX))
+
+  # Newdata needs to be converted to a matrix first, then an xgb.DMatrix.
+  if (!is.matrix(newX)) {
+    newX = model.matrix(~ . - 1, newX)
+  }
+
+  pred = predict(model, newdata = newX)
+
   fit = list(object = model)
   class(fit) = c("SL.xgboost")
   out = list(pred = pred, fit = fit)
@@ -83,7 +96,7 @@ predict.SL.xgboost <- function(object, newdata, family, ...) {
     newdata = model.matrix(~ . - 1, newdata)
   }
   xgb_mat = xgboost::xgb.DMatrix(newdata)
-  pred <- predict(object$object, xgb_mat)
+  pred = predict(object$object, xgb_mat)
   return(pred)
 }
 
