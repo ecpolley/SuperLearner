@@ -28,8 +28,13 @@ summary(Y_reg)
 sl <- SuperLearner(Y = Y_reg, X = X, SL.library = SL.library, family = gaussian())
 sl
 
-# Prediction after regression.
+# Prediction after regression, using a matrix.
 pred = predict(sl, X)
+summary(pred$pred)
+
+# Prediction after regression, using a dataframe.
+X_df = data.frame(X)
+pred = predict(sl, X_df)
 summary(pred$pred)
 
 # Test xgboost - multi-classification
