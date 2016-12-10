@@ -1,6 +1,11 @@
 # News for the SuperLearner package. #
 
 ---
+Version: 2.0-22
+Date: 2016-12-10
+* Added model.matrix to SL.xgboost
+
+---
 Version: 2.0-21
 Date: 2016-10-03
 * Add validRows option for CV.SuperLearner. Can now pass a cvControl for the outer CV and a list of cvControls, one for each cross-validation folds SuperLearner calls. default number of folds in CV.SuperLearner is now 10, matching the default with cvControl. If the user specifies both V and number of folds in cvControl(), an error message is returned.
