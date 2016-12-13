@@ -43,6 +43,11 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
                       ...) {
   .SL.require("xgboost")
 
+  if (packageVersion("xgboost") < 0.6) {
+    stop("SL.xgboost requires xgboost version >= 0.6. ",
+         'Try running: install.packages("xgboost", repos=c("http://dmlc.ml/drat/", getOption("repos")), type="source")')
+  }
+
   # X needs to be converted to a matrix first, then an xgb.DMatrix.
   if (!is.matrix(X)) {
     X = model.matrix(~ . - 1, X)
