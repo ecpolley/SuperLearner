@@ -67,6 +67,7 @@ SL.bartMachine <- function(Y, X, newX, family, obsWeights, id,
 #'
 #' @export
 predict.SL.bartMachine <- function(object, newdata, family, X = NULL, Y = NULL,...) {
+  .SL.require("bartMachine")
   pred <- predict(object$object, newdata)
   return(pred)
 }
