@@ -16,6 +16,7 @@ SL.glmnet <- function(Y, X, newX, family, obsWeights, id, alpha = 1, nfolds = 10
 }
 
 predict.SL.glmnet <- function(object, newdata, ...) {
+  .SL.require('glmnet')
   if(!is.matrix(newdata)) {
     newdata <- model.matrix(~ -1 + ., newdata)
   }
