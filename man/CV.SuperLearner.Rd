@@ -49,7 +49,7 @@ A list of parameters to control the estimation process. Parameters include \code
 A list of parameters to control the outer cross-validation process. The outer cross-validation is the sample spliting for evaluating the SuperLearner. Parameters include \code{V}, \code{stratifyCV}, \code{shuffle} and \code{validRows}. See \code{\link{SuperLearner.CV.control}} for details.
 }
   \item{innerCvControl}{
-A list of parameters to control the inner cross-validation process. It should have \code{V} elements in the list, each a valid \code{cvControl} list. If only a single value, then replicated across all folds. The inner cross-validation are the values passed to each of the \code{V} \code{SuperLearner} calls. Parameters include \code{V}, \code{stratifyCV}, \code{shuffle} and \code{validRows}. See \code{\link{SuperLearner.CV.control}} for details.
+A list of lists of parameters to control the inner cross-validation process. It should have \code{V} elements in the list, each a valid \code{cvControl} list. If only a single value, then replicated across all folds. The inner cross-validation are the values passed to each of the \code{V} \code{SuperLearner} calls. Parameters include \code{V}, \code{stratifyCV}, \code{shuffle} and \code{validRows}. See \code{\link{SuperLearner.CV.control}} for details.
 }
   \item{obsWeights}{
 Optional observation weights variable. As with \code{id} above, \code{obsWeights} is passed to the prediction and screening algorithms, but many of the built in wrappers ignore (or can't use) the information. If you are using observation weights, make sure the library you specify uses the information.
