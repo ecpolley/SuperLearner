@@ -144,7 +144,7 @@ coef(test)
 # CV.SuperLearner (cvControl) and the internal SuperLearners (innerCvControl)
 test <- CV.SuperLearner(Y = Y, X = X, SL.library = SL.library,
   cvControl = list(V = 10, shuffle = FALSE),
-  innerCvControl = list(V = 5),
+  innerCvControl = list(list(V = 5)),
   verbose = TRUE, method = "method.NNLS")
 
 ## examples with snow

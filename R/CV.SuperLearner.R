@@ -23,7 +23,7 @@ CV.SuperLearner <- function(Y, X, V = NULL, family = gaussian(), SL.library, met
 		  warning("Only a single innerCvControl is given, will be replicated across all cross-validation split calls to SuperLearner")
 		  newInnerCvControl <- vector("list", cvControl$V)
 		  for(ii in seq(cvControl$V)) {
-			  newInnerCvControl[[ii]] <- innerCvControl
+			  newInnerCvControl[[ii]] <- unlist(innerCvControl, recursive = FALSE)
 		  }
 		  innerCvControl <- newInnerCvControl  # write over previous with replicated list
 	  }
