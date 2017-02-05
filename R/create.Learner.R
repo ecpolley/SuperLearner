@@ -93,6 +93,10 @@ create.Learner = function(base_learner, params = list(), tune = list(),
       # Ignore a parameter if it's set to a real NULL or the string "NULL".
       # May need to tweak this if someone really needs to pass a NULL for some reason.
       if (!is.null(val) && val != "NULL") {
+        # Add quotes around val if it is a string rather than numeric.
+        if (class(val) == "character") {
+          val = paste0('"', val, '"')
+        }
         fn_params = paste0(fn_params, ", ", name_i, "=", val)
       }
     }
