@@ -62,3 +62,25 @@ print(ls(learners))
 # We can simply list the environment to specify the library.
 sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners), family = binomial(), env = learners)
 sl
+
+####################
+# SVM hyperparameters, including a test of character grid elements.
+
+# First remove near-constant X columns to avoid warnings in SVM.
+library(caret)
+# Remove zero variance (constant) and near-zero-variance columns.
+# This can help reduce overfitting and also helps us use a basic glm().
+# However, there is a slight risk that we are discarding helpful information.
+preproc = caret::preProcess(X, method = c("zv", "nzv"))
+X_clean = predict(preproc, X)
+rm(preproc)
+
+ncol(X)
+ncol(X_clean)
+
+svm = create.Learner("SL.svm", detailed_names = T,
+                     tune = list(kernel = c("polynomial", "radial", "sigmoid")))
+
+sl = SuperLearner(Y = Y, X = X_clean, SL.library = c("SL.mean", svm$names),
+                  family = binomial())
+sl
