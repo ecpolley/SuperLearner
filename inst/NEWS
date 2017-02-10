@@ -5,6 +5,7 @@ Version: 2.0-22
 Date: 2016-12-10
 * Added model.matrix to SL.xgboost
 * Fixed innerCvControl in CV.SuperLearner to allow multiple parameters. must now be a list of lists
+* Added SL.kernelKnn
 
 ---
 Version: 2.0-21
