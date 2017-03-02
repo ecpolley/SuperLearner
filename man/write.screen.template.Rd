@@ -40,7 +40,6 @@ Explain structure of a screening algorithm here:
 
 \author{ Eric C Polley \email{polley.eric@mayo.edu} }
 
-nih.gov
 \seealso{
 \code{\link{SuperLearner}}
 }
