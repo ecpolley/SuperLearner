@@ -89,7 +89,7 @@ A list. Contains all objects necessary to get predictions for new observations f
 }
 }
 
-\author{ Eric C Polley \email{eric.polley@nih.gov} }
+\author{ Eric C Polley \email{polley.eric@mayo.edu} }
 
 
 \seealso{
