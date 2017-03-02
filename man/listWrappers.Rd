@@ -21,7 +21,7 @@ What list to return. Can be \code{both} for both prediction algorithms and scree
 Invisible character vector with all exported functions in the SuperLearner package
 }
 
-\author{ Eric C Polley \email{eric.polley@nih.gov} }
+\author{ Eric C Polley \email{polley.eric@mayo.edu} }
 
 \seealso{
 \code{\link{SuperLearner}}
