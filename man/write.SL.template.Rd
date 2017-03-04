@@ -49,8 +49,6 @@
 \alias{predict.SL.stepAIC}
 \alias{SL.svm}
 \alias{predict.SL.svm}
-\alias{SL.glmnet}
-\alias{predict.SL.glmnet}
 \alias{SL.ridge}
 \alias{predict.SL.ridge}
 \alias{SL.leekasso}
