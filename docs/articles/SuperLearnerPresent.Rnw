@@ -1,0 +1,10 @@
+% \VignetteIndexEntry{SuperLearner Presentation}
+% \VignetteKeywords{SuperLearner}
+% \VignettePackage{SuperLearner}
+
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{pdfpages}
+\begin{document}
+\includepdf[fitpaper=true,pages=-]{SuperLearnerR.pdf}
+\end{document}
