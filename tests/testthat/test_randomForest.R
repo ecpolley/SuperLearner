@@ -116,7 +116,9 @@ print(sl)
 sl_env = new.env()
 
 # Test maxnode specification, including one version that uses the default.
-tune_rf = list(mtry = c(4, 8), maxnodes = c(5, 10, "NULL"))
+# We specify maxnodes using a list rather than vector so that 5 and 10 are not
+# coerced into strings.
+tune_rf = list(mtry = c(4, 8), maxnodes = list(5, 10, "NULL"))
 create_rf = create.Learner("SL.randomForest", tune = tune_rf, detailed_names = T,
                            env = sl_env)
 print(create_rf)
