@@ -79,10 +79,13 @@ method.NNLS2 <- function() {
     .NNLS <- function(x, y, wt) {
     	wX <- sqrt(wt) * x
     	wY <- sqrt(wt) * y
+    	# Z'Z = n * cov(Z)
     	D <- t(wX) %*% wX
     	d <- t(t(wY) %*% wX)
     	A <- diag(ncol(wX))
     	b <- rep(0, ncol(wX))
+    	# This will give an error if cov(Z) is singular, meaning at least two
+    	# columns are linearly dependent.
     	fit <- quadprog::solve.QP(Dmat = D, dvec = d, Amat = t(A), bvec = b, meq=0)
     	invisible(fit)
     }
