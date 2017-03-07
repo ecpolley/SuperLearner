@@ -44,4 +44,3 @@ List with predictions and the original training data &
 \description{
 Wrapper for a configurable implementation of k-nearest neighbors.
 }
-

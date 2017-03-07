@@ -54,4 +54,4 @@ Suggests:
     testthat,
     xgboost (>= 0.6)
 LazyLoad: yes
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

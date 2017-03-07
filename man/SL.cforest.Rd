@@ -42,4 +42,3 @@ currently).}
 \description{
 These defaults emulate cforest_unbiased() but allow customization.
 }
-

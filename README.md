@@ -4,8 +4,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SuperLearner)](http://cran.r-project.org/web/packages/SuperLearner)
 [![Downloads](http://cranlogs.r-pkg.org/badges/SuperLearner)](http://cran.rstudio.com/package=SuperLearner)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
-[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![Build Status: travis-ci](https://travis-ci.org/ecpolley/SuperLearner.svg?branch=master)](https://travis-ci.org/ecpolley/SuperLearner)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)[![Build Status: travis-ci](https://travis-ci.org/ecpolley/SuperLearner.svg?branch=master)](https://travis-ci.org/ecpolley/SuperLearner)
 [![Build Status: appveyor](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)
 [![codecov](https://codecov.io/gh/ecpolley/SuperLearner/branch/master/graph/badge.svg)](https://codecov.io/gh/ecpolley/SuperLearner)
 
@@ -62,5 +61,5 @@ Media.](http://www.targetedlearningbook.com/)
 
 ## License
 
-The contents of this repository are distributed under the MIT license. See file
-`LICENSE` for details.
+The contents of this repository are distributed under the GPL-3 license. See
+file `LICENSE` for details.

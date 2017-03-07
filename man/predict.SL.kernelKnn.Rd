@@ -16,4 +16,3 @@
 \description{
 Prediction for SL.kernelKnn
 }
-
