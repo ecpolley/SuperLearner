@@ -1,6 +1,7 @@
 #' @title SL wrapper for KernelKNN
 #'
-#' @description Wrapper for a configurable implementation of k-nearest neighbors.
+#' @description Wrapper for a configurable implementation of k-nearest
+#'   neighbors. Supports both binomial and gaussian outcome distributions.
 #' @param Y Outcome variable
 #' @param X Training dataframe
 #' @param newX Test dataframe
@@ -22,6 +23,26 @@
 #' @param ... Any additional parameters, not currently passed through.
 #' @return List with predictions and the original training data &
 #'   hyperparameters.
+#'
+#' @examples
+#'
+#' # Load a test dataset.
+#' data(PimaIndiansDiabetes2, package = "mlbench")
+#'
+#' data = PimaIndiansDiabetes2
+#'
+#' # Omit observations with missing data.
+#' data = na.omit(data)
+#'
+#' Y_bin = as.numeric(data$diabetes)
+#' X = subset(data, select = -diabetes)
+#'
+#' set.seed(1)
+#'
+#' sl = SuperLearner(Y_bin, X, family = binomial(),
+#'                  SL.library = c("SL.mean", "SL.kernelKnn"))
+#' sl
+#'
 #' @export
 SL.kernelKnn = function(Y, X, newX, family,
                         k = 10,
