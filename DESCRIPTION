@@ -29,6 +29,7 @@ Suggests:
     Hmisc,
     ipred,
     KernelKnn,
+    kernlab,
     lattice,
     LogicReg,
     MASS,
@@ -49,4 +50,4 @@ Suggests:
     testthat,
     xgboost (>= 0.6)
 LazyLoad: yes
-RoxygenNote: 6.0.0
+RoxygenNote: 6.0.1
