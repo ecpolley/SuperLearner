@@ -42,5 +42,26 @@ List with predictions and the original training data &
   hyperparameters.
 }
 \description{
-Wrapper for a configurable implementation of k-nearest neighbors.
+Wrapper for a configurable implementation of k-nearest
+  neighbors. Supports both binomial and gaussian outcome distributions.
+}
+\examples{
+
+# Load a test dataset.
+data(PimaIndiansDiabetes2, package = "mlbench")
+
+data = PimaIndiansDiabetes2
+
+# Omit observations with missing data.
+data = na.omit(data)
+
+Y_bin = as.numeric(data$diabetes)
+X = subset(data, select = -diabetes)
+
+set.seed(1)
+
+sl = SuperLearner(Y_bin, X, family = binomial(),
+                 SL.library = c("SL.mean", "SL.kernelKnn"))
+sl
+
 }
