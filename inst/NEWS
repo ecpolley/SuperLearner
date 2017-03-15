@@ -9,6 +9,7 @@ Date: 2017-03-14
 * Glmnet: support alternative loss functions; when predicting automatically add any missing covariates and remove covariates not in the original data.
 * Added SL.kernelKnn
 * Added SL.ksvm
+* Added SL.ranger
 
 ---
 Version: 2.0-21

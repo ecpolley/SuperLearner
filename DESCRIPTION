@@ -41,6 +41,7 @@ Suggests:
     polspline,
     quadprog,
     randomForest,
+    ranger,
     ROCR,
     rpart,
     SIS,
