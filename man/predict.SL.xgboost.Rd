@@ -18,4 +18,3 @@
 \description{
 XGBoost prediction on new data
 }
-

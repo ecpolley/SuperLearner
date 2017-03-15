@@ -24,4 +24,3 @@ classification. (Not used)}
 \description{
 bartMachine prediction
 }
-
