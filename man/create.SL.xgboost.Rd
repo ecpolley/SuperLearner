@@ -39,4 +39,3 @@ sl = SuperLearner(Y = Y, X = X, SL.library = xgb_grid$names)
 }
 detach(sl_env)
 }
-

@@ -60,4 +60,3 @@ posterior distribution of f(x).}
 \description{
 Support bayesian additive regression trees via the bartMachine package.
 }
-
