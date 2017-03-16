@@ -1,11 +1,14 @@
-# SuperLearner: Prediction model ensembling method
+# SuperLearner: prediction model ensembling
 
 [![Join the chat at https://gitter.im/SuperLearner](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SuperLearner?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SuperLearner)](http://cran.r-project.org/web/packages/SuperLearner)
 [![Downloads](http://cranlogs.r-pkg.org/badges/SuperLearner)](http://cran.rstudio.com/package=SuperLearner)
-[![Build Status: travis-ci](https://travis-ci.org/ecpolley/SuperLearner.svg?branch=master)](https://travis-ci.org/ecpolley/SuperLearner)
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)[![Build Status: travis-ci](https://travis-ci.org/ecpolley/SuperLearner.svg?branch=master)](https://travis-ci.org/ecpolley/SuperLearner)
 [![Build Status: appveyor](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)
 [![codecov](https://codecov.io/gh/ecpolley/SuperLearner/branch/master/graph/badge.svg)](https://codecov.io/gh/ecpolley/SuperLearner)
+
+---
 
 This is the current version of the SuperLearner R package (version 2.*).
 
@@ -38,10 +41,25 @@ install.packages("SuperLearner")
 [devtools]: https://github.com/hadley/devtools
 [CRAN]: https://cran.r-project.org/web/packages/SuperLearner/index.html
 
-## References 
+---
 
-Polley EC, van der Laan MJ (2010) Super Learner in Prediction. U.C. Berkeley Division of Biostatistics Working Paper Series. Paper 226. <http://biostats.bepress.com/ucbbiostat/paper266/>
+## References
 
-van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2007) Super Learner. Statistical Applications of Genetics and Molecular Biology, 6, article 25. <http://www.degruyter.com/view/j/sagmb.2007.6.issue-1/sagmb.2007.6.1.1309/sagmb.2007.6.1.1309.xml>
+[Polley EC, van der Laan MJ (2010) Super Learner in Prediction. U.C. Berkeley
+Division of Biostatistics Working Paper Series. Paper
+226.](http://biostats.bepress.com/ucbbiostat/paper266/)
 
-van der Laan, M. J., & Rose, S. (2011). Targeted learning: causal inference for observational and experimental data. Springer Science & Business Media.
+[van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2007) Super Learner.
+Statistical Applications of Genetics and Molecular Biology, 6, article
+25.](http://www.degruyter.com/view/j/sagmb.2007.6.issue-1/sagmb.2007.6.1.1309/sagmb.2007.6.1.1309.xml)
+
+[van der Laan, M. J., & Rose, S. (2011). Targeted learning: causal inference for
+observational and experimental data. Springer Science & Business
+Media.](http://www.targetedlearningbook.com/)
+
+---
+
+## License
+
+The contents of this repository are distributed under the GPL-3 license. See
+file `LICENSE` for details.
