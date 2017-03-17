@@ -1,0 +1,4 @@
+/* Code needs to be a smaller font to minimize horizontal scroll bars. */
+pre {
+  font-size: 12px;
+}
