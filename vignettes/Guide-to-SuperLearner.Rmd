@@ -357,7 +357,10 @@ A key difference with SuperLearner over caret or other frameworks is that we are
 
 SuperLearner makes it easy to use multiple CPU cores on your computer to speed up the calculations. We first need to setup R for multiple cores, then tell `CV.SuperLearner` to divide its computations across those cores.
 
-```{r multicore}
+There are two ways to use multiple cores in R: the "multicore" system and the "snow" system. Windows only supports the "snow" system, which is more difficult to use, whereas macOS and Linux can use either one.
+
+First we show the "multicore" system version:
+```{r multicore-cvsl}
 # Setup parallel computation - use all cores on our computer.
 num_cores = RhpcBLASctl::get_num_cores()
 
@@ -367,14 +370,14 @@ num_cores
 # Use all of those cores for parallel SuperLearner.
 options(mc.cores = num_cores)
 
-# Check how many parallel workers we are using:
+# Check how many parallel workers we are using (on macOS/Linux).
 getOption("mc.cores")
 
 # We need to set a different type of seed that works across cores.
 # Otherwise the other cores will go rogue and we won't get repeatable results.
+# This version is for the "multicore" parallel system in R.
 set.seed(1, "L'Ecuyer-CMRG")
 
-# Fit the CV.SuperLearner.
 # While this is running check CPU using in Activity Monitor / Task Manager.
 system.time({
   cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 10,
@@ -386,9 +389,44 @@ system.time({
 summary(cv_sl)
 ```
 
-The "user" component of time is essentially how long it would take on a single core. And the "elapsed" component is how long it actually took. So we can see some gain from using multiple cores.
+Here is the "snow" equivalent:
 
-If we want to use multiple cores for normal SuperLearner, not CV.SuperLearner (i.e. external cross-validation to estimate performance), we need to change the function name to `mcSuperLearner`.
+```{r snow-cvsl}
+# Make a snow cluster
+cluster = parallel::makeCluster(num_cores)
+
+# Check the cluster object.
+cluster
+
+# Load the SuperLearner package on all workers so they can find
+# SuperLearner::All(), the default screening function which keeps all variables.
+parallel::clusterEvalQ(cluster, library(SuperLearner))
+
+# We need to explictly export our custom learner functions to the workers.
+parallel::clusterExport(cluster, learners$names)
+
+# We need to set a different type of seed that works across cores.
+# This version is for SNOW parallelization.
+# Otherwise the other cores will go rogue and we won't get repeatable results.
+parallel::clusterSetRNGStream(cluster, 1)
+
+# While this is running check CPU using in Activity Monitor / Task Manager.
+system.time({
+  cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 10,
+                          parallel = cluster,
+                          SL.library = c("SL.mean", "SL.glmnet", learners$names, "SL.randomForest"))
+})
+
+# Review results.
+summary(cv_sl)
+
+# Stop the cluster workers now that we're done.
+parallel::stopCluster(cluster)
+```
+
+If we want to use multiple cores for normal SuperLearner, not CV.SuperLearner (i.e. external cross-validation to estimate performance), we need to change the function name to `mcSuperLearner` ("multicore" version) or `snowSuperLearner` ("snow" version).
+
+First the "multicore" version (won't be parallel on Windows):
 
 ```{r mcSuperLearner}
 # Set multicore compatible seed.
@@ -403,7 +441,38 @@ sl
 sl$times$everything
 ```
 
-SuperLearner also supports running across multiple computers at a time, called "multi-node" or "cluster" computing. See examples in `?SuperLearner` using `snowSuperLearner()`.
+Now the "snow" version, which should be parallel on all operating systems.
+
+```{r snowSuperLearner}
+# Make a snow cluster
+cluster = parallel::makeCluster(num_cores)
+
+# Check the cluster object.
+cluster
+
+# Load the SuperLearner package on all workers so they can find
+# SuperLearner::All(), the default screening function which keeps all variables.
+parallel::clusterEvalQ(cluster, library(SuperLearner))
+
+# We need to explictly export our custom learner functions to the workers.
+parallel::clusterExport(cluster, learners$names)
+
+# We need to set a different type of seed that works across cores.
+# This version is for SNOW parallelization.
+# Otherwise the other cores will go rogue and we won't get repeatable results.
+parallel::clusterSetRNGStream(cluster, 1)
+
+# Fit the SuperLearner.
+sl = snowSuperLearner(Y = Y_train, X = X_train, family = binomial(),
+                      cluster = cluster,
+                      SL.library = c("SL.mean", "SL.glmnet", learners$names, "SL.randomForest"))
+sl
+
+# We see the time is reduced over our initial single-core superlearner.
+sl$times$everything
+```
+
+SuperLearner also supports running across multiple computers at a time, called "multi-node" or "cluster" computing. We will skip that for now.
 
 # Weight distribution for SuperLearner
 
