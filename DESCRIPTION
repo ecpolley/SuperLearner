@@ -30,6 +30,7 @@ Suggests:
     ipred,
     KernelKnn,
     kernlab,
+    knitr,
     lattice,
     LogicReg,
     MASS,
@@ -39,10 +40,13 @@ Suggests:
     nnet,
     party,
     polspline,
+    prettydoc,
     quadprog,
     randomForest,
     ranger,
+    RhpcBLASctl,
     ROCR,
+    rmarkdown,
     rpart,
     SIS,
     spls,
@@ -51,4 +55,5 @@ Suggests:
     testthat,
     xgboost (>= 0.6)
 LazyLoad: yes
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1

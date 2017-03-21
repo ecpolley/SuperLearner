@@ -1,8 +1,15 @@
 ^README\.md
 ^\.git
 ^\.git/*
-^\.travis\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+
+# Automated testing files.
+^\.travis\.yml$
 ^appveyor\.yml$
 ^codecov\.yml$
+
+# Files from building the Guide-to-SuperLearner.rmd vignette.
+^SuperLearner.png$
+^vignettes/[^/]*_cache
+xgboost.model
