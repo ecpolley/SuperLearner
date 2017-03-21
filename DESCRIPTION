@@ -43,6 +43,7 @@ Suggests:
     prettydoc,
     quadprog,
     randomForest,
+    ranger,
     RhpcBLASctl,
     ROCR,
     rmarkdown,
