@@ -17,6 +17,8 @@ Imports:
 Suggests:
     arm,
     bartMachine,
+    biglasso,
+    bigmemory,
     caret,
     class,
     e1071,
