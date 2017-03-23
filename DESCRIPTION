@@ -51,6 +51,7 @@ Suggests:
     rmarkdown,
     rpart,
     SIS,
+    speedglm,
     spls,
     stepPlr,
     sva,
