@@ -8,7 +8,8 @@ SL.ranger(Y, X, newX, family, obsWeights, num.trees = 500,
   mtry = floor(sqrt(ncol(X))), write.forest = TRUE,
   probability = family$family == "binomial",
   min.node.size = ifelse(family$family == "gaussian", 5, 1), replace = TRUE,
-  sample.fraction = ifelse(replace, 1, 0.632), num.threads = 1, ...)
+  sample.fraction = ifelse(replace, 1, 0.632), num.threads = 1,
+  verbose = T, ...)
 }
 \arguments{
 \item{Y}{Outcome variable}
@@ -40,6 +41,8 @@ regression, 3 for survival, and 10 for probability.}
 sampling with replacement and 0.632 for sampling without replacement.}
 
 \item{num.threads}{Number of threads to use.}
+
+\item{verbose}{If TRUE, display additional output during execution.}
 
 \item{...}{Any additional arguments, not currently used.}
 }

@@ -21,6 +21,7 @@
 #' @param sample.fraction Fraction of observations to sample. Default is 1 for
 #'   sampling with replacement and 0.632 for sampling without replacement.
 #' @param num.threads Number of threads to use.
+#' @param verbose If TRUE, display additional output during execution.
 #' @param ... Any additional arguments, not currently used.
 #'
 #' @examples
@@ -62,6 +63,7 @@ SL.ranger <-
            replace = TRUE,
            sample.fraction = ifelse(replace, 1, 0.632),
            num.threads = 1,
+           verbose = T,
            ...) {
   # need write.forest = TRUE for predict method
   .SL.require("ranger")
@@ -87,7 +89,8 @@ SL.ranger <-
                         case.weights = obsWeights,
                         write.forest = write.forest,
                         probability = probability,
-                        num.threads = num.threads)
+                        num.threads = num.threads,
+                        verbose = verbose)
 
   pred <- predict(fit, data = newX)$predictions
 
@@ -97,7 +100,7 @@ SL.ranger <-
     pred = pred[, "1"]
   }
 
-  fit <- list(object = fit)
+  fit <- list(object = fit, verbose = verbose)
   class(fit) <- c("SL.ranger")
   out <- list(pred = pred, fit = fit)
   return(out)
@@ -120,7 +123,7 @@ SL.ranger <-
 #' @export
 predict.SL.ranger <- function(object, newdata, family,
                               num.threads = 1,
-                              verbose = F,
+                              verbose = object$verbose,
                               ...) {
   .SL.require("ranger")
 
