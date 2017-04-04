@@ -5,7 +5,7 @@
 \title{Prediction wrapper for ranger random forests}
 \usage{
 \method{predict}{SL.ranger}(object, newdata, family, num.threads = 1,
-  verbose = F, ...)
+  verbose = object$verbose, ...)
 }
 \arguments{
 \item{object}{SL.kernlab object}

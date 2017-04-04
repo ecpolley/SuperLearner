@@ -20,7 +20,7 @@ SL.speedlm(Y, X, newX, family, obsWeights, ...)
 \item{...}{Any remaining arguments, not used.}
 }
 \description{
-Speedglm is a fast version of lm()
+Speedlm is a fast version of lm()
 }
 \references{
 Enea, M. A. R. C. O. (2013). Fitting linear models and generalized linear
