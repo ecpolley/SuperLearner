@@ -45,11 +45,11 @@
 #' set.seed(1)
 #'
 #' # Sample rows to speed up example.
-#' row_subset = sample(nrow(X), 20)
+#' row_subset = sample(nrow(X), 30)
 #'
-#' # Subset rows and columns to speed up example.
-#' sl = SuperLearner(Y[row_subset], X[row_subset, 1, drop = FALSE],
-#'                   family = gaussian(),
+#' # Subset rows and columns & use only 2 folds to speed up example.
+#' sl = SuperLearner(Y[row_subset], X[row_subset, 1:2, drop = FALSE],
+#'                   family = gaussian(), cvControl = list(V = 2),
 #'                   SL.library = "SL.biglasso")
 #' sl
 #'
@@ -58,7 +58,7 @@
 #'
 #' @references
 #'
-#' Zeng Y, Breheny P (2016). biglasso: Extending Lasso Model Fitting to Big
+#' Zeng Y, Breheny P (2017). biglasso: Extending Lasso Model Fitting to Big
 #' Data. https://CRAN.R-project.org/package=biglasso.
 #'
 #' @seealso \code{\link{predict.SL.biglasso}} \code{\link[biglasso]{biglasso}}
@@ -78,44 +78,45 @@ SL.biglasso <-
            ncores = 1,
            nfolds = 5,
            ...) {
-    .SL.require("biglasso")
+  .SL.require("biglasso")
 
-    if (family$family == "binomial") {
-      Y = as.factor(Y)
-    }
+  # If binomial, biglasso still wants Y to be a numeric.
 
-    if (!is.matrix(X)) {
-      X = model.matrix(~ ., X)
-      # Remove intercept that was added.
-      X = X[, -1]
-    }
-
-    X = bigmemory::as.big.matrix(X)
-
-    fit = biglasso::cv.biglasso(X, Y, family = family$family,
-                             penalty = penalty,
-                             alg.logistic = alg.logistic,
-                             screen = screen,
-                             eval.metric = eval.metric,
-                             ncores = ncores,
-                             alpha = alpha,
-                             nfolds = nfolds,
-                             nlambda = nlambda)
-
-    if (!is.matrix(newX)) {
-      newX = model.matrix(~ ., newX)
-      # Remove intercept that was added.
-      newX = newX[, -1]
-    }
-
-    newX = bigmemory::as.big.matrix(newX)
-    pred <- predict(fit, newX, type = "response")
-
-    fit <- list(object = fit)
-    class(fit) <- c("SL.biglasso")
-    out <- list(pred = pred, fit = fit)
-    return(out)
+  if (!is.matrix(X)) {
+    X = model.matrix(~ ., X)
+    # Remove intercept that was added.
+    X = X[, -1]
   }
+
+  # This will give a warning if X is only a single covariate.
+  X = bigmemory::as.big.matrix(X)
+
+  fit = biglasso::cv.biglasso(X, Y, family = family$family,
+                           penalty = penalty,
+                           alg.logistic = alg.logistic,
+                           screen = screen,
+                           eval.metric = eval.metric,
+                           ncores = ncores,
+                           alpha = alpha,
+                           nfolds = nfolds,
+                           nlambda = nlambda)
+
+  if (!is.matrix(newX)) {
+    newX = model.matrix(~ ., newX)
+    # Remove intercept that was added.
+    newX = newX[, -1]
+  }
+
+  newX = bigmemory::as.big.matrix(newX)
+  pred <- predict(fit, newX, type = "response")
+
+  fit <- list(object = fit)
+  class(fit) <- c("SL.biglasso")
+
+  # Explicitly convert pred to vector as pred may be a Matrix::dgeMatrix
+  out <- list(pred = as.vector(pred), fit = fit)
+  return(out)
+}
 
 #' @title Prediction wrapper for SL.biglasso
 #'
@@ -146,5 +147,6 @@ predict.SL.biglasso <- function(object, newdata,
   # Binomial and gaussian prediction is the same.
   pred <- predict(object$object, newdata, type = "response")
 
-  pred
+  # Explicitly convert to vector as pred may be a Matrix::dgeMatrix
+  as.vector(pred)
 }
