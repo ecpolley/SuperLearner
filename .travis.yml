@@ -2,19 +2,15 @@
 # See https://docs.travis-ci.com/user/languages/r/
 
 language: r
+# Enable if a more recent version of Ubuntu is helpful.
+#dist: trusty
 r: bioc-release
 cache: packages
+# Disable sudo so that we can use container infrastructure and package caching.
+sudo: false
 # Enable sudo so that we can use apt-get to upgrade and install linux packages.
-#sudo: false
-sudo: required
-
-bioc_packages:
- - sva
- - genefilter
-
-# Install survival directly, to get the latest version and avoid
-# a build error from using an older version.
-r_packages: survival
+# We also need sudo for r_binary_packages listed below.
+# sudo: required
 
 os:
   - linux
@@ -24,33 +20,42 @@ compiler:
   - gcc
   #- clang
 
-before_install:
-  # Install custom version of xgboost since CRAN is out of date as of 2016-12-09.
-  - Rscript -e 'install.packages("xgboost", repos=c("http://dmlc.ml/drat/", getOption("repos")), type="source")'
+# dependent apt packages
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
+      - gfortran-4.9
 
-  # This allows Travis to support C++11, plus possibly other upgrades.
-  # Via https://github.com/mlampros/OpenImageR/blob/master/.travis.yml
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test -y; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq install gcc-4.8; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq install g++-4.8; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 90; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.8 90; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libgfortran3; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install r-base-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libarmadillo-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libarmadillo2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libopenblas-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libblas-dev liblapack-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install libarpack++2-dev; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install gfortran; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ln -s /usr/lib/x86_64-linux-gnu/libgfortran.so.3 /usr/lib/libgfortran.so; fi
+env:
+  global:
+    - CRAN="http://cran.rstudio.com"
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+    - R_CHECK_TIME="TRUE"
+    - R_CHECK_TESTS="TRUE"
+    # This does not appear to do anything.
+    - MAKEFLAGS="-j 2"
+    # No error if suggested packages are not available.
+    #- _R_CHECK_FORCE_SUGGESTS_=0
 
+warnings_are_errors: true
+r_check_args: "--no-build-vignettes --no-manual --as-cran --timings"
+
+r_packages:
+# Install survival directly, to get the latest version and avoid
+# a build error from using an older version.
+  - survival
 
 r_github_packages:
- - jimhester/covr
+  - jimhester/covr
+ #- jimhester/lintr
+
+bioc_packages:
+  - sva
+  - genefilter
+
 after_success:
- - Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov()'
