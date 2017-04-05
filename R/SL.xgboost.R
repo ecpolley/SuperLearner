@@ -92,12 +92,11 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
 predict.SL.xgboost <- function(object, newdata, family, ...) {
   .SL.require("xgboost")
   if(packageVersion("xgboost") < 0.6) stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
-  # Newdata needs to be converted to a matrix first, then an xgb.DMatrix.
+  # newdata needs to be converted to a matrix first
   if (!is.matrix(newdata)) {
     newdata = model.matrix(~ . - 1, newdata)
   }
-  xgb_mat = xgboost::xgb.DMatrix(newdata)  # is this required? this isn't used above in SL.xgboost
-  pred = predict(object$object, xgb_mat)
+  pred = predict(object$object, newdata = newdata)
   return(pred)
 }
 
