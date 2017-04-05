@@ -14,7 +14,7 @@ summary(Y)
 ########################
 # Run the SuperLearner
 models = c("SL.randomForest", "SL.glmnet", "SL.glm", "SL.mean")
-cv_control = SuperLearner.CV.control(V = 4L)
+cv_control = SuperLearner.CV.control(V = 2L)
 sl = SuperLearner(Y, X, SL.library = models, cvControl = cv_control)
 sl
 # Check execution times
