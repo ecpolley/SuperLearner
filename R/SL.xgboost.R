@@ -54,18 +54,18 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
   # TODO: support early stopping, which requires a "watchlist". See ?xgb.train
 
   if (family$family == "gaussian") {
-    model = xgboost::xgboost(data = xgmat, objective="reg:linear", nround = ntrees,
+    model = xgboost::xgboost(data = xgmat, objective="reg:linear", nrounds = ntrees,
                 max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
                 verbose = verbose, nthread = nthread, params = params)
   }
   if (family$family == "binomial") {
-    model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nround = ntrees,
+    model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nrounds = ntrees,
                 max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
                 verbose = verbose, nthread = nthread, params = params)
   }
   if (family$family == "multinomial") {
     # TODO: test this.
-    model = xgboost::xgboost(data = xgmat, objective="multi:softmax", nround = ntrees,
+    model = xgboost::xgboost(data = xgmat, objective="multi:softmax", nrounds = ntrees,
                 max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
                 verbose = verbose, num_class = length(unique(Y)), nthread = nthread,
                 params = params)
@@ -96,7 +96,7 @@ predict.SL.xgboost <- function(object, newdata, family, ...) {
   if (!is.matrix(newdata)) {
     newdata = model.matrix(~ . - 1, newdata)
   }
-  xgb_mat = xgboost::xgb.DMatrix(newdata)
+  xgb_mat = xgboost::xgb.DMatrix(newdata)  # is this required? this isn't used above in SL.xgboost
   pred = predict(object$object, xgb_mat)
   return(pred)
 }
