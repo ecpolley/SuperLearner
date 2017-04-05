@@ -2,15 +2,25 @@
 # See https://docs.travis-ci.com/user/languages/r/
 
 language: r
+
 # Enable if a more recent version of Ubuntu is helpful.
-#dist: trusty
-r: bioc-release
-cache: packages
+# This gives us g++-4.8, which is needed for C++11 (e.g. ranger package)
+dist: trusty
+
 # Disable sudo so that we can use container infrastructure and package caching.
 sudo: false
 # Enable sudo so that we can use apt-get to upgrade and install linux packages.
 # We also need sudo for r_binary_packages listed below.
 # sudo: required
+
+r:
+  # Test current version of R, dev version, and previous major verison.
+  - release
+  #- devel
+  #- oldrel
+
+# This only works if sudo = false.
+cache: packages
 
 os:
   - linux
@@ -19,16 +29,6 @@ os:
 compiler:
   - gcc
   #- clang
-
-# dependent apt packages
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.9
-      - g++-4.9
-      - gfortran-4.9
 
 env:
   global:
@@ -59,3 +59,6 @@ bioc_packages:
 
 after_success:
   - Rscript -e 'covr::codecov()'
+
+after_failure:
+  - ./travis-tool.sh dump_logs
