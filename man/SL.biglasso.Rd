@@ -66,11 +66,11 @@ X = Boston[, -14]
 set.seed(1)
 
 # Sample rows to speed up example.
-row_subset = sample(nrow(X), 20)
+row_subset = sample(nrow(X), 30)
 
-# Subset rows and columns to speed up example.
-sl = SuperLearner(Y[row_subset], X[row_subset, 1, drop = FALSE],
-                  family = gaussian(),
+# Subset rows and columns & use only 2 folds to speed up example.
+sl = SuperLearner(Y[row_subset], X[row_subset, 1:2, drop = FALSE],
+                  family = gaussian(), cvControl = list(V = 2),
                   SL.library = "SL.biglasso")
 sl
 
@@ -79,7 +79,7 @@ summary(pred$pred)
 
 }
 \references{
-Zeng Y, Breheny P (2016). biglasso: Extending Lasso Model Fitting to Big
+Zeng Y, Breheny P (2017). biglasso: Extending Lasso Model Fitting to Big
 Data. https://CRAN.R-project.org/package=biglasso.
 }
 \seealso{

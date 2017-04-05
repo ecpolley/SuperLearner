@@ -40,9 +40,9 @@ print(summary(model$fit$object))
 # SuperLearner with the wrapper.
 
 # Gaussian version.
-sl = SuperLearner(Y_gaus, X, family = gaussian(),
+sl = SuperLearner(Y_gaus, X, family = gaussian(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.biglasso"))
-sl
+print(sl)
 
 pred = predict(sl, X)
 summary(pred$pred)
@@ -53,9 +53,9 @@ expect_equal(pred$pred, pred2$pred)
 
 
 # Binomial version.
-sl = SuperLearner(Y_bin, X, family = binomial(),
+sl = SuperLearner(Y_bin, X, family = binomial(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.biglasso"))
-sl
+print(sl)
 
 pred = predict(sl, X)
 summary(pred$pred)

@@ -15,7 +15,10 @@ set.seed(1)
 data = data[sample(nrow(data), 100), ]
 
 # Expand out factors into indicators.
-X = data.frame(model.matrix(~ . -1, subset(data, select=-c(Class))))
+X = data.frame(model.matrix(~ . -1, subset(data, select=-c(Id, Class))))
+
+# Reduce number of covariates to speed up testing.
+X = X[, 1:20]
 
 Y = as.numeric(data$Class == "malignant")
 print(table(Y))
@@ -26,11 +29,13 @@ print(table(Y))
 
 
 ########################
-# Create a randomForest learner with ntree set to 1000 rather than the default of 500.
-create_rf = create.Learner("SL.randomForest", list(ntree = 1000))
+# Create a randomForest learner with ntree set to 100 rather than the default of 500.
+create_rf = create.Learner("SL.randomForest", list(ntree = 100))
 print(create_rf)
 print(ls())
-sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
+sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names,
+                  cvControl = list(V = 2),
+                  family = binomial())
 print(sl)
 
 # Clean up global environment.
@@ -43,11 +48,13 @@ rm(list=create_rf$names)
 create_rf = create.Learner("SL.randomForest",
                          tune = list(mtry = round(c(1, sqrt(ncol(X)), ncol(X)))))
 print(create_rf)
-sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names, family = binomial())
+sl = SuperLearner(Y = Y, X = X, SL.library = create_rf$names,
+                  cvControl = list(V = 2),
+                  family = binomial())
 print(sl)
 
 # Clean up global environment.
-rm(list=create_rf$names)
+rm(list = create_rf$names)
 
 
 ########################
@@ -60,8 +67,11 @@ print(create_enet)
 # List the environment to review what functions were created.
 print(ls(learners))
 # We can simply list the environment to specify the library.
-sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners), family = binomial(), env = learners)
-sl
+sl = SuperLearner(Y = Y, X = X, SL.library = ls(learners),
+                  cvControl = list(V = 2),
+                  family = binomial(),
+                  env = learners)
+print(sl)
 
 ####################
 # SVM hyperparameters, including a test of character grid elements.
@@ -78,9 +88,13 @@ rm(preproc)
 ncol(X)
 ncol(X_clean)
 
+# Test character tuning parameters.
 svm = create.Learner("SL.svm", detailed_names = T,
                      tune = list(kernel = c("polynomial", "radial", "sigmoid")))
 
-sl = SuperLearner(Y = Y, X = X_clean, SL.library = c("SL.mean", svm$names),
+sl = SuperLearner(Y = Y, X = X_clean,
+                  SL.library = c("SL.mean", svm$names),
+                  # Using V = 2 causes an error in SVM about an infeasible nu.
+                  cvControl = list(V = 3),
                   family = binomial())
-sl
+print(sl)

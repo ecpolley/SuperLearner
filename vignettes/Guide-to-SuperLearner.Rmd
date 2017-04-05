@@ -228,9 +228,10 @@ set.seed(1)
 # Don't have timing info for the CV.SuperLearner unfortunately.
 # So we need to time it manually.
 
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
 system.time({
-  # This will take about 5x as long as the previous SuperLearner.
-  cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 5,
+  # This will take about 3x as long as the previous SuperLearner.
+  cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 3,
                           SL.library = c("SL.mean", "SL.glmnet", "SL.randomForest"))
 })
 
@@ -274,7 +275,8 @@ SL.rf.better = function(...) {
 set.seed(1)
 
 # Fit the CV.SuperLearner.
-cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 5,
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
+cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 3,
                         SL.library = c("SL.mean", "SL.glmnet", "SL.rf.better", "SL.randomForest"))
 
 # Review results.
@@ -302,7 +304,8 @@ SL.randomForest_1
 set.seed(1)
 
 # Fit the CV.SuperLearner.
-cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 5,
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
+cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 3,
                         SL.library = c("SL.mean", "SL.glmnet", learners$names, "SL.randomForest"))
 
 # Review results.
@@ -340,7 +343,8 @@ SL.randomForest_3
 set.seed(1)
 
 # Fit the CV.SuperLearner.
-cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 5,
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
+cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 3,
                         SL.library = c("SL.mean", "SL.glmnet", learners$names, "SL.randomForest"))
 
 # Review results.
@@ -516,7 +520,8 @@ set.seed(1)
 
 # Fit the SuperLearner.
 # We need to use list() instead of c().
-cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 10,
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
+cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 3,
                         parallel = "multicore",
                         SL.library = list("SL.mean", "SL.glmnet", c("SL.glmnet", "screen.corP")))
 summary(cv_sl)
@@ -531,7 +536,8 @@ For binary prediction we are typically trying to maximize AUC, which can be the 
 ```{r auc, cache=F}
 set.seed(1)
 
-cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 5,
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
+cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(), V = 3,
                         method = "method.AUC",
                         SL.library = list("SL.mean", "SL.glmnet", c("SL.glmnet", "screen.corP")))
 summary(cv_sl)
@@ -567,6 +573,7 @@ getOption("mc.cores")
 set.seed(1, "L'Ecuyer-CMRG")
 
 # Fit the CV.SuperLearner. This will take 1-2 minutes.
+# We use V = 3 to save computation time; for a real analysis use V = 10 or 20.
 system.time({
   cv_sl = CV.SuperLearner(Y = Y_train, X = X_train, family = binomial(),
                           V = 3, parallel = "multicore",

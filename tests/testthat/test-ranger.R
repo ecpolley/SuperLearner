@@ -39,7 +39,7 @@ print(model$fit$object)
 # SuperLearner with the wrapper.
 
 # Gaussian version.
-sl = SuperLearner(Y_gaus, X, family = gaussian(),
+sl = SuperLearner(Y_gaus, X, family = gaussian(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.ranger"))
 sl
 
@@ -52,7 +52,7 @@ expect_equal(pred$pred, pred2$pred)
 
 
 # Binomial version.
-sl = SuperLearner(Y_bin, X, family = binomial(),
+sl = SuperLearner(Y_bin, X, family = binomial(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.ranger"))
 sl
 
@@ -66,7 +66,7 @@ expect_equal(pred$pred, pred2$pred)
 # Confirm wrapper works with a column called "Y" in the X dataframe.
 # NOTE: other wrappers that use formulas may fail here, e.g. SL.glm.
 colnames(X)[1] = "Y"
-sl = SuperLearner(Y_bin, X, family = binomial(),
+sl = SuperLearner(Y_bin, X, family = binomial(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.ranger"))
 sl
 

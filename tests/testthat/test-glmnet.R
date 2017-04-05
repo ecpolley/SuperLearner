@@ -29,6 +29,7 @@ summary(pred)
 
 # Try SuperLearner with the wrapper.
 sl = SuperLearner(Y, X, family = binomial(),
+                  cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.glm", "SL.glmnet"))
 sl
 
