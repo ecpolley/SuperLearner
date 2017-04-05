@@ -31,7 +31,7 @@ ksvm = SuperLearner::SL.ksvm(Y_bin, X_mat, X, family = binomial())
 # SuperLearner with the wrapper.
 
 # Gaussian version.
-sl = SuperLearner(Y_gaus, X, family = gaussian(),
+sl = SuperLearner(Y_gaus, X, family = gaussian(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.ksvm"))
 sl
 
@@ -44,7 +44,7 @@ expect_equal(pred$pred, pred2$pred)
 
 
 # Binomial version.
-sl = SuperLearner(Y_bin, X, family = binomial(),
+sl = SuperLearner(Y_bin, X, family = binomial(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.ksvm"))
 sl
 

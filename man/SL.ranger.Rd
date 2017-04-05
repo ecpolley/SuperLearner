@@ -61,7 +61,8 @@ X = Boston[, -14]
 
 set.seed(1)
 
-sl = SuperLearner(Y, X, family = gaussian(),
+# Use only 2 CV folds to speed up example.
+sl = SuperLearner(Y, X, family = gaussian(), cvControl = list(V = 2),
                  SL.library = c("SL.mean", "SL.ranger"))
 sl
 

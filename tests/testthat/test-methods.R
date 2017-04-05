@@ -17,6 +17,7 @@ SL.library <- c("SL.rpart", "SL.glmnet", "SL.mean")
 ########################
 # Test method.NNLS
 test.NNLS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+                          cvControl = list(V = 2),
                           method = "method.NNLS", family = binomial())
 print(test.NNLS)
 
@@ -29,6 +30,7 @@ expect_lte(max(test.NNLS$SL.predict), 1)
 # Test method.NNLS2
 # This will give an error in quadprog if two learners have the same predictions.
 test.NNLS2 <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+                           cvControl = list(V = 2),
                            method = "method.NNLS2", family = binomial())
 print(test.NNLS2)
 
@@ -40,6 +42,7 @@ expect_lte(max(test.NNLS2$SL.predict), 1)
 ########################
 # Test method.NNloglik
 test.NNloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+                              cvControl = list(V = 2),
                               method = "method.NNloglik", family = binomial())
 print(test.NNloglik)
 
@@ -51,6 +54,7 @@ expect_lte(max(test.NNloglik$SL.predict), 1)
 ########################
 # Test method.CC_LS
 test.CC_LS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+                           cvControl = list(V = 2),
                            method = "method.CC_LS", family = binomial())
 print(test.CC_LS)
 
@@ -62,6 +66,7 @@ expect_lte(max(test.CC_LS$SL.predict), 1)
 ########################
 # Test method.CC_nloglik
 test.CC_nloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+                                cvControl = list(V = 2),
                                 method = "method.CC_nloglik", family = binomial())
 print(test.CC_nloglik)
 
@@ -74,6 +79,7 @@ expect_lte(max(test.CC_nloglik$SL.predict), 1)
 # Test method.AUC
 # This may generate a warning about lack of convergence.
 test.AUC <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+                         cvControl = list(V = 2),
                          method = "method.AUC", family = binomial())
 print(test.AUC)
 

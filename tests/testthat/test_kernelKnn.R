@@ -19,7 +19,7 @@ set.seed(1)
 knn = SuperLearner::SL.kernelKnn(Y_bin, X, X, family = binomial())
 
 # Now try SuperLearner with the wrapper.
-sl = SuperLearner(Y_bin, X, family = binomial(),
+sl = SuperLearner(Y_bin, X, family = binomial(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.kernelKnn"))
 sl
 
@@ -36,7 +36,7 @@ set.seed(1)
 knn = SuperLearner::SL.kernelKnn(Y_gaus, X, X, family = gaussian())
 
 # Now try SuperLearner with the wrapper.
-sl = SuperLearner(Y_gaus, X, family = gaussian(),
+sl = SuperLearner(Y_gaus, X, family = gaussian(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.kernelKnn"))
 sl
 
