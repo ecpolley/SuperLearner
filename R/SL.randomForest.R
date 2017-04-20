@@ -6,12 +6,12 @@ SL.randomForest <- function(Y, X, newX, family, mtry = ifelse(family$family == "
                             maxnodes = NULL,...) {
 	.SL.require('randomForest')
 	if (family$family == "gaussian") {
-		fit.rf <- randomForest::randomForest(Y ~ ., data = X, ntree = ntree, xtest = newX, keep.forest = TRUE, mtry = mtry, nodesize = nodesize, maxnodes = maxnodes)
+		fit.rf <- randomForest::randomForest(Y ~ ., data = X, ntree = ntree, xtest = newX, keep.forest = TRUE, mtry = mtry, nodesize = nodesize, maxnodes = maxnodes, ...)
 		pred <- fit.rf$test$predicted
 		fit <- list(object = fit.rf)
 	}
 	if (family$family == "binomial") {
-		fit.rf <- randomForest::randomForest(y = as.factor(Y), x = X, ntree = ntree, xtest = newX, keep.forest = TRUE, mtry = mtry, nodesize = nodesize, maxnodes = maxnodes)
+		fit.rf <- randomForest::randomForest(y = as.factor(Y), x = X, ntree = ntree, xtest = newX, keep.forest = TRUE, mtry = mtry, nodesize = nodesize, maxnodes = maxnodes, ...)
 		pred <- fit.rf$test$votes[, 2]
 		fit <- list(object = fit.rf)
 	}
