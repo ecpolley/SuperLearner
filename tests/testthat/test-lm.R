@@ -43,10 +43,10 @@ print(summary(model$fit$object))
 # Gaussian version.
 sl = SuperLearner(Y_gaus, X, family = gaussian(),
                   SL.library = c("SL.mean", "SL.lm"))
-sl
+print(sl)
 
 pred = predict(sl, X)
-summary(pred$pred)
+print(summary(pred$pred))
 
 # Confirm prediction on matrix version of X.
 pred2 = predict(sl, X_mat)
@@ -56,10 +56,11 @@ expect_equal(pred$pred, pred2$pred)
 # Binomial version.
 sl = SuperLearner(Y_bin, X, family = binomial(),
                   SL.library = c("SL.mean", "SL.lm"))
-sl
+print(sl)
 
 pred = predict(sl, X)
-summary(pred$pred)
+# These predictions should be in [0, 1].
+print(summary(pred$pred))
 
 # Confirm prediction on matrix version of X
 pred2 = predict(sl, X_mat)
