@@ -30,7 +30,12 @@ SL.lm <- function(Y, X, newX, family, obsWeights,
 
   pred <- predict(fit, newdata = newX, type = "response")
 
-  fit <- list(object = fit)
+  # For binomial family restrict predicted probability to [0, 1].
+  if (family$family == "binomial") {
+    pred = pmin(pmax(pred, 0), 1)
+  }
+
+  fit <- list(object = fit, family = family)
   class(fit) <- "SL.lm"
 
   out <- list(pred = pred, fit = fit)
@@ -57,6 +62,11 @@ predict.SL.lm <- function(object, newdata, ...) {
   }
 
   pred <- predict(object = object$object, newdata = newdata, type = "response")
+
+  # For binomial family restrict predicted probability to [0, 1].
+  if (object$family$family == "binomial") {
+    pred = pmin(pmax(pred, 0), 1)
+  }
 
   pred
 }
