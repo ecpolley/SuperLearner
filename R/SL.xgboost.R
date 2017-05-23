@@ -55,18 +55,18 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
 
   if (family$family == "gaussian") {
     model = xgboost::xgboost(data = xgmat, objective="reg:linear", nrounds = ntrees,
-                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
+                max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
                 verbose = verbose, nthread = nthread, params = params)
   }
   if (family$family == "binomial") {
     model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nrounds = ntrees,
-                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
+                max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
                 verbose = verbose, nthread = nthread, params = params)
   }
   if (family$family == "multinomial") {
     # TODO: test this.
     model = xgboost::xgboost(data = xgmat, objective="multi:softmax", nrounds = ntrees,
-                max_depth = max_depth, minchildweight = minobspernode, eta = shrinkage,
+                max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
                 verbose = verbose, num_class = length(unique(Y)), nthread = nthread,
                 params = params)
   }
