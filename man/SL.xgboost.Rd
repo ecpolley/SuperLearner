@@ -6,7 +6,7 @@
 \usage{
 SL.xgboost(Y, X, newX, family, obsWeights, id, ntrees = 1000, max_depth = 4,
   shrinkage = 0.1, minobspernode = 10, params = list(), nthread = 1,
-  verbose = 0, ...)
+  verbose = 0, save_period = NULL, ...)
 }
 \arguments{
 \item{Y}{Outcome variable}
@@ -43,6 +43,10 @@ to keep this to 1 so that XGBoost does not compete with SuperLearner
 parallelization.}
 
 \item{verbose}{Verbosity of XGB fitting.}
+
+\item{save_period}{How often (in tree iterations) to save current model to
+disk during processing. If NULL does not save model, and if 0 saves model
+at the end.}
 
 \item{...}{Any remaining arguments (not supported though).}
 }

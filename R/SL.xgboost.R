@@ -33,13 +33,19 @@
 #' @param nthread How many threads (cores) should xgboost use. Generally we want
 #'   to keep this to 1 so that XGBoost does not compete with SuperLearner
 #'   parallelization.
+#' @param save_period How often (in tree iterations) to save current model to
+#'   disk during processing. If NULL does not save model, and if 0 saves model
+#'   at the end.
 #' @param verbose Verbosity of XGB fitting.
 #' @param ... Any remaining arguments (not supported though).
 #'
 #' @export
 SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
-                      max_depth=4, shrinkage=0.1, minobspernode=10, params = list(),
-                      nthread = 1, verbose = 0,
+                      max_depth = 4, shrinkage = 0.1, minobspernode = 10,
+                      params = list(),
+                      nthread = 1,
+                      verbose = 0,
+                      save_period = NULL,
                       ...) {
   .SL.require("xgboost")
   if(packageVersion("xgboost") < 0.6) stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
@@ -56,19 +62,22 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
   if (family$family == "gaussian") {
     model = xgboost::xgboost(data = xgmat, objective="reg:linear", nrounds = ntrees,
                 max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
-                verbose = verbose, nthread = nthread, params = params)
+                verbose = verbose, nthread = nthread, params = params,
+                save_period = save_period)
   }
   if (family$family == "binomial") {
     model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nrounds = ntrees,
                 max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
-                verbose = verbose, nthread = nthread, params = params)
+                verbose = verbose, nthread = nthread, params = params,
+                save_period = save_period)
   }
   if (family$family == "multinomial") {
     # TODO: test this.
     model = xgboost::xgboost(data = xgmat, objective="multi:softmax", nrounds = ntrees,
                 max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
                 verbose = verbose, num_class = length(unique(Y)), nthread = nthread,
-                params = params)
+                params = params,
+                save_period = save_period)
   }
 
   # Newdata needs to be converted to a matrix first, then an xgb.DMatrix.
