@@ -21,6 +21,7 @@ Suggests:
     bigmemory,
     caret,
     class,
+    dbarts,
     e1071,
     earth,
     gam,
