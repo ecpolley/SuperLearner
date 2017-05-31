@@ -15,7 +15,7 @@ build_script:
   - git config --global user.name "travis"
   - git config --global user.email "travis@example.org"
   - Rscript -e "install.packages('xgboost', repos=c('http://dmlc.ml/drat/', 'https://cran.cnr.berkeley.edu/'), type='source')"
-  - Rscript -e "source('http://bioconductor.org/biocLite.R')"
+  - Rscript -e "source('http://bioconductor.org/biocLite.R'); biocLite(c('sva', 'genefilter'))"
   - travis-tool.sh install_deps
   - travis-tool.sh github_package jimhester/covr
 
