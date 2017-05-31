@@ -2,7 +2,7 @@
 
 ---
 Version: 2.0-22
-Date: 2017-03-14
+Date: 2017-05-29
 * Added model.matrix to SL.xgboost
 * Fixed innerCvControl in CV.SuperLearner to allow multiple parameters. It must now be a list of lists.
 * create.Learner(): support character arguments.
@@ -14,6 +14,7 @@ Date: 2017-03-14
 * Added SL.biglasso
 * Added SL.lm, SL.speedlm, and SL.speedglm
 * Added SL.lda and SL.qda
+* Added SL.dbarts for C++-based bayesian additive regression trees.
 
 ---
 Version: 2.0-21
