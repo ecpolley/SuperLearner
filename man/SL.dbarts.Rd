@@ -39,7 +39,7 @@ y is binary.}
 \item{sigquant}{The quantile of the error variance prior that the rough
 estimate (sigest) is placed at. The closer the quantile is to 1, the more
 aggresive the fit will be as you are putting more prior weight on error
-standard deviations (σ) less than the rough estimate. Not applicable when y
+standard deviations (\eqn{\sigma}) less than the rough estimate. Not applicable when y
 is binary.}
 
 \item{k}{For numeric y, k is the number of prior standard deviations E(Y|x) =
@@ -53,7 +53,7 @@ more conservative the fitting will be.}
 \item{base}{Base parameter for tree prior.}
 
 \item{binaryOffset}{Used for binary y. When present, the model is P(Y = 1 |
-x) = Φ(f(x) + binaryOffset), allowing fits with probabilities shrunk
+x) = \eqn{\Phi}(f(x) + binaryOffset), allowing fits with probabilities shrunk
 towards values other than 0.5.}
 
 \item{ntree}{The number of trees in the sum-of-trees formulation.}
