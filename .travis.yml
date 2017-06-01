@@ -16,15 +16,22 @@ sudo: false
 r:
   # Test current version of R, dev version, and previous major verison.
   - release
-  #- devel
-  #- oldrel
+  - devel
+  - oldrel
 
 # This only works if sudo = false.
 cache: packages
 
 os:
   - linux
-  #- osx
+  - osx
+
+matrix:
+  # Report build completion status once non-"allow_failures" builds are done.
+  fast_finish: true
+  # Allow failures on OSX.
+  allow_failures:
+    - os: osx
 
 compiler:
   - gcc
@@ -33,7 +40,7 @@ compiler:
 env:
   global:
     - CRAN="http://cran.rstudio.com"
-    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+    #- R_BUILD_ARGS="--no-build-vignettes --no-manual"
     - R_CHECK_TIME="TRUE"
     - R_CHECK_TESTS="TRUE"
     # This does not appear to do anything.
@@ -42,7 +49,8 @@ env:
     #- _R_CHECK_FORCE_SUGGESTS_=0
 
 warnings_are_errors: true
-r_check_args: "--no-build-vignettes --no-manual --as-cran --timings"
+#r_check_args: "--no-build-vignettes --no-manual --as-cran --timings"
+r_check_args: "--as-cran --timings"
 
 r_packages:
 # Install survival directly, to get the latest version and avoid
