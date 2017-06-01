@@ -371,8 +371,9 @@ num_cores = RhpcBLASctl::get_num_cores()
 # How many cores does this computer have?
 num_cores
 
-# Use all of those cores for parallel SuperLearner.
-options(mc.cores = num_cores)
+# Use 2 of those cores for parallel SuperLearner.
+# Replace "2" with "num_cores" (without quotes) to use all cores.
+options(mc.cores = 2)
 
 # Check how many parallel workers we are using (on macOS/Linux).
 getOption("mc.cores")
@@ -397,7 +398,8 @@ Here is the "snow" equivalent:
 
 ```{r snow-cvsl}
 # Make a snow cluster
-cluster = parallel::makeCluster(num_cores)
+# Again, replace 2 with num_cores to use all available cores.
+cluster = parallel::makeCluster(2)
 
 # Check the cluster object.
 cluster
@@ -449,7 +451,8 @@ Now the "snow" version, which should be parallel on all operating systems.
 
 ```{r snowSuperLearner}
 # Make a snow cluster
-cluster = parallel::makeCluster(num_cores)
+# Reminder: change "2" to "num_cores" (without quotes) to use all available cores.
+cluster = parallel::makeCluster(2)
 
 # Check the cluster object.
 cluster
