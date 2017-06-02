@@ -39,7 +39,7 @@ all non-binary variables are scaled. Per default, data are scaled
 internally (both x and y variables) to zero mean and unit variance. The
 center and scale values are returned and used for later predictions.}
 
-\item{C}{cost of constraints violation (default: 1) this is the ‘C’-constant
+\item{C}{cost of constraints violation (default: 1) this is the 'C'-constant
 of the regularization term in the Lagrange formulation.}
 
 \item{nu}{parameter needed for nu-svc, one-svc, and nu-svr. The nu parameter

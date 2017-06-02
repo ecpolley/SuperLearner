@@ -40,7 +40,7 @@
 #' @param printevery As the MCMC runs, a message is printed every printevery
 #'   draws.
 #' @param keepevery Every keepevery draw is kept to be returned to the user.
-#'   Useful for “thinning” samples.
+#'   Useful for "thinning" samples.
 #' @param keeptrainfits If TRUE the draws of f(x) for x corresponding to the
 #'   rows of x.train are returned.
 #' @param usequants When TRUE, determine tree decision rules using estimated
