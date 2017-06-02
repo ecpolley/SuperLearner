@@ -22,7 +22,7 @@
 #'   all non-binary variables are scaled. Per default, data are scaled
 #'   internally (both x and y variables) to zero mean and unit variance. The
 #'   center and scale values are returned and used for later predictions.
-#' @param C cost of constraints violation (default: 1) this is the ‘C’-constant
+#' @param C cost of constraints violation (default: 1) this is the 'C'-constant
 #'   of the regularization term in the Lagrange formulation.
 #' @param nu parameter needed for nu-svc, one-svc, and nu-svr. The nu parameter
 #'   sets the upper bound on the training error and the lower bound on the

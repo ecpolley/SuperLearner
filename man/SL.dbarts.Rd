@@ -67,7 +67,7 @@ will actually be returned.}
 draws.}
 
 \item{keepevery}{Every keepevery draw is kept to be returned to the user.
-Useful for “thinning” samples.}
+Useful for "thinning" samples.}
 
 \item{keeptrainfits}{If TRUE the draws of f(x) for x corresponding to the
 rows of x.train are returned.}
