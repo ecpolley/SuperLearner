@@ -1,3 +1,4 @@
+# Docs: https://www.appveyor.com/docs/build-configuration/
 # DO NOT CHANGE the "init" and "install" sections below
 
 # Download script file from GitHub
@@ -6,16 +7,24 @@ init:
         $ErrorActionPreference = "Stop"
         Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
+
 install:
   ps: Bootstrap
 
 # Adapt as necessary starting from here
 
+before_build:
+  # Avoid note about non-standard file/directory during R CMD check.
+  - bash -c "echo '^travis-tool\.sh\.cmd$' >> .Rbuildignore"
+
 build_script:
   - git config --global user.name "travis"
   - git config --global user.email "travis@example.org"
   - Rscript -e "install.packages('xgboost', repos=c('http://dmlc.ml/drat/', 'https://cran.cnr.berkeley.edu/'), type='source')"
-  - Rscript -e "source('http://bioconductor.org/biocLite.R'); biocLite(c('sva', 'genefilter'))"
+  #- travis-tool.sh install_bioc BiocInstaller
+  - Rscript -e "source('https://bioconductor.org/biocLite.R'); biocLite()"
+  #- travis-tool.sh install_bioc sva genefilter
+  - travis-tool.sh install_bioc_deps
   - travis-tool.sh install_deps
   - travis-tool.sh github_package jimhester/covr
 
@@ -38,6 +47,8 @@ environment:
 
   matrix:
     - R_VERSION: release
+    - R_VERSION: devel
+    - R_VERSION: oldrel
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
