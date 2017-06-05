@@ -12,6 +12,7 @@ install:
 # Adapt as necessary starting from here
 
 build_script:
+  - Rscript -e "print(paste('Appveyor cache skipping setting:', Sys.getenv('APPVEYOR_CACHE_SKIP_RESTORE')))"
   - git config --global user.name "travis"
   - git config --global user.email "travis@example.org"
   - Rscript -e "install.packages('xgboost', repos=c('http://dmlc.ml/drat/', 'https://cran.cnr.berkeley.edu/'), type='source')"
@@ -35,6 +36,8 @@ environment:
     _R_CHECK_FORCE_SUGGESTS_: 0
     R_ARCH: x64
     USE_RTOOLS: true ## to be able to use Remotes (i.e. packages from non-CRAN sources)
+    # Run once as a PR to update the appveyor cache, which should fix glmnet issue.
+    APPVEYOR_CACHE_SKIP_RESTORE: true
 
   matrix:
     - R_VERSION: release
