@@ -36,7 +36,7 @@ environment:
     _R_CHECK_FORCE_SUGGESTS_: 0
     R_ARCH: x64
     USE_RTOOLS: true ## to be able to use Remotes (i.e. packages from non-CRAN sources)
-    # Run once as a PR to update the appveyor cache, which should fix glmnet issue.
+    # Run once as PR to update the appveyor cache, which should fix glmnet issue.
     APPVEYOR_CACHE_SKIP_RESTORE: true
 
   matrix:
