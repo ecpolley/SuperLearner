@@ -4,7 +4,7 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SuperLearner)](http://cran.r-project.org/web/packages/SuperLearner)
 [![Downloads](http://cranlogs.r-pkg.org/badges/SuperLearner)](http://cran.rstudio.com/package=SuperLearner)
 [![Build Status: travis-ci](https://travis-ci.org/ecpolley/SuperLearner.svg?branch=master)](https://travis-ci.org/ecpolley/SuperLearner)
-[![Build Status: appveyor](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)
+[![Build Status: appveyor](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)](https://ci.appveyor.com/project/ecpolley/superlearner)
 [![codecov](https://codecov.io/gh/ecpolley/SuperLearner/branch/master/graph/badge.svg)](https://codecov.io/gh/ecpolley/SuperLearner)
 
 This is the current version of the SuperLearner R package (version 2.*).
