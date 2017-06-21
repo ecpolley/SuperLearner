@@ -39,7 +39,6 @@ compiler:
 
 env:
   global:
-    - CRAN="http://cran.rstudio.com"
     #- R_BUILD_ARGS="--no-build-vignettes --no-manual"
     - R_CHECK_TIME="TRUE"
     - R_CHECK_TESTS="TRUE"
@@ -48,9 +47,27 @@ env:
     # No error if suggested packages are not available.
     #- _R_CHECK_FORCE_SUGGESTS_=0
 
+cran: "http://cran.rstudio.com"
 warnings_are_errors: true
 #r_check_args: "--no-build-vignettes --no-manual --as-cran --timings"
 r_check_args: "--as-cran --timings"
+r_build_args:
+
+# Override default Travis build process so that we can add conditional
+# reverse dependency checking.
+# Build and check lines based on travis docs:
+# https://docs.travis-ci.com/user/languages/r/#Customizing-the-Travis-build-steps
+script:
+  # Install callr manually since CRAN version is old and this may help
+  # tests/cran/revdep.R to work correctly.
+  # Installing using r_github_packages doesn't seem to work right.
+  - Rscript -e 'source("https://install-github.me/r-lib/callr")'
+  - R CMD build . #--no-build-vignettes --no-manual
+  - R CMD check *tar.gz --as-cran --timings
+  - if [ "${SL_CRAN}" == "true" ]; then
+      Rscript --verbose tests/cran/revdep.R;
+    fi
+
 
 r_packages:
 # Install survival directly, to get the latest version and avoid
@@ -59,7 +76,9 @@ r_packages:
 
 r_github_packages:
   - jimhester/covr
- #- jimhester/lintr
+  # Use custom devtools that shows more info during revdep_check()
+  - ck37/devtools
+  #- jimhester/lintr
 
 bioc_packages:
   - sva
@@ -68,5 +87,6 @@ bioc_packages:
 after_success:
   - Rscript -e 'covr::codecov()'
 
-after_failure:
-  - ./travis-tool.sh dump_logs
+#after_failure:
+  # This doesn't do anything because travis-tool.sh is no longer used.
+  # - ./travis-tool.sh dump_logs
