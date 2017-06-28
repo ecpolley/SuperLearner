@@ -6,23 +6,42 @@
 #' @param newX Test dataframe
 #' @param family Gaussian or binomial
 #' @param obsWeights Observation-level weights
+#' @param model Whether to save model.matrix of data in fit object. Set to FALSE
+#'   to save memory.
 #' @param ... Any remaining arguments, not used.
 #'
-# @references
+#' @examples
+#'
+#' data(Boston, package = "MASS")
+#' Y = Boston$medv
+#' # Remove outcome from covariate dataframe.
+#' X = Boston[, -14]
+#'
+#' set.seed(1)
+#'
+#' sl = SuperLearner(Y, X, family = gaussian(),
+#'                   SL.library = c("SL.mean", "SL.lm"))
+#'
+#' print(sl)
+#'
+#' @references
+#'
+#' Fox, J. (2015). Applied regression analysis and generalized linear models.
+#' Sage Publications.
 #'
 #' @seealso \code{\link{predict.SL.lm}} \code{\link[stats]{lm}}
 #'   \code{\link[stats]{predict.lm}}  \code{\link{SL.speedlm}}
 #'
 #' @export
-SL.lm <- function(Y, X, newX, family, obsWeights,
-                       ...) {
+SL.lm <- function(Y, X, newX, family, obsWeights, model = TRUE, ...) {
 
   # X must be a dataframe, not a matrix.
   if (is.matrix(X)) {
     X = as.data.frame(X)
   }
 
-  fit <- stats::lm(Y ~ ., data = X, weights = obsWeights)
+  # qr element is needed in order to predict(), unless we extract coefficents.
+  fit <- stats::lm(Y ~ ., data = X, weights = obsWeights, model = model)
 
   if (is.matrix(newX)) {
     newX = as.data.frame(newX)

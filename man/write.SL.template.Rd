@@ -19,8 +19,6 @@
 \alias{predict.SL.gam}
 \alias{SL.gbm}
 \alias{predict.SL.gbm}
-\alias{SL.glm}
-\alias{predict.SL.glm}
 \alias{SL.glm.interaction}
 \alias{SL.ipredbagg}
 \alias{predict.SL.ipredbagg}

@@ -1,7 +1,7 @@
 library(testthat)
 library(SuperLearner)
 
-context("Wrapper: lm")
+context("Wrapper: glm")
 
 data(Boston, package = "MASS")
 
@@ -20,12 +20,12 @@ set.seed(1)
 
 ##########
 # Try just the wrapper itself, not via SuperLearner
-model = SuperLearner::SL.lm(Y_gaus, X, X, family = gaussian(),
+model = SuperLearner::SL.glm(Y_gaus, X, X, family = gaussian(),
                                   obsWeights = rep(1, nrow(X)))
 print(model$fit$object)
 print(summary(model$fit$object))
 
-model = SuperLearner::SL.lm(Y_bin, X, X, family = binomial(),
+model = SuperLearner::SL.glm(Y_bin, X, X, family = binomial(),
                                   obsWeights = rep(1, nrow(X)))
 print(summary(model$fit$object))
 
@@ -41,7 +41,7 @@ test_that("Memory usage: fit obj does not contain the model element.", {
 
 # Confirm that not conserving memory also works.
 test_that("Memory usage: fit obj does contain the model element.", {
-          model = SuperLearner::SL.lm(Y_bin, X, X, family = binomial(),
+          model = SuperLearner::SL.glm(Y_bin, X, X, family = binomial(),
                                   obsWeights = rep(1, nrow(X)),
                                   model = T)
           expect("model" %in% names(model$fit$object),
@@ -49,9 +49,9 @@ test_that("Memory usage: fit obj does contain the model element.", {
   })
 
 # Confirm matrix X also works.
-model = SuperLearner::SL.lm(Y_gaus, X_mat, X, family = gaussian(), obsWeights = rep(1, nrow(X)))
+model = SuperLearner::SL.glm(Y_gaus, X_mat, X, family = gaussian(), obsWeights = rep(1, nrow(X)))
 print(summary(model$fit$object))
-model = SuperLearner::SL.lm(Y_bin, X_mat, X, family = binomial(), obsWeights = rep(1, nrow(X)))
+model = SuperLearner::SL.glm(Y_bin, X_mat, X, family = binomial(), obsWeights = rep(1, nrow(X)))
 print(summary(model$fit$object))
 
 
@@ -61,7 +61,7 @@ print(summary(model$fit$object))
 
 # Gaussian version.
 sl = SuperLearner(Y_gaus, X, family = gaussian(),
-                  SL.library = c("SL.mean", "SL.lm"))
+                  SL.library = c("SL.mean", "SL.glm"))
 print(sl)
 
 pred = predict(sl, X)
@@ -74,7 +74,7 @@ expect_equal(pred$pred, pred2$pred)
 
 # Binomial version.
 sl = SuperLearner(Y_bin, X, family = binomial(),
-                  SL.library = c("SL.mean", "SL.lm"))
+                  SL.library = c("SL.mean", "SL.glm"))
 print(sl)
 
 pred = predict(sl, X)

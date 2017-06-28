@@ -15,6 +15,7 @@ Date: 2017-05-29
 * Added SL.lm, SL.speedlm, and SL.speedglm
 * Added SL.lda and SL.qda
 * Added SL.dbarts for C++-based bayesian additive regression trees.
+* SL.lm and SL.glm now have a model argument, defaulting to F to conserve memory.
 
 ---
 Version: 2.0-21
