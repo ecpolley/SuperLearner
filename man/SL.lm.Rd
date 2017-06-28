@@ -4,7 +4,7 @@
 \alias{SL.lm}
 \title{Wrapper for lm}
 \usage{
-SL.lm(Y, X, newX, family, obsWeights, model = F, ...)
+SL.lm(Y, X, newX, family, obsWeights, model = TRUE, ...)
 }
 \arguments{
 \item{Y}{Outcome variable}
@@ -17,8 +17,8 @@ SL.lm(Y, X, newX, family, obsWeights, model = F, ...)
 
 \item{obsWeights}{Observation-level weights}
 
-\item{model}{Whether to save model.matrix of data in fit object. Defaults to
-F to save memory.}
+\item{model}{Whether to save model.matrix of data in fit object. Set to FALSE
+to save memory.}
 
 \item{...}{Any remaining arguments, not used.}
 }

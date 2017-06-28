@@ -9,8 +9,8 @@
 #' @param newX Test dataframe
 #' @param family Gaussian or binomial
 #' @param obsWeights Observation-level weights
-#' @param model Whether to save model.matrix of data in fit object. Defaults to
-#'   F to save memory.
+#' @param model Whether to save model.matrix of data in fit object. Set to FALSE
+#' to save memory.
 #' @param ... Any remaining arguments, not used.
 #'
 #' @examples
@@ -36,7 +36,7 @@
 #'   \code{\link[stats]{predict.glm}}  \code{\link{SL.speedglm}}
 #'
 #' @export
-SL.glm <- function(Y, X, newX, family, obsWeights, model = F, ...) {
+SL.glm <- function(Y, X, newX, family, obsWeights, model = TRUE, ...) {
 
   # X must be a dataframe, not a matrix.
   if (is.matrix(X)) {
