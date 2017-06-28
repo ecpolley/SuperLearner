@@ -25,7 +25,7 @@ model = SuperLearner::SL.glm(Y_gaus, X, X, family = gaussian(),
 print(model$fit$object)
 print(summary(model$fit$object))
 
-model = SuperLearner::SL.glm(Y_bin, X, X, family = binomial(),
+model = SuperLearner::SL.glm(Y_bin, X, X, family = binomial(), model = FALSE,
                                   obsWeights = rep(1, nrow(X)))
 print(summary(model$fit$object))
 
