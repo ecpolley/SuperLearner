@@ -85,7 +85,8 @@ bioc_packages:
   - genefilter
 
 after_success:
-  - Rscript -e 'covr::codecov()'
+  # Only check test coverage for R = release and OS = linux.
+  - test ${TRAVIS_R_VERSION_STRING} == "release" && test ${TRAVIS_OS_NAME} == "linux" && Rscript -e 'covr::codecov()'
 
 #after_failure:
   # This doesn't do anything because travis-tool.sh is no longer used.
