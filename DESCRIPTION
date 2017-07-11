@@ -25,6 +25,7 @@ Suggests:
     devtools,
     e1071,
     earth,
+    extraTrees,
     gam,
     gbm,
     genefilter,

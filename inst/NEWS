@@ -16,6 +16,7 @@ Date: 2017-05-29
 * Added SL.lda and SL.qda
 * Added SL.dbarts for C++-based bayesian additive regression trees.
 * SL.lm and SL.glm now have a model argument, defaulting to TRUE (matching glm and lm), but can be changed to FALSE to conserve memory. Both wrappers also explicitly convert X matrix to a data frame.
+* Added SL.extraTrees for extremely randomized trees, a random forest variant.
 
 ---
 Version: 2.0-21
