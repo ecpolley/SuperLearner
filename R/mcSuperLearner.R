@@ -162,7 +162,10 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
 	  }
 
     # Compute weights for each algorithm in library.
-    getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
+    getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames,
+                                  obsWeights = obsWeights, control = control,
+                                  verbose = verbose,
+                                  errorsInLibrary = errorsInCVLibrary)
     coef <- getCoef$coef
     names(coef) <- libraryNames
 
@@ -239,15 +242,19 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
     # predY <- do.call('cbind', mclapply(seq(k), FUN = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
 
     # Check for errors.
-    errorsInLibrary <- apply(predY, 2, function(xx) any(is.na(xx)))
+    errorsInLibrary <- apply(predY, 2, function(xx) anyNA(xx))
     if (sum(errorsInLibrary) > 0) {
       if (sum(coef[as.logical(errorsInLibrary)]) > 0) {
-        warning(paste("re-running estimation of coefficients removing failed algorithm(s) \n Orignial coefficients are: \n", coef, "\n"))
+        warning(paste0("Re-running estimation of coefficients removing failed algorithm(s)\n",
+                       "Original coefficients are: \n", paste(coef, collapse = ", "), "\n"))
         Z[, as.logical(errorsInLibrary)] <- 0
         if (all(Z == 0)) {
           stop("All algorithms dropped from library")
         }
-        getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
+        getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames,
+                                      obsWeights = obsWeights, control = control,
+                                      verbose = verbose,
+                                      errorsInLibrary = errorsInLibrary)
         coef <- getCoef$coef
         names(coef) <- libraryNames
       } else {

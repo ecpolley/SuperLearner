@@ -15,8 +15,8 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
   if (is.character(method)) {
     if (exists(method, mode = 'list')) {
       method <- get(method, mode = 'list')
-    } else if (exists(method, mode = 'function', envir = env)) {
-      method <- get(method, mode = 'function', envir = env)()
+    } else if (exists(method, mode = 'function')) {
+      method <- get(method, mode = 'function')()
     }
   } else if (is.function(method)) {
     method <- method()
@@ -163,7 +163,10 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	  }
 
     # Compute weights for each algorithm in library.
-    getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
+    getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames,
+                                  obsWeights = obsWeights, control = control,
+                                  verbose = verbose,
+                                  errorsInLibrary = errorsInCVLibrary)
     coef <- getCoef$coef
     names(coef) <- libraryNames
 
@@ -244,14 +247,18 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 
     # check for errors
     errorsInLibrary <- apply(predY, 2, function(xx) any(is.na(xx)))
-    if(sum(errorsInLibrary) > 0) {
-      if(sum(coef[as.logical(errorsInLibrary)]) > 0) {
-        warning(paste("re-running estimation of coefficients removing failed algorithm(s) \n Orignial coefficients are: \n", coef, "\n"))
+    if (sum(errorsInLibrary) > 0) {
+      if (sum(coef[as.logical(errorsInLibrary)]) > 0) {
+        warning(paste0("Re-running estimation of coefficients removing failed algorithm(s)\n",
+                       "Original coefficients are: \n", paste(coef, collapse = ", "), "\n"))
         Z[, as.logical(errorsInLibrary)] <- 0
-        if(all(Z == 0)) {
+        if (all(Z == 0)) {
           stop("All algorithms dropped from library")
         }
-        getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
+        getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames,
+                                      obsWeights = obsWeights, control = control,
+                                      verbose = verbose,
+                                      errorsInLibrary = errorsInLibrary)
         coef <- getCoef$coef
         names(coef) <- libraryNames
       } else {

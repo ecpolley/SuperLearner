@@ -136,7 +136,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
 			} else {
 				out[, s] <- testAlg$pred
 			}
-			if(verbose) message(paste("CV", libraryNames[s]))
+			if (verbose) message(paste("CV", libraryNames[s]))
 		} #end library
 	  invisible(out)
 	}
@@ -150,23 +150,26 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
 
   # Check for errors. If any algorithms had errors, replace entire column with
   # 0 even if error is only in one fold.
-  errorsInCVLibrary <- apply(Z, 2, function(x) any(is.na(x)))
-  if(sum(errorsInCVLibrary) > 0) {
+  errorsInCVLibrary <- apply(Z, 2, function(x) anyNA(x))
+  if (sum(errorsInCVLibrary) > 0) {
 	  Z[, as.logical(errorsInCVLibrary)] <- 0
 	}
-	if(all(Z == 0)) {
+	if (all(Z == 0)) {
 	 stop("All algorithms dropped from library")
 	}
 
   # Compute weights for each algorithm in library.
-  getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
+  getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames,
+                                obsWeights = obsWeights, control = control,
+                                verbose = verbose,
+                                errorsInLibrary = errorsInCVLibrary)
   coef <- getCoef$coef
   names(coef) <- libraryNames
 
   time_train = proc.time() - time_train_start
 
   # Set a default in case the method does not return the optimizer result.
-  if(!("optimizer" %in% names(getCoef))) {
+  if (!("optimizer" %in% names(getCoef))) {
     getCoef["optimizer"] <- NA
   }
 
@@ -209,7 +212,11 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
   # }
   .predFun <- function(index, lib, Y, dataX, newX, whichScreen, family, id, obsWeights, verbose, control, libraryNames) {
     pred_fn = get(lib$predAlgorithm[index], envir = env)
-    testAlg <- try(do.call(pred_fn, list(Y = Y, X = subset(dataX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
+    testAlg <- try(do.call(pred_fn, list(Y = Y,
+                                         X = subset(dataX,
+                                                    select = whichScreen[lib$rowScreen[index], ], drop=FALSE),
+                                         newX = subset(newX, select = whichScreen[lib$rowScreen[index], ], drop=FALSE),
+                                         family = family, id = id, obsWeights = obsWeights)))
     # testAlg <- try(do.call(lib$predAlgorithm[index], list(Y = Y, X = dataX[, whichScreen[lib$rowScreen[index], drop = FALSE]], newX = newX[, whichScreen[lib$rowScreen[index], drop = FALSE]], family = family, id = id, obsWeights = obsWeights)))
     if (inherits(testAlg, "try-error")) {
       warning(paste("Error in algorithm", lib$predAlgorithm[index], " on full data", "\n  The Algorithm will be removed from the Super Learner (i.e. given weight 0) \n" ))
@@ -227,22 +234,32 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
   }
 
 
-  predY <- do.call('cbind', lapply(seq(k), FUN = .predFun, lib = library$library, Y = Y, dataX = X, newX = newX, whichScreen = whichScreen, family = family, id = id, obsWeights = obsWeights, verbose = verbose, control = control, libraryNames = libraryNames))
+  predY <- do.call('cbind', lapply(seq(k), FUN = .predFun,
+                                   lib = library$library, Y = Y, dataX = X,
+                                   newX = newX, whichScreen = whichScreen,
+                                   family = family, id = id,
+                                   obsWeights = obsWeights, verbose = verbose,
+                                   control = control,
+                                   libraryNames = libraryNames))
 
   # check for errors
-  errorsInLibrary <- apply(predY, 2, function(xx) any(is.na(xx)))
-  if(sum(errorsInLibrary) > 0) {
-	  if(sum(coef[as.logical(errorsInLibrary)]) > 0) {
-		  warning(paste("re-running estimation of coefficients removing failed algorithm(s) \n Orignial coefficients are: \n", coef, "\n"))
+  errorsInLibrary <- apply(predY, 2, function(algorithm) anyNA(algorithm))
+  if (sum(errorsInLibrary) > 0) {
+	  if (sum(coef[as.logical(errorsInLibrary)]) > 0) {
+		  warning(paste0("Re-running estimation of coefficients removing failed algorithm(s)\n",
+		                 "Original coefficients are: \n", paste(coef, collapse = ", "), "\n"))
 		  Z[, as.logical(errorsInLibrary)] <- 0
-		  if(all(Z == 0)) {
+		  if (all(Z == 0)) {
 			  stop("All algorithms dropped from library")
 		  }
-      getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames, obsWeights = obsWeights, control = control, verbose = verbose)
+      getCoef <- method$computeCoef(Z = Z, Y = Y, libraryNames = libraryNames,
+                                    obsWeights = obsWeights, control = control,
+                                    verbose = verbose,
+                                    errorsInLibrary = errorsInLibrary)
       coef <- getCoef$coef
       names(coef) <- libraryNames
 	  } else {
-		  warning("coefficients already 0 for all failed algorithm(s)")
+		  warning("Coefficients already 0 for all failed algorithm(s)")
 	  }
   }
 
