@@ -1,7 +1,12 @@
 # News for the SuperLearner package. #
 
 ---
-Version: 2.0-22-9000
+Version: 2.0-23
+Date: 2017-07-20
+* 
+
+---
+Version: 2.0-22
 Date: 2017-07-07
 * Added model.matrix to SL.xgboost
 * Fixed innerCvControl in CV.SuperLearner to allow multiple parameters. It must now be a list of lists.
