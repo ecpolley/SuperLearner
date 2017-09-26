@@ -142,6 +142,7 @@ SL.dbarts = function(Y, X, newX, family, obsWeights, id,
   #pred = predict(model, newdata = newX)
   if (family$family == "gaussian") {
     pred = model$yhat.test.mean
+  }  
   if (family$family == "binomial") {
     pred = colMeans(pnorm(model$yhat.test))
   }
