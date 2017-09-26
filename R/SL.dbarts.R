@@ -101,13 +101,13 @@ SL.dbarts = function(Y, X, newX, family, obsWeights, id,
                      nskip = 100,
                      printevery = 100,
                      keepevery = 1,
-                     keeptrainfits = T,
-                     usequants = F,
+                     keeptrainfits = TRUE,
+                     usequants = FALSE,
                      numcut = 100,
                      printcutoffs = 0,
                      nthread = 1,
-                     keepcall = T,
-                     verbose = F,
+                     keepcall = TRUE,
+                     verbose = FALSE,
                      ...) {
 
   .SL.require("dbarts")
@@ -142,11 +142,9 @@ SL.dbarts = function(Y, X, newX, family, obsWeights, id,
   #pred = predict(model, newdata = newX)
   if (family$family == "gaussian") {
     pred = model$yhat.test.mean
-  } else {
-    # No mean is provided for binary Y :/
-    pred = colMeans(model$yhat.test)
+  if (family$family == "binomial") {
+    pred = colMeans(pnorm(model$yhat.test))
   }
-
   fit = list(object = model)
   class(fit) = c("SL.dbarts")
   out = list(pred = pred, fit = fit)
