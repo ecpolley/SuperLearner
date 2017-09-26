@@ -2,8 +2,8 @@
 
 ---
 Version: 2.0-23
-Date: 2017-07-20
-* 
+Date: 2017-09-26
+* fixed transformation of outcome in SL.dbarts for binomial family
 
 ---
 Version: 2.0-22
