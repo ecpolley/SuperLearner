@@ -37,12 +37,22 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
   kScreen <- length(library$screenAlgorithm)
   Z <- matrix(NA, N, k)
   libraryNames <- paste(library$library$predAlgorithm, library$screenAlgorithm[library$library$rowScreen], sep="_")
-	
+
+	is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
 	# split data
 	# todo: allow user to supply these, in a cvControl like argument
 	# split should be either a single value between 0 and 1, OR a vector with the validRows
 	if(length(split) == 1) {
-		if(split <= 0 | split >= 1) stop("invalid split value, must be between 0 and 1")
+		if(split <= 0) {
+			stop("invalid split value, must be between 0 and 1")
+		} else if(split >= 1) {
+			if((split <= N)&is.wholenumber(split)) {
+				validRows <- split
+				trainRows <- setdiff(seq(N), validRows)
+			} else {
+				stop("invalid split value, must be between 0 and 1")
+			}
+		}
 		validRows <- sample.int(N, size = round((1 - split)*N))
 		trainRows <- setdiff(seq(N), validRows)
 	} else {
