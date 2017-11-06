@@ -52,9 +52,10 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
 			} else {
 				stop("invalid split value, must be between 0 and 1")
 			}
+		} else {
+			validRows <- sample.int(N, size = round((1 - split)*N))
+			trainRows <- setdiff(seq(N), validRows)
 		}
-		validRows <- sample.int(N, size = round((1 - split)*N))
-		trainRows <- setdiff(seq(N), validRows)
 	} else {
 		if(length(split) >= N) stop("split should be a vector with the row numbers for the samples in the validation split")
 		validRows <- split
