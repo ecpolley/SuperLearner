@@ -37,19 +37,42 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
   kScreen <- length(library$screenAlgorithm)
   Z <- matrix(NA, N, k)
   libraryNames <- paste(library$library$predAlgorithm, library$screenAlgorithm[library$library$rowScreen], sep="_")
-	
-	# split data
-	# todo: allow user to supply these, in a cvControl like argument
-	# split should be either a single value between 0 and 1, OR a vector with the validRows
-	if(length(split) == 1) {
-		if(split <= 0 | split >= 1) stop("invalid split value, must be between 0 and 1")
-		validRows <- sample.int(N, size = round((1 - split)*N))
-		trainRows <- setdiff(seq(N), validRows)
-	} else {
-		if(length(split) >= N) stop("split should be a vector with the row numbers for the samples in the validation split")
-		validRows <- split
-		trainRows <- setdiff(seq(N), validRows)
-	}
+
+  # split data
+  # todo: allow user to supply these, in a cvControl like argument
+  # split should be either a single value between 0 and 1, OR a vector with the validRows
+  # is.wholenumber() borrowed from ?is.integer()
+  is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
+  treatSplitAsIndices <- function(x) {
+    res <- FALSE
+    if(length(x) == 1) {
+      if((x >= 1) & (x <= N) & is.wholenumber(x)) {
+        res <- TRUE
+      }
+    } else if((length(x) > 1) & (length(x) < N)) {
+      res <- TRUE
+    }
+    return(res)
+  }
+  treatSplitAsFraction <- function(x) {
+    res <- FALSE
+    if(length(x) == 1) {
+      if((x > 0) & (x < 1)) {
+        res <- TRUE
+      }
+    }
+    return(res)
+  }
+
+  validRows <- if(treatSplitAsIndices(split)) {
+    split
+  } else if(treatSplitAsFraction(split)) {
+    sample.int(N, size = round((1 - split)*N))
+  } else {
+    stop("split should be a single value between 0 and 1 (not inclusive) OR\n",
+         "a numeric vector containing row numbers of X in the validation sample.")
+  }
+  trainRows <- setdiff(seq(N), validRows)
 	
 	# put fitLibrary in it's own environment to locate later
 	fitLibEnv <- new.env()

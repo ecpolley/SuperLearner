@@ -2,7 +2,7 @@ Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
 Version: 2.0-23-9000
-Date: 2017-07-20
+Date: 2017-11-07
 Authors@R: c(person("Eric", "Polley", email = "polley.eric@mayo.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Sam", "Lendle", role = c("ctb")), person("Mark", "van der Laan", role = c("aut", "ths")))
 Maintainer: Eric Polley <polley.eric@mayo.edu>
 Description: Implements the super learner prediction method and contains a

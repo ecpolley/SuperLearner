@@ -2,8 +2,9 @@
 
 ---
 Version: 2.0-23
-Date: 2017-09-26
+Date: 2017-11-07
 * fixed transformation of outcome in SL.dbarts for binomial family
+* SampleSplitSuperLearner(): support validation sample size of 1 when observation's row number is passed in via 'split'.
 
 ---
 Version: 2.0-22
