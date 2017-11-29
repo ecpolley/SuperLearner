@@ -2,7 +2,7 @@
 #
 #  Created by Eric Polley on 2011-01-01.
 #
-SuperLearner2 <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
+SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
                          method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(),
                          cvControl = list(), obsWeights = NULL, env = parent.frame()) {
 
