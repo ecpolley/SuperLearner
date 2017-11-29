@@ -196,11 +196,12 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 
   time_predict = system.time({
 
-    if (length(library$screenAlgorithm) < 2) {
-      whichScreen <- t(sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
+    whichScreen <- if (length(library$screenAlgorithm) < 2) {
+      sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights), simplify = FALSE)
     } else {
-      whichScreen <- t(parallel::parSapply(cl = cluster, X = library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
+      parallel::parSapply(cl = cluster, X = library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights), simplify = FALSE)
     }
+    whichScreen <- do.call(rbind, whichScreen)
     # change to sapply?
     # for(s in 1:k) {
     #   testAlg <- try(do.call(library$library$predAlgorithm[s], list(Y = Y, X = subset(X, select = whichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(newX, select = whichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = id, obsWeights = obsWeights)))
