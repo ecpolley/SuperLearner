@@ -194,7 +194,8 @@ mcSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
   }
 
   time_predict = system.time({
-    whichScreen <- t(sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights)))
+    whichScreen <- sapply(library$screenAlgorithm, FUN = .screenFun, list = list(Y = Y, X = X, family = family, id = id, obsWeights = obsWeights), simplify = FALSE)
+    whichScreen <- do.call(rbind, whichScreen)
 
     # change to sapply?
     # for(s in 1:k) {
