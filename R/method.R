@@ -51,14 +51,14 @@ method.NNLS <- function() {
       }
 
       initCoef <- coef(fit.nnls)
-  		initCoef[is.na(initCoef)] <- 0.0
+      initCoef[is.na(initCoef)] <- 0.0
       # normalize so sum(coef) = 1 if possible
-  		if (sum(initCoef) > 0) {
-  			coef <- initCoef / sum(initCoef)
-  		} else {
-  			warning("All algorithms have zero weight", call. = FALSE)
-  			coef <- initCoef
-  		}
+      if (sum(initCoef) > 0) {
+        coef <- initCoef / sum(initCoef)
+      } else {
+        warning("All algorithms have zero weight", call. = FALSE)
+        coef <- initCoef
+      }
       out <- list(cvRisk = cvRisk, coef = coef, optimizer = fit.nnls)
       return(out)
     },
@@ -85,31 +85,31 @@ method.NNLS2 <- function() {
     names(cvRisk) <- libraryNames
     # compute coef
     .NNLS <- function(x, y, wt, errorsInLibrary = NULL) {
-    	wX <- sqrt(wt) * x
-    	wY <- sqrt(wt) * y
-    	# Z'Z = n * cov(Z)
-    	D <- t(wX) %*% wX
-    	d <- t(t(wY) %*% wX)
-    	A <- diag(ncol(wX))
-    	b <- rep(0, ncol(wX))
-    	# This will give an error if cov(Z) is singular, meaning at least two
-    	# columns are linearly dependent.
-    	# TODO: This will also error if any learner failed. Fix this.
-    	fit <- quadprog::solve.QP(Dmat = D, dvec = d, Amat = t(A), bvec = b, meq=0)
-    	invisible(fit)
+      wX <- sqrt(wt) * x
+      wY <- sqrt(wt) * y
+      # Z'Z = n * cov(Z)
+      D <- t(wX) %*% wX
+      d <- t(t(wY) %*% wX)
+      A <- diag(ncol(wX))
+      b <- rep(0, ncol(wX))
+      # This will give an error if cov(Z) is singular, meaning at least two
+      # columns are linearly dependent.
+      # TODO: This will also error if any learner failed. Fix this.
+      fit <- quadprog::solve.QP(Dmat = D, dvec = d, Amat = t(A), bvec = b, meq=0)
+      invisible(fit)
     }
     fit.nnls <- .NNLS(x = Z, y = Y, wt = obsWeights,
                       errorsInLibrary = errorsInLibrary)
     initCoef <- fit.nnls$solution
     initCoef[initCoef < 0] <- 0.0
-		initCoef[is.na(initCoef)] <- 0.0
+    initCoef[is.na(initCoef)] <- 0.0
     # normalize so sum(coef) = 1 if possible
-		if(sum(initCoef) > 0) {
-			coef <- initCoef/sum(initCoef)
-		} else {
-			warning("All algorithms have zero weight", call. = FALSE)
-			coef <- initCoef
-		}
+    if(sum(initCoef) > 0) {
+      coef <- initCoef/sum(initCoef)
+    } else {
+      warning("All algorithms have zero weight", call. = FALSE)
+      coef <- initCoef
+    }
     out <- list(cvRisk = cvRisk, coef = coef, optimizer = fit.nnls)
     return(out)
   },
@@ -131,42 +131,42 @@ method.NNloglik <- function() {
       names(cvRisk) <- libraryNames
       # compute coef
       .NNloglik <- function(x, y, wt, start = rep(0, ncol(x))) {
-      	# adapted from MASS pg 445
-      	fmin <- function(beta, X, y, w) {
-      		p <- plogis(crossprod(t(X), beta))
-      		-sum(2 * w * ifelse(y, log(p), log(1-p)))
-      	}
-      	gmin <- function(beta, X, y, w) {
-      		eta <- X %*% beta
-      		p <- plogis(eta)
-      		-2 * t(w * dlogis(eta) * ifelse(y, 1/p, -1/(1-p))) %*% X
-      	}
-      	fit <- optim(start, fmin, gmin, X = x, y = y, w = wt, method = "L-BFGS-B", lower = 0, ...)
-      	invisible(fit)
+        # adapted from MASS pg 445
+        fmin <- function(beta, X, y, w) {
+          p <- plogis(crossprod(t(X), beta))
+          -sum(2 * w * ifelse(y, log(p), log(1-p)))
+        }
+        gmin <- function(beta, X, y, w) {
+          eta <- X %*% beta
+          p <- plogis(eta)
+          -2 * t(w * dlogis(eta) * ifelse(y, 1/p, -1/(1-p))) %*% X
+        }
+        fit <- optim(start, fmin, gmin, X = x, y = y, w = wt, method = "L-BFGS-B", lower = 0, ...)
+        invisible(fit)
       }
       tempZ <- trimLogit(Z, trim = control$trimLogit)
       fit.nnloglik <- .NNloglik(x = tempZ, y = Y, wt = obsWeights)
-  		if (verbose) {
-  			message(paste("Non-Negative log-likelihood convergence: ", fit.nnloglik$convergence == 0))
-  		}
-  		initCoef <- fit.nnloglik$par
+      if (verbose) {
+        message(paste("Non-Negative log-likelihood convergence: ", fit.nnloglik$convergence == 0))
+      }
+      initCoef <- fit.nnloglik$par
       initCoef[initCoef < 0] <- 0.0
-  		initCoef[is.na(initCoef)] <- 0.0
+      initCoef[is.na(initCoef)] <- 0.0
 
-  		# Any algorithms with NA cvRisk will be restricted to 0 coefficient.
-  		# Otherwise algorithms with NA risk and all NA predictions can still receive
-  		# a positive coefficient. This does not bode well for this optimization
-  		# algorithm but we will handle anyway.
-  		if (sum(errorsInLibrary) > 0) {
-  		  initCoef[errorsInLibrary] = 0
-  		}
+      # Any algorithms with NA cvRisk will be restricted to 0 coefficient.
+      # Otherwise algorithms with NA risk and all NA predictions can still receive
+      # a positive coefficient. This does not bode well for this optimization
+      # algorithm but we will handle anyway.
+      if (sum(errorsInLibrary) > 0) {
+        initCoef[errorsInLibrary] = 0
+      }
       # normalize so sum(coef) = 1 if possible
-  		if (sum(initCoef) > 0) {
-  			coef <- initCoef / sum(initCoef)
-  		} else {
-  			warning("All algorithms have zero weight", call. = FALSE)
-  			coef <- initCoef
-  		}
+      if (sum(initCoef) > 0) {
+        coef <- initCoef / sum(initCoef)
+      } else {
+        warning("All algorithms have zero weight", call. = FALSE)
+        coef <- initCoef
+      }
       out <- list(cvRisk = cvRisk, coef = coef, optimizer = fit.nnloglik)
       return(out)
     },
@@ -182,9 +182,9 @@ method.NNloglik <- function() {
   invisible(out)
 }
 
-
 method.CC_LS <- function() {
-	# Contributed by Sam Lendle
+    # Contributed by Sam Lendle
+    # Edited by David Benkeser
   computeCoef = function(Z, Y, libraryNames, verbose, obsWeights,
                          errorsInLibrary = NULL, ...) {
     # compute cvRisk
@@ -198,16 +198,47 @@ method.CC_LS <- function() {
       d <- crossprod(wX, wY)
       A <- cbind(rep(1, ncol(wX)), diag(ncol(wX)))
       bvec <- c(1, rep(0, ncol(wX)))
-      # This will fail if any learners have NA predictions.
-      # TODO: fix this.
       fit <- quadprog::solve.QP(Dmat=D, dvec=d, Amat=A, bvec=bvec, meq=1)
       invisible(fit)
     }
-    fit <- compute(x = Z, y = Y, wt = obsWeights)
+    modZ <- Z
+    # check for columns of all zeros. assume these correspond
+    # to errors that SuperLearner sets equal to 0. not a robust
+    # solution, since in theory an algorithm could predict 0 for
+    # all observations (e.g., SL.mean when all Y in training = 0)
+    naCols <- which(apply(Z, 2, function(z){ all(z == 0 ) }))
+    anyNACols <- length(naCols) > 0
+    if(anyNACols){
+        # if present, throw warning identifying learners
+        warning(paste0(paste0(libraryNames[naCols],collapse = ", "), " have NAs.",
+                       "Removing from super learner."))
+    }
+    # check for duplicated columns
+    dupCols <- which(duplicated(Z, MARGIN = 2))
+    anyDupCols <- length(dupCols) > 0 
+    if(anyDupCols){
+        # if present, throw warning identifying learners
+        warning(paste0(paste0(libraryNames[dupCols],collapse = ", "), 
+                       " are duplicates of previous learners.",
+                       " Removing from super learner."))
+    }
+    # remove from Z if present
+    if(anyDupCols | anyNACols){
+        rmCols <- unique(c(naCols,dupCols))
+        modZ <- Z[,-rmCols]
+    }
+    # compute coefficients on remaining columns
+    fit <- compute(x = modZ, y = Y, wt = obsWeights)
     coef <- fit$solution
     if (anyNA(coef)) {
       warning("Some algorithms have weights of NA, setting to 0.")
       coef[is.na(coef)] = 0
+    }
+    # add in coefficients with 0 weights for algorithms with NAs
+    if(anyDupCols | anyNACols){
+        ind <- c(seq_along(coef), rmCols - 0.5)
+        coef <- c(coef, rep(0, length(rmCols)))
+        coef <- coef[order(ind)]
     }
 
     # Set very small coefficients to 0 and renormalize.
@@ -229,7 +260,8 @@ method.CC_LS <- function() {
 }
 
 method.CC_nloglik <- function() {
-	# Contributed by Sam Lendle
+    # Contributed by Sam Lendle
+    # Edited by David Benkeser
   computePred = function(predY, coef, control, ...) {
     if (sum(coef != 0) == 0) {
       stop("All metalearner coefficients are zero, cannot compute prediction.")
@@ -238,7 +270,20 @@ method.CC_nloglik <- function() {
              matrix(coef[coef != 0]))
   }
   computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
-    logitZ = trimLogit(Z, control$trimLogit)
+    # check for duplicated columns
+    dupCols <- which(duplicated(Z, MARGIN = 2))
+    anyDupCols <- length(dupCols) > 0 
+    modZ <- Z
+    if(anyDupCols){
+        # if present, throw warning identifying learners
+        warning(paste0(paste0(libraryNames[dupCols],collapse = ", "), 
+                       " are duplicates of previous learners.",
+                       " Removing from super learner."))
+        modZ <- modZ[,-dupCols]
+    }
+    modlogitZ <- trimLogit(modZ, control$trimLogit)
+    logitZ <- trimLogit(Z, control$trimLogit)
+
     cvRisk <- apply(logitZ, 2, function(x) -sum(2 * obsWeights *
                                        ifelse(Y, plogis(x, log.p=TRUE),
                                                  plogis(x, log.p=TRUE, lower.tail=FALSE))))
@@ -258,8 +303,8 @@ method.CC_nloglik <- function() {
       }
     }
 
-    lower_bounds = rep(0, ncol(Z))
-    upper_bounds = rep(1, ncol(Z))
+    lower_bounds = rep(0, ncol(modZ))
+    upper_bounds = rep(1, ncol(modZ))
 
     # Any algorithms with NA cvRisk will be restricted to 0 coefficient.
     # Otherwise algorithms with NA risk and all NA predictions can still receive
@@ -269,8 +314,8 @@ method.CC_nloglik <- function() {
       upper_bounds[is.na(cvRisk)] = 0
     }
 
-    r <- nloptr::nloptr(x0 = rep(1 / ncol(Z), ncol(Z)),
-            eval_f = obj_and_grad(Y, logitZ),
+    r <- nloptr::nloptr(x0 = rep(1 / ncol(modZ), ncol(modZ)),
+            eval_f = obj_and_grad(Y, modlogitZ),
             lb = lower_bounds,
             ub = upper_bounds,
             eval_g_eq = function(beta) (sum(beta) - 1),
@@ -284,7 +329,12 @@ method.CC_nloglik <- function() {
       warning("Some algorithms have weights of NA, setting to 0.")
       coef[is.na(coef)] <- 0
     }
-
+    # add in duplicated coefficients equal to 0 
+    if(anyDupCols){
+        ind <- c(seq_along(coef), dupCols - 0.5)
+        coef <- c(coef,rep(0, length(dupCols)))
+        coef <- coef[order(ind)]
+    }
     # set very small coefficients to 0 and renormalize
     coef[coef < 1.0e-4] <- 0
     coef <- coef / sum(coef)
@@ -296,7 +346,7 @@ method.CC_nloglik <- function() {
        computeCoef = computeCoef,
        computePred = computePred)
 }
-
+        
 method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
                        bounds = c(0, Inf), normalize = TRUE) {
   # Contributed by Erin LeDell
@@ -440,8 +490,8 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
                       Z = Z,
                       Y = Y)
         if (res$status < 1 || res$status > 4) {
-		  warning(res$message)
-		}
+      warning(res$message)
+    }
         coef <- res$solution
         if (anyNA(coef)) {
           warning("Some algorithms have weights of NA, setting to 0.")
