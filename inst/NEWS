@@ -2,10 +2,10 @@
 
 ---
 Version: 2.0-23
-Date: 2017-11-29
+Date: 2017-12-13
 * fixed transformation of outcome in SL.dbarts for binomial family
 * SampleSplitSuperLearner(): support validation sample size of 1 when observation's row number is passed in via 'split'.
-* Fixed case where single-column X causes failure in SuperLearner(), snowSuperLearner(), mcSuperLearner(), SampleSplitSuperLearner()
+* Fixed case where single-column X in combination with more than one screening algorithm causes failure in SuperLearner(), snowSuperLearner(), mcSuperLearner(), SampleSplitSuperLearner().
 
 ---
 Version: 2.0-22
