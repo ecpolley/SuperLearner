@@ -38,6 +38,10 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
     Z <- matrix(NA, N, k)
     libraryNames <- paste(library$library$predAlgorithm, library$screenAlgorithm[library$library$rowScreen], sep="_")
 
+    if(p < 2 & !identical(library$screenAlgorithm, "All")) {
+        warning('Screening algorithms specified in combination with single-column X.')
+    }
+
     # split data
     # todo: allow user to supply these, in a cvControl like argument
     # split should be either a single value between 0 and 1, OR a vector with the validRows

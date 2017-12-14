@@ -48,6 +48,10 @@ snowSuperLearner <- function(cluster, Y, X, newX = NULL, family = gaussian(), SL
 	Z <- matrix(NA, N, k)
 	libraryNames <- paste(library$library$predAlgorithm, library$screenAlgorithm[library$library$rowScreen], sep="_")
 
+  if(p < 2 & !identical(library$screenAlgorithm, "All")) {
+    warning('Screening algorithms specified in combination with single-column X.')
+  }
+
 	# put fitLibrary in it's own environment to locate later
 	fitLibEnv <- new.env()
 	assign('fitLibrary', vector('list', length = k), envir = fitLibEnv)
