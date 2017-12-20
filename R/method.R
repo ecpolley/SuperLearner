@@ -214,7 +214,9 @@ method.CC_LS <- function() {
                        "Removing from super learner."))
     }
     # check for duplicated columns
-    dupCols <- which(duplicated(Z, MARGIN = 2))
+    # set a tolerance level to avoid numerical instability
+    tol <- 8
+    dupCols <- which(duplicated(round(Z, tol), MARGIN = 2))
     anyDupCols <- length(dupCols) > 0 
     if(anyDupCols){
         # if present, throw warning identifying learners
@@ -271,7 +273,9 @@ method.CC_nloglik <- function() {
   }
   computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
     # check for duplicated columns
-    dupCols <- which(duplicated(Z, MARGIN = 2))
+    # set a tolerance 
+    tol <- 8
+    dupCols <- which(duplicated(round(Z, tol), MARGIN = 2))
     anyDupCols <- length(dupCols) > 0 
     modZ <- Z
     if(anyDupCols){
