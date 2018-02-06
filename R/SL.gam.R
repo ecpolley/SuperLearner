@@ -19,7 +19,11 @@ SL.gam <- function(Y, X, newX, family, obsWeights, deg.gam = 2, cts.num = 4, ...
     gam.model <- as.formula(paste("Y~", paste(colnames(X), collapse = "+"), sep = ""))
   }
   fit.gam <- gam::gam(gam.model, data = X, family = family, control = gam::gam.control(maxit = 50, bf.maxit = 50), weights = obsWeights)
-  pred <- gam::predict.gam(fit.gam, newdata = newX, type = "response")
+  if(packageVersion('gam') >= 1.15) {
+    pred <- gam::predict.Gam(fit.gam, newdata = newX, type = "response") # updated gam class in version 1.15
+  } else {
+    pred <- gam::predict.gam(fit.gam, newdata = newX, type = "response")
+  }
   fit <- list(object = fit.gam)
   out <- list(pred = pred, fit = fit)
   class(out$fit) <- c("SL.gam")
@@ -28,7 +32,12 @@ SL.gam <- function(Y, X, newX, family, obsWeights, deg.gam = 2, cts.num = 4, ...
 
 predict.SL.gam <- function(object, newdata, ...){
   .SL.require('gam')
-  pred <- gam::predict.gam(object = object$object, newdata = newdata, type = "response")
+  if(packageVersion('gam') >= 1.15) {
+    pred <- gam::predict.Gam(object = object$object, newdata = newdata, type = "response") # updated gam class in version 1.15
+  } else {
+    pred <- gam::predict.gam(object = object$object, newdata = newdata, type = "response")
+  }
+  
   return(pred)
 }
 
