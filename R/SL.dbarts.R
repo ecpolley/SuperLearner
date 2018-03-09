@@ -144,7 +144,7 @@ SL.dbarts = function(Y, X, newX, family, obsWeights, id,
     pred = model$yhat.test.mean
   }  
   if (family$family == "binomial") {
-    pred = colMeans(pnorm(model$yhat.test))
+    pred = colMeans(stats::pnorm(model$yhat.test))
   }
   fit = list(object = model)
   class(fit) = c("SL.dbarts")
