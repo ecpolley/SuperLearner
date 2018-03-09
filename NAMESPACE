@@ -5,7 +5,7 @@ importFrom(stats, coef)
 importFrom(stats, predict)
 importFrom(graphics, plot)
 
-importFrom("stats", "as.formula", "binomial", "cor.test", "dlogis", "formula", "gaussian", "glm", "lm", "loess", "loess.control", "model.matrix", "optim", "plogis", "predict.lm", "qnorm", "reorder", "sd", "step", "var", "weighted.mean")
+importFrom("stats", "as.formula", "binomial", "cor.test", "dlogis", "formula", "gaussian", "glm", "lm", "loess", "loess.control", "model.matrix", "optim", "plogis", "pnorm", "predict.lm", "qnorm", "reorder", "sd", "step", "var", "weighted.mean")
 importFrom("utils", "capture.output", "RShowDoc", "packageVersion")
 
 S3method(print, SuperLearner)
