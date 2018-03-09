@@ -11,7 +11,7 @@ simY <- 10*simX$a + rnorm(n)
 test_that("Function works with/without duplicates.",{
   # should throw a warning for duplicated columns
   set.seed(1234)
-  expect_warning(test_sl1 <- SuperLearner(Y = simY, X = simX,
+  expect_warning(test_sl1 <<- SuperLearner(Y = simY, X = simX,
                           method = "method.CC_LS",
                           SL.library = c("SL.glm","SL.glm","SL.mean")))
   # second coefficient should be 0
