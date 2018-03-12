@@ -31,7 +31,6 @@ Suggests:
     genefilter,
     ggplot2,
     glmnet,
-    Hmisc,
     ipred,
     KernelKnn,
     kernlab,
