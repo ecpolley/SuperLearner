@@ -56,7 +56,6 @@ Suggests:
     SIS,
     speedglm,
     spls,
-    stepPlr,
     sva,
     testthat,
     xgboost (>= 0.6)
