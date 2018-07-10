@@ -1,6 +1,10 @@
 # News for the SuperLearner package. #
 
 ---
+Version: 2.0-25
+Date: 2018-07-10
+
+---
 Version: 2.0-24
 Date: 2018-07-10
 * remove multicore test in randomForest test. Was generating warning note on CRAN devel
