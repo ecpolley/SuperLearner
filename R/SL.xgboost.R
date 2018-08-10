@@ -10,7 +10,7 @@
 #'
 #' If you run into errors please first try installing the latest version of
 #' XGBoost from drat as described here:
-#' \url{https://github.com/dmlc/xgboost/blob/master/doc/build.md#r-package-installation}
+#' \url{http://xgboost.readthedocs.io/en/latest/build.html}
 #'
 #' @param Y Outcome variable
 #' @param X Covariate dataframe
@@ -29,7 +29,7 @@
 #' @param minobspernode Minimum observations allowed per tree node, after which
 #'   no more splitting will occur.
 #' @param params Many other parameters can be customized. See
-#'   \url{https://github.com/dmlc/xgboost/blob/master/doc/parameter.md}
+#'   \url{http://xgboost.readthedocs.io/en/latest/parameter.html}
 #' @param nthread How many threads (cores) should xgboost use. Generally we want
 #'   to keep this to 1 so that XGBoost does not compete with SuperLearner
 #'   parallelization.
