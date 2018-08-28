@@ -61,14 +61,14 @@ matrix:
         - quantreg
         - dplyr
         - stringi
-        - ddalpha
-        - prodlim
+        # - ddalpha
+        # - prodlim
         - data.table
         - RhpcBLASctl
         - matrixStats
         - devtools
         - kernlab
-        - e1071
+        # - e1071
         - gam
         - gbm
         - party
