@@ -74,8 +74,8 @@ matrix:
         - party
         - ranger
         - xgboost
-        - class
-        - kernsmooth
+        # - class
+        # - kernsmooth
         - RSQLite # for sva
        #  - sva  # Currently broken if installed automatically, but can't be installed as a binary.
 
