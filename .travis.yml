@@ -36,10 +36,10 @@ matrix:
   # oldrel (R 3.3) can't use r_binary_packages, but instead can use Travis's
   # package caching. However if cache is invalidated due to a build error it
   # will be slow to build on the next Travis CI run.
-    - os: linux
-      r: oldrel
-      dist: trusty
-      sudo: false
+  #  - os: linux
+  #    r: oldrel
+  #    dist: trusty
+  #    sudo: false
     - os: linux
       r: release
       dist: trusty
