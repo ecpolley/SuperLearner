@@ -3,6 +3,7 @@
 ---
 Version: 2.0-25
 Date: 2018-07-10
+* Updated listWrappers() to allow search results without SuperLearner loaded
 
 ---
 Version: 2.0-24
