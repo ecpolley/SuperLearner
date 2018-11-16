@@ -1,5 +1,5 @@
 listWrappers <- function(what = "both") {
-	everything <- getNamespaceExports("SuperLearner")
+	everything <- sort(getNamespaceExports("SuperLearner"))
 	if(what == "both") {
 		message("All prediction algorithm wrappers in SuperLearner:\n")
 		print(everything[grepl(pattern="^[S]L", everything)])
