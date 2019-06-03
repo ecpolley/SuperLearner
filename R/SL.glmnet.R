@@ -153,7 +153,7 @@ predict.SL.glmnet <- function(object, newdata,
       newdata = cbind(newdata, new_cols)
 
       # Sort columns in the correct order so that matrix multiplication is correct.
-      newdata = newdata[, original_cols]
+      newdata = newdata[, original_cols, drop = FALSE]
     }
   }
 
