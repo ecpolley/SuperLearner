@@ -137,7 +137,7 @@ predict.SL.glmnet <- function(object, newdata,
       warning(paste("Removing extra columns in prediction data:",
                      paste(extra_cols, collapse = ", ")))
 
-      newdata = newdata[, !colnames(newdata) %in% extra_cols, drop = F]
+      newdata = newdata[, !colnames(newdata) %in% extra_cols, drop = FALSE]
     }
   }
 
