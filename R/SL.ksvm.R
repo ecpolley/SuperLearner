@@ -132,7 +132,7 @@ SL.ksvm = function(Y, X, newX, family,
   if (!is.matrix(newX)) {
     newX = model.matrix(~ ., data = newX)
     # Remove intercept column.
-    newX = newX[, -1]
+    newX = newX[, -1, drop = FALSE]
   }
 
   # CK: I could not get this to work using simply predict(). Not sure why.
@@ -172,7 +172,7 @@ predict.SL.ksvm <- function(object, newdata, family, coupler = "minpair", ...) {
   if (!is.matrix(newdata)) {
     newdata = model.matrix(~ ., data = newdata)
     # Remove intercept column.
-    newdata = newdata[, -1]
+    newdata = newdata[, -1, drop = FALSE]
   }
 
   if (family$family == "binomial") {
