@@ -91,6 +91,10 @@ Returns the \code{family} value from above
   \item{fitLibrary}{
 A list with the fitted objects for each algorithm in \code{SL.library} on the full training data set.
 }
+  \item{cvFitLibrary}{
+A list with fitted objects for each algorithm in \code{SL.library} on each of 
+\code{V} different training data sets. 
+}
   \item{varNames}{
 A character vector with the names of the variables in \code{X}.
 }
