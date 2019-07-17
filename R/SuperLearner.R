@@ -106,7 +106,8 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
     }
 
     # create function for the cross-validation step:
-    .crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, kScreen, k, p, libraryNames) {
+    .crossValFUN <- function(valid, Y, dataX, id, obsWeights, library, 
+                             kScreen, k, p, libraryNames, saveCVFitLibrary) {
         tempLearn <- dataX[-valid, , drop = FALSE]
         tempOutcome <- Y[-valid]
         tempValid <- dataX[valid, , drop = FALSE]
@@ -131,6 +132,12 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
 
         # should this be converted to a lapply also?
         out <- matrix(NA, nrow = nrow(tempValid), ncol = k)
+        if(saveCVFitLibrary){
+            model_out <- vector(mode = "list", length = k)
+        }else{
+            model_out <- NULL
+        }
+
         for(s in seq(k)) {
             pred_fn = get(library$library$predAlgorithm[s], envir = env)
             testAlg <- try(do.call(pred_fn, list(Y = tempOutcome, X = subset(tempLearn, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), newX = subset(tempValid, select = tempWhichScreen[library$library$rowScreen[s], ], drop=FALSE), family = family, id = tempId, obsWeights = tempObsWeights)))
@@ -139,10 +146,16 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
             # errorsInCVLibrary[s] <<- 1
             } else {
                 out[, s] <- testAlg$pred
+                if(saveCVFitLibrary){
+                    model_out[[s]] <- testAlg$fit
+                }
             }
             if (verbose) message(paste("CV", libraryNames[s]))
         } #end library
-        invisible(out)
+        if(saveCVFitLibrary){
+            names(model_out) <- libraryNames
+        }
+        invisible(list(out = out, model_out = model_out))
     }
     # the lapply performs the cross-validation steps to create Z
     # additional steps to put things in the correct order
@@ -150,8 +163,18 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
     # need to unlist folds to put the rows back in the correct order
     time_train_start = proc.time()
 
-    Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', lapply(validRows, FUN = .crossValFUN, Y = Y, dataX = X, id = id, obsWeights = obsWeights, library = library, kScreen = kScreen, k = k, p = p, libraryNames = libraryNames))
-
+    crossValFUN_out <- lapply(validRows, FUN = .crossValFUN, 
+                              Y = Y, dataX = X, id = id, 
+                              obsWeights = obsWeights, 
+                              library = library, kScreen = kScreen, 
+                              k = k, p = p, libraryNames = libraryNames,
+                              saveCVFitLibrary = control$saveCVFitLibrary)
+    Z[unlist(validRows, use.names = FALSE), ] <- do.call('rbind', lapply(crossValFUN_out, "[[", "out"))
+    if(control$saveCVFitLibrary){
+        cvFitLibrary <- lapply(crossValFUN_out, "[[", "model_out")
+    }else{
+        cvFitLibrary <- NULL
+    }
     # Check for errors. If any algorithms had errors, replace entire column with
     # 0 even if error is only in one fold.
     errorsInCVLibrary <- apply(Z, 2, function(x) anyNA(x))
@@ -301,6 +324,7 @@ SuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
         cvRisk = getCoef$cvRisk,
         family = family,
         fitLibrary = get('fitLibrary', envir = fitLibEnv),
+        cvFitLibrary = cvFitLibrary,
         varNames = varNames,
         validRows = validRows,
         method = method,

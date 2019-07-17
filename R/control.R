@@ -2,12 +2,14 @@
 # 
 # Created by Eric Polley on 2011-01-03.
 # 
-SuperLearner.control <- function(saveFitLibrary = TRUE, trimLogit = 0.001) {
+SuperLearner.control <- function(saveFitLibrary = TRUE, 
+                                 saveCVFitLibrary = FALSE,
+                                 trimLogit = 0.001) {
   if(trimLogit > 0.5) {
     warning('trimLogit must be less than 0.5, will replace with trimLogit = 0.001')
     trimLogit <- 0.001
   }
-  list(saveFitLibrary = saveFitLibrary, trimLogit = trimLogit)
+  list(saveFitLibrary = saveFitLibrary, trimLogit = trimLogit, saveCVFitLibrary = saveCVFitLibrary)
 }
 
 SuperLearner.CV.control <- function(V = 10L, stratifyCV = FALSE, shuffle = TRUE, validRows = NULL){
