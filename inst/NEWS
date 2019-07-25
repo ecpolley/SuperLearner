@@ -5,6 +5,7 @@ Version: 2.0-25
 Date: 2018-07-10
 * Updated listWrappers() to allow search results without SuperLearner loaded
 * Fixed error in 'predict.SL.ksvm' and 'predict.SL.glmnet' when newdata is a single row (added drop = FALSE)
+* Added control option to 'SuperLearner' to save the internal cross-validation algorithm fits as a list. default is FALSE.
 
 ---
 Version: 2.0-24
