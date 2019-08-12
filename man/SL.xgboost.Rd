@@ -36,7 +36,7 @@ overfitting.}
 no more splitting will occur.}
 
 \item{params}{Many other parameters can be customized. See
-\url{https://github.com/dmlc/xgboost/blob/master/doc/parameter.md}}
+\url{https://xgboost.readthedocs.io/en/latest/parameter.html}}
 
 \item{nthread}{How many threads (cores) should xgboost use. Generally we want
 to keep this to 1 so that XGBoost does not compete with SuperLearner
@@ -62,5 +62,5 @@ on cross-validated performance.
 
 If you run into errors please first try installing the latest version of
 XGBoost from drat as described here:
-\url{https://github.com/dmlc/xgboost/blob/master/doc/build.md#r-package-installation}
+\url{https://xgboost.readthedocs.io/en/latest/build.html}
 }
