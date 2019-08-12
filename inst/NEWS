@@ -1,11 +1,23 @@
 # News for the SuperLearner package. #
 
 ---
+Version: 2.0-26-9000
+Date: 2019-08-12
+* 
+
+---
 Version: 2.0-25
-Date: 2018-07-10
+Date: 2019-08-05
 * Updated listWrappers() to allow search results without SuperLearner loaded
 * Fixed error in 'predict.SL.ksvm' and 'predict.SL.glmnet' when newdata is a single row (added drop = FALSE)
 * Added control option to 'SuperLearner' to save the internal cross-validation algorithm fits as a list. default is FALSE.
+* Removed dbarts from Suggests and the associated wrapper over to SuperLearnerExtra. dbarts no longer available on CRAN
+* added prettydoc as a Depends for the vignette
+* changed VignetteBuilder to rmarkdown
+* Removed the SuperLearnerPresent.Rnw file, was a shortcut to create the SuperLearnerR vignette
+* Changed .SL.require to use 'requireNamespace()' instead of 'require()'
+* added '.SL.require("bibmemory")' to 'SL.biglasso.R'
+* allowed SL.gam to use s() instead of gam::s() and 'require' instead of 'requireNamespace`
 
 ---
 Version: 2.0-24
