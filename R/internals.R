@@ -60,7 +60,7 @@
 	if("SL.DSA" %in% library) .SL.require('DSA', message = 'You have selected DSA as a library algorithm but either do not have the DSA package installed or it can not be loaded')
 	if("SL.gam" %in% library) .SL.require('gam', message = 'You have selected gam as a library algorithm but either do not have the gam package installed or it can not be loaded')
 	if("SL.gbm" %in% library) .SL.require('gbm', message = 'You have selected gbm as a library algorithm but either do not have the gbm package installed or it can not be loaded')
-	if("SL.glmnet" %in% library)	.SL.require('glmnet', message = 'You have selected glmnet as a library algorithm but either do not have the glmnet package installed or it can not be loaded')
+	if("SL.glmnet" %in% library) .SL.require('glmnet', message = 'You have selected glmnet as a library algorithm but either do not have the glmnet package installed or it can not be loaded')
 	if("SL.knn" %in% library) .SL.require('class', message = 'You have selected knn as a library algorithm but either do not have the class package installed or it can not be loaded')
 	if("SL.logreg" %in% library) .SL.require('LogicReg', message = 'You have selected logreg as a library algorithm but either do not have the LogicReg package installed or it can not be loaded')
 	if("SL.nnet" %in% library) .SL.require('nnet', message = 'You have selected nnet as a library algorithm but either do not have the nnet package installed or it can not be loaded')
