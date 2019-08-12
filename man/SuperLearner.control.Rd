@@ -7,7 +7,7 @@ Control parameters for the SuperLearner
 \description{
 Control parameters for the \code{SuperLearner}}
 \usage{
-SuperLearner.control(saveFitLibrary = TRUE, trimLogit = 0.001)
+SuperLearner.control(saveFitLibrary = TRUE, saveCVFitLibrary = FALSE, trimLogit = 0.001)
 }
 
 \arguments{
