@@ -4,8 +4,9 @@
 # 
 
 # .SL.require() extends the require() function to add my own error messages
+# If a package uses special functions in a formula, may need to use require() instead
 .SL.require <- function(package, message = paste('loading required package (', package, ') failed', sep = '')) {
-  if(!require(package, character.only = TRUE)) {
+  if(!requireNamespace(package, quietly = FALSE)) {
     stop(message, call. = FALSE)
   }
   invisible(TRUE)
@@ -73,8 +74,9 @@
 	if("SL.mars" %in% library) .SL.require('mda', message = 'You have selected mars as a library algorithm but either do not have the mda package installed or it can not be loaded')
 	if("SL.earth" %in% library) .SL.require('earth', message = 'You have selected earth as a library algorithm but either do not have the earth package installed or it can not be loaded')
 	if("SL.caret" %in% library) .SL.require('caret', message = 'You have selected caret as a library algorithm but either do not have the caret package installed or it can not be loaded')
-	if(!is.null(addPackages)) {
-	  sapply(addPackages, function(x) require(force(x), character.only = TRUE))
-	}
+#	#removing this check, need to replace with requireNamespace per writing R extensions 1.1.3.1
+#	if(!is.null(addPackages)) {
+#	  sapply(addPackages, function(x) require(force(x), character.only = TRUE))
+#	}
 	invisible(TRUE)
 }
