@@ -4,7 +4,7 @@
 
 SL.nnls <- function(Y, X, newX, family, obsWeights, ...) {
   .SL.require("nnls")
-  fit.nnls <- nnls(sqrt(obsWeights)*as.matrix(X), sqrt(obsWeights)*Y) 
+  fit.nnls <- nnls::nnls(sqrt(obsWeights)*as.matrix(X), sqrt(obsWeights)*Y) 
   initCoef <- coef(fit.nnls)
   initCoef[is.na(initCoef)] <- 0
   if (sum(initCoef) > 0) {
