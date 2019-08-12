@@ -79,6 +79,7 @@ SL.biglasso <-
            nfolds = 5,
            ...) {
   .SL.require("biglasso")
+  .SL.require("bigmemory")  
 
   # If binomial, biglasso still wants Y to be a numeric.
 
@@ -135,6 +136,7 @@ SL.biglasso <-
 predict.SL.biglasso <- function(object, newdata,
                               ...) {
   .SL.require("biglasso")
+  .SL.require("bigmemory")
 
   if (!is.matrix(newdata)) {
     newdata = model.matrix(~ ., newdata)
