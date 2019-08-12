@@ -1,8 +1,8 @@
 Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
-Version: 2.0-25-9000
-Date: 2018-07-10
+Version: 2.0-26-9000
+Date: 2019-08-12
 Authors@R: c(person("Eric", "Polley", email = "polley.eric@mayo.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Sam", "Lendle", role = c("ctb")), person("Mark", "van der Laan", role = c("aut", "ths")))
 Maintainer: Eric Polley <polley.eric@mayo.edu>
 Description: Implements the super learner prediction method and contains a
@@ -21,7 +21,6 @@ Suggests:
     bigmemory,
     caret,
     class,
-    dbarts,
     devtools,
     e1071,
     earth,
@@ -58,5 +57,5 @@ Suggests:
     testthat,
     xgboost (>= 0.6)
 LazyLoad: yes
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
 RoxygenNote: 6.0.1
