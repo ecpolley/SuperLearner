@@ -38,20 +38,20 @@ sl
 ####
 
 # Change alpha.
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), alpha = 0)
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), alpha = 0)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), alpha = 0, obsWeights = rep(1, nrow(X)), id = NULL)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), alpha = 0, obsWeights = rep(1, nrow(X)), id = NULL)
 
 # Change useMin.
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), useMin = F)
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), useMin = F)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), useMin = F, obsWeights = rep(1, nrow(X)), id = NULL)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), useMin = F, obsWeights = rep(1, nrow(X)), id = NULL)
 
 # Change nfolds.
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), nfolds = 3)
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), nfolds = 3)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), nfolds = 3, obsWeights = rep(1, nrow(X)), id = NULL)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), nfolds = 3, obsWeights = rep(1, nrow(X)), id = NULL)
 
 # Change loss function.
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), loss = "auc")
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), loss = "mae")
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), loss = "auc", obsWeights = rep(1, nrow(X)), id = NULL)
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), loss = "mae", obsWeights = rep(1, nrow(X)), id = NULL)
 
 #####################
 # Check prediction options
@@ -59,7 +59,7 @@ glmnet = SuperLearner::SL.glmnet(Y, X, X, family = gaussian(), loss = "mae")
 
 newdata = X
 
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial())
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), obsWeights = rep(1, nrow(X)), id = NULL)
 
 # Test adding an extra column, which will generate a warning.
 pred = predict(glmnet$fit, cbind(newdata, extra_column = 5))
