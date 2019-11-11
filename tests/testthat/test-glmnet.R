@@ -21,7 +21,7 @@ set.seed(1, "L'Ecuyer-CMRG")
 ####
 
 # Try just the wrapper itself, not via SuperLearner
-glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial())
+glmnet = SuperLearner::SL.glmnet(Y, X, X, family = binomial(), obsWeights = rep(1, nrow(X)), id = NULL)
 
 # Check prediction.
 pred = predict(glmnet$fit, X)
