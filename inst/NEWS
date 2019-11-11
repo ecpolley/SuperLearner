@@ -3,7 +3,7 @@
 ---
 Version: 2.0-26-9000
 Date: 2019-08-12
-* 
+* Added obsWeights and id arguments to the test-glmnet.R file, line 24
 
 ---
 Version: 2.0-25
