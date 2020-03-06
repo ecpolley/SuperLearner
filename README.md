@@ -27,8 +27,8 @@ This is the current version of the SuperLearner R package (version 2.*).
 ### Install the development version from GitHub:
 
 ```r
-# install.packages("devtools")
-devtools::install_github("ecpolley/SuperLearner")
+# install.packages("remotes")
+remotes::install_github("ecpolley/SuperLearner")
 ```
 
 ### Install the current release from CRAN:
@@ -37,6 +37,7 @@ install.packages("SuperLearner")
 ```
 
 [devtools]: https://github.com/hadley/devtools
+[remotes]: https://cran.r-project.org/web/packages/remotes/index.html
 [CRAN]: https://cran.r-project.org/web/packages/SuperLearner/index.html
 
 ## Examples 
