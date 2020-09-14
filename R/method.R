@@ -174,8 +174,9 @@ method.NNloglik <- function() {
       if (sum(coef != 0) == 0) {
         stop("All metalearner coefficients are zero, cannot compute prediction.")
       }
-      out <- plogis(crossprod(t(trimLogit(predY[, coef != 0], trim = control$trimLogit)),
+      out <- plogis(crossprod(t(trimLogit(predY[, coef != 0, drop = FALSE], trim = control$trimLogit)),
                               coef[coef != 0]))
+      row.names(out) <- row.names(predY)
       return(out)
     }
   )
