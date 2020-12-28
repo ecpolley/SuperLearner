@@ -65,10 +65,12 @@ method.NNLS <- function() {
 
     computePred = function(predY, coef, ...) {
       if (sum(coef != 0) == 0) {
-        stop("All metalearner coefficients are zero, cannot compute prediction.")
+        warning("All metalearner coefficients are zero, predictions will all be equal to 0", call. = FALSE)
+        out <- rep(0, nrow(predY))
+      } else {
+        # Restrict crossproduct to learners with non-zero coefficients.
+        out <- crossprod(t(predY[, coef != 0, drop = FALSE]), coef[coef != 0])
       }
-      # Restrict crossproduct to learners with non-zero coefficients.
-      out <- crossprod(t(predY[, coef != 0, drop = FALSE]), coef[coef != 0])
       return(out)
     }
   )
@@ -172,10 +174,13 @@ method.NNloglik <- function() {
     },
     computePred = function(predY, coef, control, ...) {
       if (sum(coef != 0) == 0) {
-        stop("All metalearner coefficients are zero, cannot compute prediction.")
-      }
-      out <- plogis(crossprod(t(trimLogit(predY[, coef != 0], trim = control$trimLogit)),
+        warning("All metalearner coefficients are zero, predictions will all be equal to 0", call. = FALSE)
+        out <- rep(0, nrow(predY))
+      } else {
+        # Restrict crossproduct to learners with non-zero coefficients.
+        out <- plogis(crossprod(t(trimLogit(predY[, coef != 0], trim = control$trimLogit)),
                               coef[coef != 0]))
+      }
       return(out)
     }
   )
@@ -266,7 +271,7 @@ method.CC_nloglik <- function() {
     # Edited by David Benkeser
   computePred = function(predY, coef, control, ...) {
     if (sum(coef != 0) == 0) {
-      stop("All metalearner coefficients are zero, cannot compute prediction.")
+      warning("All metalearner coefficients are zero, predictions will all be 0", call. = FALSE)
     }
     plogis(trimLogit(predY[, coef != 0], trim = control$trimLogit) %*%
              matrix(coef[coef != 0]))
@@ -438,7 +443,7 @@ method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
       # computePred is a function that takes the weights and the predicted values from each algorithm in the library and combines them based on the model to output the super learner predicted values
       computePred = function(predY, coef, control, ...) {
         if (sum(coef != 0) == 0) {
-          stop("All metalearner coefficients are zero, cannot compute prediction.")
+          warning("All metalearner coefficients are zero, all predictions will be 0")
         }
         out <- crossprod(t(predY[, coef != 0, drop = F]), coef[coef != 0])
         return(out)
