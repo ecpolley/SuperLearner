@@ -1,7 +1,8 @@
-library(testthat)
-library(bartMachine)
+#library(testthat)
+#library(bartMachine)
 
-context("Learner: bartMachine")
+if(all(sapply(c("testthat", "bartMachine"), requireNamespace))){
+testthat::context("Learner: bartMachine")
 
 # Create sample dataset for testing.
 set.seed(1)
@@ -32,3 +33,4 @@ sl <- SuperLearner(Y = Y_reg, X = X, SL.library = SL.library,
 sl
 
 # TODO: test prediction.
+}
