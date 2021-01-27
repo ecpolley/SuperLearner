@@ -1,8 +1,9 @@
-library(testthat)
-library(xgboost)
+# library(testthat)
+# library(xgboost)
 library(SuperLearner)
-
-context("Learner: XGBoost")
+if(all(sapply(c("testthat", "xgboost"), requireNamespace))){
+  
+testthat::context("Learner: XGBoost")
 
 # Create sample dataset for testing.
 set.seed(1)
@@ -39,14 +40,14 @@ summary(pred$pred)
 # Test xgboost - multi-classification
 # TODO: add test here.
 
-test_that("Test create.SL.xgboost", {
+testthat::test_that("Test create.SL.xgboost", {
   # Create a new environment to hold the functions.
   sl_env = new.env()
   xgb_grid = create.SL.xgboost(tune = list(ntrees = c(5, 10), max_depth = c(1, 2),
                       minobspernode = 10, shrinkage = c(0.1, 0.01, 0.001)), env = sl_env)
   xgb_grid
   xgb_functions = ls(sl_env)
-  expect_equal(length(xgb_functions), 12)
+  testthat::expect_equal(length(xgb_functions), 12)
   # Load the functions for use in the SuperLearner call.
   attach(sl_env)
   sl <- SuperLearner(Y = Y_reg, X = X, SL.library = c(SL.library, xgb_grid$names),
@@ -55,3 +56,4 @@ test_that("Test create.SL.xgboost", {
   print(sl)
   detach(sl_env)
 })
+}  # should we add an else, for when package not available?
