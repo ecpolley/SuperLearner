@@ -1,7 +1,9 @@
-library(testthat)
+#library(testthat)
 library(SuperLearner)
 
-context("Wrapper: biglasso")
+if(all(sapply(c("testthat", "biglasso", "bigmemory", "MASS"), requireNamespace))){
+  
+testthat::context("Wrapper: biglasso")
 
 data(Boston, package = "MASS")
 
@@ -49,7 +51,7 @@ summary(pred$pred)
 
 # Confirm prediction on matrix version of X.
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
 
 
 # Binomial version.
@@ -62,10 +64,12 @@ summary(pred$pred)
 
 # Confirm prediction on matrix version of X
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
 
 ####################
 # TODO: test different argument customizations.
 
 ####################
 # TODO: test hyperparameter optimization.
+  
+}
