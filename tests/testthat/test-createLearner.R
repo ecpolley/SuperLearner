@@ -1,6 +1,8 @@
-library(testthat)
+# library(testthat)
 
-context("create.Learner()")
+if(all(sapply(c("testthat", "mlbench", "randomForest", "glmnet", "caret", "e1071"), requireNamespace))){
+  
+testthat::context("create.Learner()")
 
 ############################
 # Setup test dataset from mlbench.
@@ -77,7 +79,7 @@ print(sl)
 # SVM hyperparameters, including a test of character grid elements.
 
 # First remove near-constant X columns to avoid warnings in SVM.
-library(caret)
+# library(caret)
 # Remove zero variance (constant) and near-zero-variance columns.
 # This can help reduce overfitting and also helps us use a basic glm().
 # However, there is a slight risk that we are discarding helpful information.
@@ -98,3 +100,5 @@ sl = SuperLearner(Y = Y, X = X_clean,
                   cvControl = list(V = 3),
                   family = binomial())
 print(sl)
+  
+  }
