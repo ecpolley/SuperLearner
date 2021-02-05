@@ -1,8 +1,10 @@
-library(testthat)
-library(glmnet)
-library(cvAUC)
+#library(testthat)
+#library(glmnet)
+#library(cvAUC)
 
-context("Meta methods")
+if(all(sapply(c("testthat", "glmnet", "cvAUC", "rpart", "quadprog", "nloptr"), requireNamespace))){
+  
+testthat::context("Meta methods")
 
 # Create sample dataset for testing.
 set.seed(1)
@@ -22,18 +24,18 @@ test.NNLS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
 print(test.NNLS)
 
 # Check that predictions >= 0
-expect_gte(min(test.NNLS$SL.predict), 0)
+testthat::expect_gte(min(test.NNLS$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(test.NNLS$SL.predict), 1)
+testthat::expect_lte(max(test.NNLS$SL.predict), 1)
 
 # Test explicit prediction
 pred = predict(test.NNLS)
 summary(pred$pred)
 
 # Check that predictions >= 0
-expect_gte(min(pred$pred), 0)
+testthat::expect_gte(min(pred$pred), 0)
 # Check that predictions <= 1
-expect_lte(max(pred$pred), 1)
+testthat::expect_lte(max(pred$pred), 1)
 
 ##########
 # Test with a failing algorithm.
@@ -47,18 +49,18 @@ sl_bad <- SuperLearner(Y = Y, X = X, verbose = T,
 print(sl_bad)
 
 # Check that predictions >= 0
-expect_gte(min(sl_bad$SL.predict), 0)
+testthat::expect_gte(min(sl_bad$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(sl_bad$SL.predict), 1)
+testthat::expect_lte(max(sl_bad$SL.predict), 1)
 
 # Test explicit prediction
 pred = predict(sl_bad)
 summary(pred$pred)
 
 # Check that predictions >= 0
-expect_gte(min(pred$pred), 0)
+testthat::expect_gte(min(pred$pred), 0)
 # Check that predictions <= 1
-expect_lte(max(pred$pred), 1)
+testthat::expect_lte(max(pred$pred), 1)
 
 # Need to cleanup so future tests don't fail but then use this object.
 rm(sl_bad)
@@ -72,15 +74,15 @@ test.NNLS2 <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
 print(test.NNLS2)
 
 # Check that predictions >= 0
-expect_gte(min(test.NNLS2$SL.predict), 0)
+testthat::expect_gte(min(test.NNLS2$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(test.NNLS2$SL.predict), 1)
+testthat::expect_lte(max(test.NNLS2$SL.predict), 1)
 
 ######
 # Test with a failed algorithm.
 
 # TODO: fix method.NNLS2 for failed algorithms. Not clear how to fix this.
-if (F) {
+if (FALSE) {
   sl_bad <- SuperLearner(Y = Y, X = X, verbose = T,
                          SL.library = c(SL.library, "SL.bad_algorithm"),
                          cvControl = list(V = 2),
@@ -88,18 +90,18 @@ if (F) {
   print(sl_bad)
 
   # Check that predictions >= 0
-  expect_gte(min(sl_bad$SL.predict), 0)
+  testthat::expect_gte(min(sl_bad$SL.predict), 0)
   # Check that predictions <= 1
-  expect_lte(max(sl_bad$SL.predict), 1)
+  testthat::expect_lte(max(sl_bad$SL.predict), 1)
 
   # Test explicit prediction
   pred = predict(sl_bad)
   summary(pred$pred)
 
   # Check that predictions >= 0
-  expect_gte(min(pred$pred), 0)
+  testthat::expect_gte(min(pred$pred), 0)
   # Check that predictions <= 1
-  expect_lte(max(pred$pred), 1)
+  testthat::expect_lte(max(pred$pred), 1)
 
   # Need to cleanup so future tests don't fail but then use this object.
   rm(sl_bad)
@@ -113,9 +115,9 @@ test.NNloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F
 print(test.NNloglik)
 
 # Check that predictions >= 0
-expect_gte(min(test.NNloglik$SL.predict), 0)
+testthat::expect_gte(min(test.NNloglik$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(test.NNloglik$SL.predict), 1)
+testthat::expect_lte(max(test.NNloglik$SL.predict), 1)
 
 ######
 # Test with a failed algorithm.
@@ -129,18 +131,18 @@ print(sl_bad)
 summary(sl_bad$SL.predict)
 
 # Check that predictions >= 0
-expect_gte(min(sl_bad$SL.predict), 0)
+testthat::expect_gte(min(sl_bad$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(sl_bad$SL.predict), 1)
+testthat::expect_lte(max(sl_bad$SL.predict), 1)
 
 # Test explicit prediction
 pred = predict(sl_bad)
 summary(pred$pred)
 
 # Check that predictions >= 0
-expect_gte(min(pred$pred), 0)
+testthat::expect_gte(min(pred$pred), 0)
 # Check that predictions <= 1
-expect_lte(max(pred$pred), 1)
+testthat::expect_lte(max(pred$pred), 1)
 
 # Need to cleanup so future tests don't fail but then use this object.
 rm(sl_bad)
@@ -153,16 +155,16 @@ test.CC_LS <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
 print(test.CC_LS)
 
 # Check that predictions >= 0
-expect_gte(min(test.CC_LS$SL.predict), 0)
+testthat::expect_gte(min(test.CC_LS$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(test.CC_LS$SL.predict), 1)
+testthat::expect_lte(max(test.CC_LS$SL.predict), 1)
 
 
 ######
 # Test with a failed algorithm.
 
 # TODO: fix CC_LS for bad algorithms. Not clear how to do so.
-if (F) {
+if (FALSE) {
   sl_bad <- SuperLearner(Y = Y, X = X, verbose = T,
                          SL.library = c(SL.library, "SL.bad_algorithm"),
                          cvControl = list(V = 2),
@@ -172,18 +174,18 @@ if (F) {
   summary(sl_bad$SL.predict)
 
   # Check that predictions >= 0
-  expect_gte(min(sl_bad$SL.predict), 0)
+  testthat::expect_gte(min(sl_bad$SL.predict), 0)
   # Check that predictions <= 1
-  expect_lte(max(sl_bad$SL.predict), 1)
+  testthat::expect_lte(max(sl_bad$SL.predict), 1)
 
   # Test explicit prediction
   pred = predict(sl_bad)
   summary(pred$pred)
 
   # Check that predictions >= 0
-  expect_gte(min(pred$pred), 0)
+  testthat::expect_gte(min(pred$pred), 0)
   # Check that predictions <= 1
-  expect_lte(max(pred$pred), 1)
+  testthat::expect_lte(max(pred$pred), 1)
 
   # Need to cleanup so future tests don't fail but then use this object.
   rm(sl_bad)
@@ -197,9 +199,9 @@ test.CC_nloglik <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose =
 print(test.CC_nloglik)
 
 # Check that predictions >= 0
-expect_gte(min(test.CC_nloglik$SL.predict), 0)
+testthat::expect_gte(min(test.CC_nloglik$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(test.CC_nloglik$SL.predict), 1)
+testthat::expect_lte(max(test.CC_nloglik$SL.predict), 1)
 
 ######
 # Test with a failed algorithm.
@@ -213,18 +215,18 @@ print(sl_bad)
 summary(sl_bad$SL.predict)
 
 # Check that predictions >= 0
-expect_gte(min(sl_bad$SL.predict), 0)
+testthat::expect_gte(min(sl_bad$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(sl_bad$SL.predict), 1)
+testthat::expect_lte(max(sl_bad$SL.predict), 1)
 
 # Test explicit prediction
 pred = predict(sl_bad)
 summary(pred$pred)
 
 # Check that predictions >= 0
-expect_gte(min(pred$pred), 0)
+testthat::expect_gte(min(pred$pred), 0)
 # Check that predictions <= 1
-expect_lte(max(pred$pred), 1)
+testthat::expect_lte(max(pred$pred), 1)
 
 # Need to cleanup so future tests don't fail but then use this object.
 rm(sl_bad)
@@ -232,20 +234,20 @@ rm(sl_bad)
 ########################
 # Test method.AUC
 # This may generate a warning about lack of convergence.
-test.AUC <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = F,
+test.AUC <- SuperLearner(Y = Y, X = X, SL.library = SL.library, verbose = FALSE,
                          cvControl = list(V = 2),
                          method = "method.AUC", family = binomial())
 print(test.AUC)
 
 # Check that AUC predictions >= 0
-expect_gte(min(test.AUC$SL.predict), 0)
+testthat::expect_gte(min(test.AUC$SL.predict), 0)
 # Check that NNLS predictions <= 1
-expect_lte(max(test.AUC$SL.predict), 1)
+testthat::expect_lte(max(test.AUC$SL.predict), 1)
 
 ######
 # Test with a failed algorithm.
 
-sl_bad <- SuperLearner(Y = Y, X = X, verbose = T,
+sl_bad <- SuperLearner(Y = Y, X = X, verbose = TRUE,
                        SL.library = c(SL.library, "SL.bad_algorithm"),
                        cvControl = list(V = 2),
                        method = "method.AUC", family = binomial())
@@ -254,18 +256,20 @@ print(sl_bad)
 summary(sl_bad$SL.predict)
 
 # Check that predictions >= 0
-expect_gte(min(sl_bad$SL.predict), 0)
+testthat::expect_gte(min(sl_bad$SL.predict), 0)
 # Check that predictions <= 1
-expect_lte(max(sl_bad$SL.predict), 1)
+testthat::expect_lte(max(sl_bad$SL.predict), 1)
 
 # Test explicit prediction
 pred = predict(sl_bad)
 summary(pred$pred)
 
 # Check that predictions >= 0
-expect_gte(min(pred$pred), 0)
+testthat::expect_gte(min(pred$pred), 0)
 # Check that predictions <= 1
-expect_lte(max(pred$pred), 1)
+testthat::expect_lte(max(pred$pred), 1)
 
 # Need to cleanup so future tests don't fail but then use this object.
 rm(sl_bad)
+
+  }
