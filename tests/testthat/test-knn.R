@@ -1,6 +1,8 @@
-library(testthat)
+# library(testthat)
 
-context("Learner: knn")
+if(all(sapply(c("testthat", "mlbench", "class"), requireNamespace))){
+
+  testthat::context("Learner: knn")
 
 # Load a test dataset.
 data(PimaIndiansDiabetes2, package = "mlbench")
@@ -36,3 +38,5 @@ pred = predict(sl, X_test, X = X_train, Y = Y_train)
 pred
 
 #pred$library.predict[, "SL.knn_All"] == sl$library.predict[, "SL.knn_All"]
+
+  }
