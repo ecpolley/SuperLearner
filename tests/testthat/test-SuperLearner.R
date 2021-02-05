@@ -1,3 +1,6 @@
+library(SuperLearner)
+if(all(sapply(c("randomForest", "glmnet"), requireNamespace))) {
+
 ########################
 # Simulate data
 set.seed(23432)
@@ -19,3 +22,5 @@ sl = SuperLearner(Y, X, SL.library = models, cvControl = cv_control)
 sl
 # Check execution times
 sl$times
+
+}
