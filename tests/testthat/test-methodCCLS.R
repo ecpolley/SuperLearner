@@ -1,7 +1,7 @@
 # library(testthat)
 library(SuperLearner)
 
-if(all(sapply(c("testthat"), requireNamespace))){
+if(all(sapply(c("testthat", "quadprog"), requireNamespace))){
   
 testthat::context("Method: CC_LS")
 
