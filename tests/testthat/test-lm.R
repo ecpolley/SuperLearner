@@ -1,7 +1,9 @@
-library(testthat)
+# library(testthat)
 library(SuperLearner)
 
-context("Wrapper: lm")
+if(all(sapply(c("testthat", "MASS"), requireNamespace))){
+  
+testthat::context("Wrapper: lm")
 
 data(Boston, package = "MASS")
 
@@ -34,17 +36,17 @@ print(summary(model$fit$object))
 print(names(model$fit$object))
 
 # Confirm that we are conserving memory.
-test_that("Memory usage: fit obj does not contain the model element.", {
-          expect(!"model" %in% names(model$fit$object),
+testthat::test_that("Memory usage: fit obj does not contain the model element.", {
+          testthat::expect(!"model" %in% names(model$fit$object),
                  "'model' does exist in the fit object, but shouldn't.")
   })
 
 # Confirm that not conserving memory also works.
-test_that("Memory usage: fit obj does contain the model element.", {
+testthat::test_that("Memory usage: fit obj does contain the model element.", {
           model = SuperLearner::SL.lm(Y_bin, X, X, family = binomial(),
                                   obsWeights = rep(1, nrow(X)),
                                   model = T)
-          expect("model" %in% names(model$fit$object),
+          testthat::expect("model" %in% names(model$fit$object),
                  "'model' should exist in the fit object.")
   })
 
@@ -69,7 +71,7 @@ print(summary(pred$pred))
 
 # Confirm prediction on matrix version of X.
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
 
 
 # Binomial version.
@@ -83,10 +85,12 @@ print(summary(pred$pred))
 
 # Confirm prediction on matrix version of X
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
 
 ####################
 # TODO: test different argument customizations.
 
 ####################
 # TODO: test hyperparameter optimization.
+
+  }
