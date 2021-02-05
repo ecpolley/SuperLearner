@@ -1,8 +1,10 @@
-library(testthat)
+# library(testthat)
 library(SuperLearner)
-library(party)
+# library(party)
 
-context("Learner: cforest")
+if(all(sapply(c("party", "mlbench", "testthat", "ROCR"), requireNamespace))){
+
+testthat::context("Learner: cforest")
 
 ############################
 # Setup test dataset from mlbench.
@@ -68,3 +70,5 @@ sl = SuperLearner(Y = Y_reg, X = X, SL.library = sl_lib,
                   cvControl = list(V = 2),
                   family = gaussian())
 sl
+
+  }
