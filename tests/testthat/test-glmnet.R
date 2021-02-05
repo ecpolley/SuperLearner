@@ -1,7 +1,9 @@
-library(testthat)
+# library(testthat)
 library(SuperLearner)
 
-context("Learner: glmnet")
+if(all(sapply(c("testthat", "glmnet", "mlbench"), requireNamespace))){
+  
+testthat::context("Learner: glmnet")
 
 # Load a test dataset.
 data(PimaIndiansDiabetes2, package = "mlbench")
@@ -88,3 +90,5 @@ tryCatch({
   print(e)
 })
 summary(pred)
+
+  }
