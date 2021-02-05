@@ -1,7 +1,9 @@
-library(testthat)
+# library(testthat)
 library(SuperLearner)
 
-context("Learner: ksvm")
+if(all(sapply(c("testthat", "MASS", "kernlab"), requireNamespace))){
+  
+testthat::context("Learner: ksvm")
 
 data(Boston, package = "MASS")
 
@@ -40,7 +42,7 @@ summary(pred$pred)
 
 # Confirm prediction on matrix version of X
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
 
 
 # Binomial version.
@@ -53,4 +55,6 @@ summary(pred$pred)
 
 # Confirm prediction on matrix version of X
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
+
+  }
