@@ -1,8 +1,10 @@
-library(testthat)
-library(extraTrees)
+# library(testthat)
+# library(extraTrees)
 library(SuperLearner)
 
-context("Learner: extraTrees")
+if(all(sapply(c("testthat", "extraTrees", "MASS", "ranger"), requireNamespace))){
+  
+testthat::context("Learner: extraTrees")
 
 ############################
 # Setup test dataset.
@@ -114,3 +116,5 @@ print(ls(sl_env))
 sl = SuperLearner(Y = Y_bin, X = X, SL.library = c("SL.mean", lib$names),
                   family = binomial(), cvControl = list(V = 2), env = sl_env)
 print(sl)
+  
+  }
