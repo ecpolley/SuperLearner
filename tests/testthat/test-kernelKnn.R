@@ -1,6 +1,8 @@
-library(testthat)
+# library(testthat)
 
-context("Learner: kernelKnn")
+if(all(sapply(c("testthat", "mlbench", "KernelKnn"), requireNamespace))){
+  
+testthat::context("Learner: kernelKnn")
 
 # Load a test dataset.
 data(PimaIndiansDiabetes2, package = "mlbench")
@@ -40,3 +42,4 @@ sl = SuperLearner(Y_gaus, X, family = gaussian(), cvControl = list(V = 2),
                   SL.library = c("SL.mean", "SL.kernelKnn"))
 sl
 
+} 
