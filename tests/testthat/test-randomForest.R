@@ -1,8 +1,10 @@
-library(testthat)
-library(randomForest)
+# library(testthat)
+# library(randomForest)
 library(SuperLearner)
 
-context("Learner: randomForest")
+if(all(sapply(c("testthat", "randomForest", "mlbench"), requireNamespace))){
+  
+testthat::context("Learner: randomForest")
 
 ############################
 # Setup test dataset from mlbench.
@@ -177,3 +179,5 @@ print(sl)
 #                                   family = binomial()))
 #  print(sl)
 #}
+
+  }
