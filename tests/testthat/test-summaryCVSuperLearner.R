@@ -1,6 +1,7 @@
-library(testthat)
 
-context("Method: summary.CV.SuperLearner")
+if(all(sapply(c("testthat", "mlbench", "glmnet", "cvAUC", "quadprog"), requireNamespace))){
+  
+testthat::context("Method: summary.CV.SuperLearner")
 
 ############################
 # Setup test dataset from mlbench.
@@ -47,3 +48,5 @@ cv_sl = CV.SuperLearner(Y = Y, X = X, family = binomial(),
                         SL.library = sl_lib,
                         method = method)
 summary(cv_sl)
+
+  }
