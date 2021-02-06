@@ -1,7 +1,9 @@
-library(testthat)
+#library(testthat)
 library(SuperLearner)
 
-context("Wrapper: QDA")
+if(all(sapply(c("testthat", "MASS"), requireNamespace))){
+  
+testthat::context("Wrapper: QDA")
 
 data(Boston, package = "MASS")
 
@@ -51,7 +53,7 @@ summary(pred$pred)
 
 # Confirm prediction on matrix version of X
 pred2 = predict(sl, X_mat)
-expect_equal(pred$pred, pred2$pred)
+testthat::expect_equal(pred$pred, pred2$pred)
 
 ####################
 # Test different argument customizations.
@@ -67,4 +69,4 @@ sl
 ####################
 # TODO: test hyperparameter optimization.
 
-
+}
