@@ -97,7 +97,7 @@ summary(pred$pred)
 }
 \references{
 Hsu, C. W., Chang, C. C., & Lin, C. J. (2016). A practical guide to support
-vector classification. \url{http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf}
+vector classification. \url{https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf}
 
 Scholkopf, B., & Smola, A. J. (2001). Learning with kernels: support vector
 machines, regularization, optimization, and beyond. MIT press.
