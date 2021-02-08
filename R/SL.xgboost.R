@@ -62,9 +62,9 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
   if (family$family == "gaussian") {
     # reg:linear was deprecated in version 1.1.1.1, changed to reg:squarederror
     if(packageVersion("xgboost") >= "1.1.1.1") {
-      objective <- 'reg:linear'
-      } else {
       objective <- 'reg:squarederror'
+      } else {
+      objective <- 'reg:linear'
     }
     model = xgboost::xgboost(data = xgmat, objective=objective, nrounds = ntrees,
                 max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
@@ -75,7 +75,7 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
     model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nrounds = ntrees,
                 max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
                 verbose = verbose, nthread = nthread, params = params,
-                save_period = save_period)
+                save_period = save_period, eval_metric = "logloss")
   }
   if (family$family == "multinomial") {
     # TODO: test this.
