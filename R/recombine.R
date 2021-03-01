@@ -13,6 +13,7 @@ recombineSL <- function(object, Y, method = "method.NNloglik", verbose = FALSE) 
     stop("The supplied 'object' is not of class, SuperLearner.")
   }
   
+  newMethod <- method
   if (is.character(method)) {
     if (exists(method, mode = 'list')) {
       method <- get(method, mode = 'list')
@@ -35,6 +36,7 @@ recombineSL <- function(object, Y, method = "method.NNloglik", verbose = FALSE) 
   
   # get relevant objects from the SuperLearner fit object
   call <- object$call
+  call[["method"]] <- newMethod
   obsWeights <- object$obsWeights
   control <- object$control
   cvControl <- object$cvControl
@@ -129,6 +131,8 @@ recombineCVSL <- function(object, method = "method.NNloglik", verbose = FALSE, s
   if (!inherits(object, "CV.SuperLearner")) {
     stop("The supplied 'object' is not of class, CV.SuperLearner.")
   }
+  
+  newMethod <- method
   if (is.character(method)) {
     if (exists(method, mode = 'list')) {
       method <- get(method, mode = 'list')
@@ -151,6 +155,7 @@ recombineCVSL <- function(object, method = "method.NNloglik", verbose = FALSE, s
   
   # get relevant objects from the CV.SuperLearner object
   call <- object$call
+  call[["method"]] <- newMethod         
   library <- object$SL.library
   libraryNames <- object$libraryNames
   folds <- object$folds
