@@ -352,7 +352,7 @@ cv_sl = CV.SuperLearner(Y = y_train, X = x_train, family = binomial(), V = 3,
 summary(cv_sl)
 ```
 
-We see here that mtry = 3 performed a little bit better than mtry = 1 or mtry = 7, although the difference is not significant. If we used more data and more cross-validation folds we might see more drastic differences. A higher mtry does better when a small percentage of variables are predictive of the outcome, because it gives each tree a better chance of finding a useful variable.
+We see here that mtry = 7 performed a little bit better than mtry = 1 or mtry = 3, although the difference is not significant. If we used more data and more cross-validation folds we might see more drastic differences. A higher mtry does better when a small percentage of variables are predictive of the outcome, because it gives each tree a better chance of finding a useful variable.
 
 Note that SL.ranger and SL.ranger_2 have the same settings, and their performance is very similar - statistically a tie. It's not exactly equivalent due to random variation in the two forests.
 
@@ -501,7 +501,7 @@ review_weights = function(cv_sl) {
 print(review_weights(cv_sl), digits = 3)
 ```
 
-Notice that in this case the ensemble never uses the mean, lasso, or the randomForest with mtry = 1. Adding multiple configurations of randomForest was helpful because mtry = 7 was used. However, based on the minimum column we can see that no algorithm was used every single time.
+Notice that in this case the ensemble never uses the mean nor the randomForest with mtry = 1. Also the LASSO (glmnet) was only used on a subset of the folds. Adding multiple configurations of randomForest was helpful because mtry = 7 was used. However, based on the minimum column we can see that no algorithm was used every single time.
 
 We recommend reviewing the weight distribution for any SuperLearner project to better understand which algorithms are chosen for the ensemble.
 
