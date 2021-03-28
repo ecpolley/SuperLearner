@@ -2,9 +2,9 @@ Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
 Version: 2.0-27-9000
-Date: 2019-08-12
-Authors@R: c(person("Eric", "Polley", email = "polley.eric@mayo.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Sam", "Lendle", role = c("ctb")), person("Mark", "van der Laan", role = c("aut", "ths")))
-Maintainer: Eric Polley <polley.eric@mayo.edu>
+Date: 2021-03-28
+Authors@R: c(person("Eric", "Polley", email = "epolley@uchicago.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Sam", "Lendle", role = c("ctb")), person("Mark", "van der Laan", role = c("aut", "ths")))
+Maintainer: Eric Polley <epolley@uchicago.edu>
 Description: Implements the super learner prediction method and contains a
     library of prediction algorithms to be used in the super learner.
 License: GPL-3
