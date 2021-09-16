@@ -3,7 +3,6 @@
 [![Join the chat at https://gitter.im/SuperLearner](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/SuperLearner?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/SuperLearner)](http://cran.r-project.org/web/packages/SuperLearner)
 [![Downloads](http://cranlogs.r-pkg.org/badges/SuperLearner)](http://cran.rstudio.com/package=SuperLearner)
-[![Build Status: travis-ci](https://travis-ci.org/ecpolley/SuperLearner.svg?branch=master)](https://travis-ci.org/ecpolley/SuperLearner)
 [![Build Status: appveyor](https://ci.appveyor.com/api/projects/status/github/ecpolley/SuperLearner?branch=master&svg=true)](https://ci.appveyor.com/project/ecpolley/SuperLearner/history)
 [![codecov](https://codecov.io/gh/ecpolley/SuperLearner/branch/master/graph/badge.svg)](https://codecov.io/gh/ecpolley/SuperLearner)
 
