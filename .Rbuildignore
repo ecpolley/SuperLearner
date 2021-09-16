@@ -5,7 +5,6 @@
 ^\.Rproj\.user$
 
 # Automated testing files.
-^\.travis\.yml$
 ^appveyor\.yml$
 ^codecov\.yml$
 ^revdep$
