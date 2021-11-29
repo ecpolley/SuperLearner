@@ -3,6 +3,7 @@
 ---
 Version: 2.0-27-9000
 Date: 2019-10-27
+* Added n.cores argument to SL.gbm
 
 ---
 Version: 2.0-26
