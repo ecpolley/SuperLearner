@@ -3,7 +3,7 @@
 
 SL.loess <- function(Y, X, newX, family, obsWeights, span = 0.75, l.family = "gaussian", ...) {
 	if(family$family == "gaussian") {
-		fit.loess <- loess(as.formula(paste("Y~", names(X))), data = X, family = l.family, span = span, control = loess.control(surface = "direct"), weights = obsWeights)
+		fit.loess <- loess(Y ~ ., data = X, family = l.family, span = span, control = loess.control(surface = "direct"), weights = obsWeights)
 	}
 	if(family$family == "binomial") {
 				stop('family = binomial() not currently implemented for SL.loess')
