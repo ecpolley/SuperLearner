@@ -4,6 +4,7 @@
 Version: 2.0-27-9000
 Date: 2019-10-27
 * Added n.cores argument to SL.gbm
+* fixed formula warning in SL.loess. Note the loess() function is limited to 1-4 features
 
 ---
 Version: 2.0-26
