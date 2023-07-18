@@ -48,7 +48,7 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
                       save_period = NULL,
                       ...) {
   .SL.require("xgboost")
-  if(packageVersion("xgboost") < 0.6) stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
+  if(packageVersion("xgboost") < "0.6") stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
   # X needs to be converted to a matrix first, then an xgb.DMatrix.
   if (!is.matrix(X)) {
     X = model.matrix(~ . - 1, X)
@@ -106,7 +106,7 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
 #' @param ... Any remaining arguments (not supported though).
 predict.SL.xgboost <- function(object, newdata, family, ...) {
   .SL.require("xgboost")
-  if(packageVersion("xgboost") < 0.6) stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
+  if(packageVersion("xgboost") < "0.6") stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
   # newdata needs to be converted to a matrix first
   if (!is.matrix(newdata)) {
     newdata = model.matrix(~ . - 1, newdata)
