@@ -20,7 +20,7 @@ SL.gam <- function(Y, X, newX, family, obsWeights, deg.gam = 2, cts.num = 4, ...
     gam.model <- as.formula(paste("Y~", paste(colnames(X), collapse = "+"), sep = ""))
   }
   fit.gam <- gam::gam(gam.model, data = X, family = family, control = gam::gam.control(maxit = 50, bf.maxit = 50), weights = obsWeights)
-  if(packageVersion('gam') >= 1.15) {
+  if(packageVersion('gam') >= "1.15") {
     pred <- gam::predict.Gam(fit.gam, newdata = newX, type = "response") # updated gam class in version 1.15
   } else {
     stop("This SL.gam wrapper requires gam version >= 1.15, please update the gam package with 'update.packages('gam')'")
@@ -33,7 +33,7 @@ SL.gam <- function(Y, X, newX, family, obsWeights, deg.gam = 2, cts.num = 4, ...
 
 predict.SL.gam <- function(object, newdata, ...){
   .SL.require('gam')
-  if(packageVersion('gam') >= 1.15) {
+  if(packageVersion('gam') >= "1.15") {
     pred <- gam::predict.Gam(object = object$object, newdata = newdata, type = "response") # updated gam class in version 1.15
   } else {
     stop("This SL.gam wrapper requires gam version >= 1.15, please update the gam package with 'update.packages('gam')'")
