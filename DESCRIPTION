@@ -1,8 +1,8 @@
 Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
-Version: 2.0-29-9000
-Date: 2023-07-18
+Version: 2.0-30-9000
+Date: 2024-02-06
 Authors@R: c(person("Eric", "Polley", email = "epolley@uchicago.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Sam", "Lendle", role = c("ctb")), person("Mark", "van der Laan", role = c("aut", "ths")))
 Maintainer: Eric Polley <epolley@uchicago.edu>
 Description: Implements the super learner prediction method and contains a
@@ -24,7 +24,6 @@ Suggests:
     devtools,
     e1071,
     earth,
-    extraTrees,
     gam (>= 1.15),
     gbm,
     genefilter,
