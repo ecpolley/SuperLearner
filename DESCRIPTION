@@ -13,7 +13,8 @@ Depends:
     R (>= 2.14.0),
     nnls
 Imports:
-    cvAUC
+    cvAUC,
+    methods
 Suggests:
     arm,
     bartMachine,
