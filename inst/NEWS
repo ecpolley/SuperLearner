@@ -1,11 +1,16 @@
 # News for the SuperLearner package. #
 
 ---
-Version: 2.0-29-9000
-Date: 2019-10-27
+Version: 2.0-30-9000
+Date: 2024-02-06
+
+---
+Version: 2.0-29
+Date: 2024-02-06
 * Added n.cores argument to SL.gbm
 * fixed formula warning in SL.loess. Note the loess() function is limited to 1-4 features
 * fixed version checks to be character instead of numeric
+* removes SL.extraTrees (no longer on CRAN, available at SuperLearnerExtra)
 
 ---
 Version: 2.0-28
