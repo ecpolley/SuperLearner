@@ -31,6 +31,6 @@ A list of length V where each element in the list is a vector with the row numbe
 }
 }
 
-\author{ Eric C Polley \email{polley.eric@mayo.edu} }
+\author{ Eric C Polley \email{epolley@uchicago.edu} }
 
 \keyword{utilities}
