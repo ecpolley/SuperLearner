@@ -22,7 +22,7 @@
 #' @return \item{pred}{ Predicted values from Super Learner fit}
 #' \item{library.predict}{ Predicted values for each algorithm in library}
 #'
-#' @author Eric C Polley \email{polley.eric@@mayo.edu}
+#' @author Eric C Polley \email{epolley@uchicago.edu}
 #'
 #' @seealso \code{\link{SuperLearner}}
 #'
