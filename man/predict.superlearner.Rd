@@ -42,6 +42,6 @@ algorithm name (e.g. \code{predict.SL.glm} for \code{SL.glm}).
 \code{\link{SuperLearner}}
 }
 \author{
-Eric C Polley \email{polley.eric@mayo.edu}
+Eric C Polley \email{epolley@uchicago.edu}
 }
 \keyword{models}
