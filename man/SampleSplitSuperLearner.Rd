@@ -112,7 +112,7 @@ A logical vector indicating if any algorithms experienced an error on the full d
 \references{ 
 	van der Laan, M. J., Polley, E. C. and Hubbard, A. E. (2008) Super Learner, \emph{Statistical Applications of Genetics and Molecular Biology}, \bold{6}, article 25.  
 }
-\author{ Eric C Polley \email{polley.eric@mayo.edu} }
+\author{ Eric C Polley \email{epolley@uchicago.edu} }
 
 \examples{
 \dontrun{
