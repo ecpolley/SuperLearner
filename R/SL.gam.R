@@ -7,7 +7,7 @@
 SL.gam <- function(Y, X, newX, family, obsWeights, deg.gam = 2, cts.num = 4, ...) {
 # requireNamespace() alone does not work. requireNamespace, unlike require(), does not attached the package and allow the formula to parse correctly with s(), gam::s() doesn't work, is not recognized as a special function
   if(!requireNamespace('gam')) {stop("SL.gam requires the gam package, but it isn't available")}
-  if(!"gam" %in% loadedNamespaces()) attachNamespace('gam')
+  if (!"package:gam" %in% search()) attachNamespace('gam') # check if gam attached, if not, then attached
   if("mgcv" %in% loadedNamespaces()) warning("mgcv and gam packages are both in use. You might see an error because both packages use the same function names.")
   # create the formula for gam with a spline for each continuous variable
   cts.x <- apply(X, 2, function(x) (length(unique(x)) > cts.num))
