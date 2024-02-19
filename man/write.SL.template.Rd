@@ -85,7 +85,7 @@ A list. Contains all objects necessary to get predictions for new observations f
 }
 }
 
-\author{ Eric C Polley \email{polley.eric@mayo.edu} }
+\author{ Eric C Polley \email{epolley@uchicago.edu} }
 
 
 \seealso{
