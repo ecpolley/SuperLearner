@@ -1,5 +1,10 @@
-.onAttach <- function(...) {
-  packageStartupMessage('Super Learner')
-  packageStartupMessage('Version: ', utils::packageDescription('SuperLearner')$Version)
-  packageStartupMessage('Package created on ', utils::packageDescription('SuperLearner')$Date, '\n')
+.onAttach <- function(libname, pkgname) {
+  v <- utils::packageVersion(pkgname)
+  b <- utils::packageDate(pkgname)
+
+  foo <- sprintf("%s\nVersion: %s\nPackage created on: %s",
+                 pkgname,
+                 v,
+                 if (anyNA(b)) "unknown" else format(b, "%F"))
+  packageStartupMessage(foo)
 }

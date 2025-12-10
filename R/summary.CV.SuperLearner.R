@@ -1,10 +1,46 @@
+#' Summary Function for Cross-Validated Super Learner
+#'
+#' Summary method for the \code{CV.SuperLearner()} function.
+#'
+#' Summary method for \code{CV.SuperLearner}. Calculates the V-fold
+#' cross-validated estimate of either the mean squared error or the \eqn{-2 \log(L)}
+#' depending on the loss function used.
+#'
+#' @param object An object of class "CV.SuperLearner", the result of a call to
+#' \code{CV.SuperLearner}.
+#' @param obsWeights Optional vector for observation weights.
+#' @param x An object of class "summary.CV.SuperLearner", the result of a call
+#' to \code{summary.CV.SuperLearner()}.
+#' @param digits The number of significant digits to use when printing.
+#' @param \dots Ignored.
+#'
+#' @returns
+#' A list with components
+#' \item{call}{ The function call from \code{CV.SuperLearner} }
+#' \item{method}{ Describes the loss function used.  Currently either least squares of negative log Likelihood. }
+#' \item{V}{ Number of folds }
+#' \item{Risk.SL}{ Risk estimate for the super learner }
+#' \item{Risk.dSL}{ Risk estimate for the
+#' discrete super learner (the cross-validation selector) }
+#' \item{Risk.library}{ A matrix with the risk estimates for each algorithm in the library }
+#' \item{Table}{ A table with the mean risk estimate and standard
+#' deviation across the folds for the super learner and all algorithms in the
+#' library }
+#'
+#' @author Eric C Polley \email{eric.polley@@nih.gov}
+#' @seealso \code{\link{CV.SuperLearner}}
+#' @keywords methods
+
+#' @exportS3Method summary CV.SuperLearner
 summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
 
   if ("env" %in% names(object)) {
     env = object$env
-  } else {
+  }
+  else {
     env = parent.frame()
   }
+
   # Default is "method.NNLS".
   method <- if (is.null(as.list(object$call)[["method"]])) {
     method <- "method.NNLS"
@@ -69,6 +105,8 @@ summary.CV.SuperLearner <- function(object, obsWeights = NULL, ...) {
 	return(out)
 }
 
+#' @exportS3Method print summary.CV.SuperLearner
+#' @rdname summary.CV.SuperLearner
 print.summary.CV.SuperLearner <- function(x, digits = max(2, getOption("digits") - 2), ...) {
 	cat("\nCall: ", deparse(x$call, width.cutoff = .9*getOption("width")), "\n", fill = getOption("width"))
 	cat("Risk is based on: ")

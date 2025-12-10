@@ -50,7 +50,7 @@
 #' sl
 #' }
 #'
-#' @export
+#' @export `create.Learner`
 create.Learner = function(base_learner, params = list(), tune = list(),
                                    env = parent.frame(), name_prefix = base_learner,
                                    detailed_names = F, verbose = F) {
@@ -71,11 +71,11 @@ create.Learner = function(base_learner, params = list(), tune = list(),
 
     if (length(tune) > 0) {
       # Specify drop=F in case tuneGrid is a single-column dataframe.
-      g = tuneGrid[i, , drop=F]
+      g = tuneGrid[i, , drop = FALSE]
 
       # Separate with "_" because some hyperparameters could be floats with a period.
       if (detailed_names) {
-        name = do.call(paste, c(list(name_prefix), g, list(sep="_")))
+        name = do.call(paste, c(list(name_prefix), g, list(sep = "_")))
       }
     } else {
       g = c()
@@ -94,7 +94,7 @@ create.Learner = function(base_learner, params = list(), tune = list(),
       # May need to tweak this if someone really needs to pass a NULL for some reason.
       if (!is.null(val) && val != "NULL") {
         # Add quotes around val if it is a string rather than numeric.
-        if (is(val, "character")) {
+        if (is.character(val)) {
           val = paste0('"', val, '"')
         }
         fn_params = paste0(fn_params, ", ", name_i, "=", val)
