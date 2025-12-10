@@ -1,7 +1,13 @@
-# bayesglm{arm}
-# Bayesian generalized linear regression
+#' Wrapper for Bayesian GLM learner using `arm`
+#'
+#' Support Bayesian GLM via the \pkg{arm} package.
+#'
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 
-SL.bayesglm <- function(Y, X, newX, family, obsWeights, ...){
+#' @export
+SL.bayesglm <- function(Y, X, newX = X, family = gaussian(), obsWeights = NULL, ...){
   .SL.require('arm')
   fit.glm <- arm::bayesglm(Y ~ ., data = X, family = family, weights = obsWeights)
   pred <- predict(fit.glm, newdata = newX, type = "response")
@@ -11,8 +17,10 @@ SL.bayesglm <- function(Y, X, newX, family, obsWeights, ...){
   return(out)
 }
 
-predict.SL.bayesglm <- function(object, newdata, ...){
+#' @exportS3Method predict SL.bayesglm
+#' @rdname SL.bayesglm
+predict.SL.bayesglm <- function(object, newdata, ...) {
   .SL.require('arm')
-  pred <- predict(object = object$object, newdata = newdata, type = "response")
-  return(pred)
+
+  predict(object = object$object, newdata = newdata, type = "response")
 }

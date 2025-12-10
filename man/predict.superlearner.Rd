@@ -4,8 +4,7 @@
 \alias{predict.SuperLearner}
 \title{Predict method for SuperLearner object}
 \usage{
-\method{predict}{SuperLearner}(object, newdata, X = NULL, Y = NULL,
-  onlySL = FALSE, ...)
+\method{predict}{SuperLearner}(object, newdata, X = NULL, Y = NULL, onlySL = FALSE, ...)
 }
 \arguments{
 \item{object}{Fitted object from \code{SuperLearner}}

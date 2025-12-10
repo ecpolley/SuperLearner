@@ -548,7 +548,7 @@ summary(cv_sl)
 
 This conveniently shows us the AUC for each algorithm without us having to calculate it manually. But we aren't getting SEs sadly.
 
-Another important optimizer to consider is negative log likelihood, which is intended for binary outcomes and will often work better than NNLS (the default). This is specified by method = "NNloglik".
+Another important optimizer to consider is negative log likelihood, which is intended for binary outcomes and will often work better than NNLS (the default). This is specified by `method = "NNloglik"`.
 
 # XGBoost hyperparameter exploration
 

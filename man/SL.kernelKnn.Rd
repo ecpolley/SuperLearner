@@ -2,19 +2,34 @@
 % Please edit documentation in R/SL.kernelKnn.R
 \name{SL.kernelKnn}
 \alias{SL.kernelKnn}
+\alias{predict.SL.kernelKnn}
 \title{SL wrapper for KernelKNN}
 \usage{
-SL.kernelKnn(Y, X, newX, family, k = 10, method = "euclidean",
-  weights_function = NULL, extrema = F, h = 1, ...)
+SL.kernelKnn(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  k = 10,
+  method = "euclidean",
+  weights_function = NULL,
+  extrema = FALSE,
+  h = 1,
+  ...
+)
+
+\method{predict}{SL.kernelKnn}(object, newdata, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Training dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Test dataframe}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{Gaussian or binomial}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
 \item{k}{Number of nearest neighbors to use}
 
@@ -35,18 +50,17 @@ k-nearest-neighbors will be removed (can be thought as outlier removal).}
 \item{h}{the bandwidth, applicable if the weights_function is not NULL.
 Defaults to 1.0.}
 
-\item{...}{Any additional parameters, not currently passed through.}
-}
-\value{
-List with predictions and the original training data &
-  hyperparameters.
+\item{...}{For SL wrappers, other remaining arguments. For \code{write.SL.template()}, arguments passed to \code{\link[=cat]{cat()}}.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
 Wrapper for a configurable implementation of k-nearest
-  neighbors. Supports both binomial and gaussian outcome distributions.
+neighbors. Supports both binomial and gaussian outcome distributions.
 }
 \examples{
-
 # Load a test dataset.
 data(PimaIndiansDiabetes2, package = "mlbench")
 
@@ -63,5 +77,4 @@ set.seed(1)
 sl = SuperLearner(Y_bin, X, family = binomial(),
                  SL.library = c("SL.mean", "SL.kernelKnn"))
 sl
-
 }

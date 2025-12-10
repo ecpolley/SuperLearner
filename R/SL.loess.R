@@ -1,9 +1,11 @@
 # loess {stats}
 # l.family can be either 'gaussian' (least squares) or 'symmetric' (M-estimator with Tukey's biweight)
 
-SL.loess <- function(Y, X, newX, family, obsWeights, span = 0.75, l.family = "gaussian", ...) {
+#' @export
+SL.loess <- function(Y, X, newX = X, family = gaussian(), obsWeights = NULL, span = 0.75, l.family = "gaussian", ...) {
 	if(family$family == "gaussian") {
-		fit.loess <- loess(Y ~ ., data = X, family = l.family, span = span, control = loess.control(surface = "direct"), weights = obsWeights)
+		fit.loess <- loess(Y ~ ., data = X, family = l.family, span = span,
+		                   control = loess.control(surface = "direct"), weights = obsWeights)
 	}
 	if(family$family == "binomial") {
 				stop('family = binomial() not currently implemented for SL.loess')
@@ -15,9 +17,8 @@ SL.loess <- function(Y, X, newX, family, obsWeights, span = 0.75, l.family = "ga
 	return(out)
 }
 
-# 
+#' @exportS3Method predict SL.loess
 predict.SL.loess <- function(object, newdata, ...) {
-	pred <- predict(object = object$object, newdata = newdata)
-	return(pred)
+	predict(object = object$object, newdata = newdata)
 }
 

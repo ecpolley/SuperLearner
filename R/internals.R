@@ -1,12 +1,12 @@
 # Internal functions for SuperLearner package
-# 
+#
 # Created by Eric Polley on 2011-01-03
-# 
+#
 
 # .SL.require() extends the require() function to add my own error messages
 # If a package uses special functions in a formula, may need to use require() instead
 .SL.require <- function(package, message = paste('loading required package (', package, ') failed', sep = '')) {
-  if(!requireNamespace(package, quietly = FALSE)) {
+  if(!requireNamespace(package, quietly = TRUE)) {
     stop(message, call. = FALSE)
   }
   invisible(TRUE)
@@ -22,7 +22,7 @@
 # the list contains character vectors, and the scructure of the character vectors is always prediction algorithm first, followed by a list of screening algorithms to be coupled with the prediction algorithm.  If no screening algorithm is given (as in "predAlg3" above) then the algorithm will run on the entire set of variables by default.
 
 .createLibrary <- function(SL.library) {
-	if (is.character(SL.library)) { 
+	if (is.character(SL.library)) {
 		k <- length(SL.library)
 		whichScreen <- matrix(1, nrow = 1, ncol = k)
 		screenAlgorithm <- "All"
@@ -38,12 +38,12 @@
 		}
 		screenAlgorithmFull <- unlist(lapply(SL.library, FUN="[", -1))
 		screenAlgorithm <- unique(screenAlgorithmFull)
-		
+
 		library <- data.frame(predAlgorithm = rep(predNames, times=NumberScreen), rowScreen = match(screenAlgorithmFull, screenAlgorithm), stringsAsFactors = FALSE)
 	} else {
 	  stop('format for SL.library is not recognized')
 	}
-	
+
 	out <- list(library = library, screenAlgorithm = screenAlgorithm)
 	return(out)
 }

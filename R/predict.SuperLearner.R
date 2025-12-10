@@ -27,6 +27,7 @@
 #' @seealso \code{\link{SuperLearner}}
 #'
 #' @keywords models
+#' @exportS3Method predict SuperLearner
 predict.SuperLearner <- function(object, newdata, X = NULL, Y = NULL,
                                  onlySL = FALSE, ...) {
   if (missing(newdata)) {

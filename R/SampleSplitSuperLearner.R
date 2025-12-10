@@ -1,8 +1,130 @@
-#  SuperLearner for Sample Split instead of V-fold CV
-#
-#  Created by Eric Polley on 2014-04-15.
-#
-SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library, method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(), split = 0.8, obsWeights = NULL) {
+#' Sampling-Splitting SuperLearner Prediction Function
+#'
+#' @description
+#' A Prediction Function for the SuperLearner. The \code{SuperLearner()}
+#' function takes a training set pair (X, Y) and returns the predicted values
+#' based on a validation set. `SampleSplitSuperLearner()` uses sample split
+#' validation whereas [SuperLearner()] uses V-fold cross-validation.
+#'
+#' @inherit SuperLearner details
+#'
+#' @inheritParams SuperLearner
+#' @param split Either a single value between 0 and 1 indicating the fraction
+#' of the samples for the training split. A value of 0.8 will randomly assign
+#' 80 percent of the samples to the training split and the other 20 percent to
+#' the validation split. Alternatively, split can be a numeric vector with the
+#' row numbers of \code{X} corresponding to the validation split. All other
+#' rows not in the vector will be considered in the training split.
+#'
+#' @returns
+#' \item{call}{ The matched call. }
+#' \item{libraryNames}{ A character
+#' vector with the names of the algorithms in the library. The format is
+#' 'predictionAlgorithm_screeningAlgorithm' with '_All' used to denote the
+#' prediction algorithm run on all variables in X. }
+#' \item{SL.library}{ Returns \code{SL.library} in the same format as the argument with the same name
+#' above. }
+#' \item{SL.predict}{ The predicted values from the super learner for
+#' the rows in \code{newX}. }
+#' \item{coef}{ Coefficients for the super learner.
+#' }
+#' \item{library.predict}{ A matrix with the predicted values from each
+#' algorithm in \code{SL.library} for the rows in \code{newX}. }
+#' \item{Z}{ The
+#' Z matrix (the cross-validated predicted values for each algorithm in
+#' \code{SL.library}). }
+#' \item{cvRisk}{ A numeric vector with the V-fold
+#' cross-validated risk estimate for each algorithm in \code{SL.library}. Note
+#' that this does not contain the CV risk estimate for the SuperLearner, only
+#' the individual algorithms in the library. }
+#' \item{family}{ Returns the
+#' \code{family} value from above }
+#' \item{fitLibrary}{ A list with the fitted
+#' objects for each algorithm in \code{SL.library} on the full training data
+#' set. }
+#' \item{varNames}{ A character vector with the names of the variables
+#' in \code{X}. }
+#' \item{validRows}{ A list containing the row numbers for the
+#' V-fold cross-validation step. }
+#' \item{method}{ A list with the method
+#' functions. }
+#' \item{whichScreen}{ A logical matrix indicating which variables
+#' passed each screening algorithm. }
+#' \item{control}{ The \code{control} list.
+#' } \item{split}{ The \code{split} value. }
+#' \item{errorsInCVLibrary}{ A
+#' logical vector indicating if any algorithms experienced an error within the
+#' CV step. }
+#' \item{errorsInLibrary}{ A logical vector indicating if any
+#' algorithms experienced an error on the full data. }
+#'
+#' @author Eric C Polley \email{epolley@@uchicago.edu}
+#'
+#' @inherit SuperLearner references
+#'
+#' @keywords models
+#'
+#' @examples
+#' \dontrun{
+#' ## simulate data
+#' set.seed(23432)
+#' ## training set
+#' n <- 500
+#' p <- 50
+#' X <- matrix(rnorm(n*p), nrow = n, ncol = p)
+#' colnames(X) <- paste("X", 1:p, sep="")
+#' X <- data.frame(X)
+#' Y <- X[, 1] + sqrt(abs(X[, 2] * X[, 3])) + X[, 2] - X[, 3] + rnorm(n)
+#'
+#' ## test set
+#' m <- 1000
+#' newX <- matrix(rnorm(m*p), nrow = m, ncol = p)
+#' colnames(newX) <- paste("X", 1:p, sep="")
+#' newX <- data.frame(newX)
+#' newY <- newX[, 1] + sqrt(abs(newX[, 2] * newX[, 3])) + newX[, 2] -
+#'   newX[, 3] + rnorm(m)
+#'
+#' # generate Library and run Super Learner
+#' SL.library <- c("SL.glm", "SL.randomForest", "SL.gam",
+#'   "SL.polymars", "SL.mean")
+#'
+#' test <- SampleSplitSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
+#'                                 verbose = TRUE, method = "method.NNLS")
+#'
+#' test
+#'
+#' # library with screening
+#' SL.library <- list(c("SL.glmnet", "All"),
+#'                    c("SL.glm", "screen.randomForest", "All", "screen.SIS"),
+#'                    "SL.randomForest",
+#'                    c("SL.polymars", "All"),
+#'                    "SL.mean")
+#'
+#' test <- SampleSplitSuperLearner(Y = Y, X = X, newX = newX, SL.library = SL.library,
+#'                                 verbose = TRUE, method = "method.NNLS")
+#' test
+#'
+#' # binary outcome
+#' set.seed(1)
+#' N <- 200
+#' X <- matrix(rnorm(N*10), N, 10)
+#' X <- as.data.frame(X)
+#' Y <- rbinom(N, 1, plogis(.2*X[, 1] + .1*X[, 2] - .2*X[, 3] +
+#'   .1*X[, 3]*X[, 4] - .2*abs(X[, 4])))
+#'
+#' SL.library <- c("SL.glmnet", "SL.glm", "SL.knn", "SL.gam", "SL.mean")
+#'
+#' # least squares loss function
+#' test.NNLS <- SampleSplitSuperLearner(Y = Y, X = X, SL.library = SL.library,
+#'                                      verbose = TRUE, method = "method.NNLS",
+#'                                      family = binomial())
+#' test.NNLS
+#' }
+
+#' @export
+SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.library,
+                                    method = 'method.NNLS', id = NULL, verbose = FALSE, control = list(),
+                                    split = 0.8, obsWeights = NULL) {
     if(is.character(method)) {
         if(exists(method, mode = 'list')) {
             method <- get(method, mode = 'list')
@@ -145,7 +267,7 @@ SampleSplitSuperLearner <- function(Y, X, newX = NULL, family = gaussian(), SL.l
     for(s in seq(kScreen)) {
         testScreen <- try(do.call(library$screenAlgorithm[s], list(Y = tempOutcome, X = tempLearn, family = family, id = tempId, obsWeights = tempObsWeights)))
         if(inherits(testScreen, "try-error")) {
-            warning(paste("replacing failed screening algorithm,", library$screenAlgorithm[s], ", with All()", "\n ")) 
+            warning(paste("replacing failed screening algorithm,", library$screenAlgorithm[s], ", with All()", "\n "))
             tempWhichScreen[s, ] <- TRUE
         } else {
             tempWhichScreen[s, ] <- testScreen

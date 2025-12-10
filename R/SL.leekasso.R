@@ -1,5 +1,5 @@
-SL.leekasso <- function (Y, X, newX, family, obsWeights, id, ...) 
-{
+#' @export
+SL.leekasso <- function (Y, X, newX = X, family = gaussian(), ...) {
 	.SL.require("sva") # Bioconductor package, but really only need the f.pvalue function, might just replace it with internal function?
 	N <- length(Y)
 	mod <- cbind(rep.int(1, N), Y)
@@ -7,8 +7,8 @@ SL.leekasso <- function (Y, X, newX, family, obsWeights, id, ...)
   pValues <- sva::f.pvalue(t(X), mod, mod0)
   index <- which(rank(pValues) <= 10) # always 10!
 
-  lm1 <- lm(Y ~ ., data = X[, index])
-  pred <- predict.lm(lm1, newdata = newX[, index])
+  lm1 <- glm(Y ~ ., data = X[, index], family = family)
+  pred <- predict(lm1, newdata = newX[, index], type = "response")
   # pred <- numeric()
   fit <- list(object = lm1, index = index)
   class(fit) <- c("SL.leekasso")
@@ -16,13 +16,13 @@ SL.leekasso <- function (Y, X, newX, family, obsWeights, id, ...)
   return(out)
 }
 
-predict.SL.leekasso <- function(object, newdata, ...){
-  pred <- predict(object = object$object, newdata = newdata[, object$index], type = "response")
-  pred
+#' @exportS3Method predict SL.leekasso
+predict.SL.leekasso <- function(object, newdata, ...) {
+  predict(object = object$object, newdata = newdata[, object$index], type = "response")
 }
-## 
+##
 ## f.pvalue function from sva package:
-# f.pvalue <- function (dat, mod, mod0) 
+# f.pvalue <- function (dat, mod, mod0)
 # {
 #     n <- dim(dat)[2]
 #     m <- dim(dat)[1]
@@ -30,11 +30,11 @@ predict.SL.leekasso <- function(object, newdata, ...){
 #     df0 <- dim(mod0)[2]
 #     p <- rep(0, m)
 #     Id <- diag(n)
-#     resid <- dat %*% (Id - mod %*% solve(t(mod) %*% mod) %*% 
+#     resid <- dat %*% (Id - mod %*% solve(t(mod) %*% mod) %*%
 #         t(mod))
 #     rss1 <- rowSums(resid * resid)
 #     rm(resid)
-#     resid0 <- dat %*% (Id - mod0 %*% solve(t(mod0) %*% mod0) %*% 
+#     resid0 <- dat %*% (Id - mod0 %*% solve(t(mod0) %*% mod0) %*%
 #         t(mod0))
 #     rss0 <- rowSums(resid0 * resid0)
 #     rm(resid0)

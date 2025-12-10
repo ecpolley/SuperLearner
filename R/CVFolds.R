@@ -1,14 +1,33 @@
-# create a list of row numbers for the V-fold cross validation.
-# based on sample size N, id, Y, and cvControl
-# 
-# inside cvControl:
-# V : number of folds
-# stratifyCV : if Y is binary, stratify folds to try and keep proportion constant
-# shuffle : should the rows of X,Y be shuffled since the split function is deterministic
+#' Generate list of row numbers for each fold in the cross-validation
+#'
+#' \code{CVFolds} is used in the \code{SuperLearner} to create the
+#' cross-validation splits.
+#'
+#' @param N Sample size
+#' @param id Optional cluster id variable. If present, all observations in the
+#' same cluster will always be in the same split.
+#' @param Y outcome
+#' @param cvControl Control parameters for the cross-validation step. See
+#' \code{\link{SuperLearner.CV.control}} for details.
+#'
+#' @returns
+#' A list of length V where each element in the list
+#' is a vector with the row numbers of the corresponding validation sample.
+#'
+#' @author Eric C Polley \email{epolley@@uchicago.edu}
+#' @keywords utilities
+#'
+#' @export
+CVFolds <- function(N, id, Y, cvControl) {
+  # create a list of row numbers for the V-fold cross validation.
+  # based on sample size N, id, Y, and cvControl
+  #
+  # inside cvControl:
+  # V : number of folds
+  # stratifyCV : if Y is binary, stratify folds to try and keep proportion constant
+  # shuffle : should the rows of X,Y be shuffled since the split function is deterministic
+  # created by Eric Polley on 2011-01-18.
 
-# created by Eric Polley on 2011-01-18.
-
-CVFolds <- function(N, id, Y, cvControl){
   # validRows would be a user specified list of row numbers for the validation sets
 	if(!is.null(cvControl$validRows)) {
 	  return(cvControl$validRows)
@@ -16,7 +35,7 @@ CVFolds <- function(N, id, Y, cvControl){
 	stratifyCV <- cvControl$stratifyCV
 	shuffle <- cvControl$shuffle
 	V <- cvControl$V
-	
+
 	if(!stratifyCV) {
 		if(shuffle) {
 			if(is.null(id)) {
@@ -74,6 +93,6 @@ CVFolds <- function(N, id, Y, cvControl){
 				stop("stratified sampling with id not currently implemented")
 			}
 		}
-	}	
+	}
 	return(validRows)
 }

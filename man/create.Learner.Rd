@@ -4,9 +4,15 @@
 \alias{create.Learner}
 \title{Factory for learner wrappers}
 \usage{
-create.Learner(base_learner, params = list(), tune = list(),
-  env = parent.frame(), name_prefix = base_learner, detailed_names = F,
-  verbose = F)
+create.Learner(
+  base_learner,
+  params = list(),
+  tune = list(),
+  env = parent.frame(),
+  name_prefix = base_learner,
+  detailed_names = F,
+  verbose = F
+)
 }
 \arguments{
 \item{base_learner}{Character string of the learner function that will be
@@ -29,7 +35,7 @@ parameter configurations.}
 }
 \value{
 Returns a list with expanded tuneGrid and the names of the created
-  functions.
+functions.
 }
 \description{
 Create custom learners and/or a sequence of learners with hyperparameter

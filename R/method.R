@@ -1,3 +1,50 @@
+#' Methods to estimate the coefficients for the SuperLearner
+#' @name method
+#'
+#' @description
+#' These functions contain the information on the loss function and the model
+#' to combine algorithms.
+#'
+#' @details
+#' A \code{SuperLearner} method must be a list (or a function to create a list)
+#' with exactly 3 elements. The 3 elements must be named \code{require},
+#' \code{computeCoef} and \code{computePred}.
+#'
+#' @param file A connection, or a character string naming a file to print to.
+#' Passed to \code{\link{cat}}.
+#' @param optim_method Passed to the \code{optim} call method. See
+#' \code{\link{optim}} for details.
+#' @param nlopt_method Either \code{optim_method} or \code{nlopt_method} must
+#' be provided, the other must be \code{NULL}
+#' @param bounds Bounds for parameter estimates
+#' @param normalize Logical. Should the parameters be normalized to sum up to 1
+#' @param \dots Additional arguments passed to \code{\link{cat}}.
+#'
+#' @returns
+#' A list containing 3 elements:
+#' \item{require}{ A character vector
+#' listing any required packages. Use \code{NULL} if no additional packages are
+#' required }
+#' \item{computeCoef}{ A function. The arguments are: \code{Z},
+#' \code{Y}, \code{libraryNames}, \code{obsWeights}, \code{control},
+#' \code{verbose}. The value is a list with two items: \code{cvRisk} and
+#' \code{coef}. This function computes the coefficients of the super learner.
+#' As the super learner minimizes the cross-validated risk, the loss function
+#' information is contained in this function as well as the model to combine
+#' the algorithms in \code{SL.library}. }
+#' \item{computePred}{ A function. The
+#' arguments are: \code{predY}, \code{coef}, \code{control}. The value is a
+#' numeric vector with the super learner predicted values. }
+#'
+#' @author Eric C Polley \email{Polley.Eric@@mayo.edu}
+#'
+#' @seealso [SuperLearner()]
+#'
+#' @keywords utilities
+#' @examples
+#' write.method.template(file = '')
+#'
+
 # outline for SuperLearner methods
 # these should always have class 'SL.method'
 #
@@ -7,6 +54,9 @@
 #   1) compute coefficients
 #   2) compute predictions
 
+#'
+#' @export
+#' @rdname SL.method
 method.template <- function() {
   out <- list(
   # require allows you to pass a character vector with required packages
@@ -31,11 +81,15 @@ method.template <- function() {
   invisible(out)
 }
 
+#' @export
+#' @rdname SL.method
 write.method.template <- function(file = '', ...) {
   cat('method.template <- function() {\n  out <- list(\n    # require allows you to pass a character vector with required packages\n    # use NULL if no required packages\n    require = NULL,\n\n    # computeCoef is a function that returns a list with two elements:\n    # 1) coef: the weights (coefficients) for each algorithm\n    # 2) cvRisk: the V-fold CV risk for each algorithm\n    computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {\n      cvRisk <- numeric()\n      coef <- numeric()\n      out <- list(cvRisk = cvRisk, coef = coef)\n      return(out)\n    },\n\n    # computePred is a function that takes the weights and the predicted values\n    # from each algorithm in the library and combines them based on the model to\n    # output the super learner predicted values\n    computePred = function(predY, coef, control, ...) {\n      out <- crossprod(t(predY), coef)\n      return(out)\n    }\n    )\n    invisible(out)\n  }', file = file, ...)
 }
 
 # examples:
+#' @export
+#' @rdname SL.method
 method.NNLS <- function() {
   out <- list(
     require = 'nnls',
@@ -45,7 +99,7 @@ method.NNLS <- function() {
       names(cvRisk) <- libraryNames
 
       # compute coef
-      fit.nnls <- nnls(sqrt(obsWeights) * Z, sqrt(obsWeights) * Y)
+      fit.nnls <- nnls::nnls(sqrt(obsWeights) * Z, sqrt(obsWeights) * Y)
       if (verbose) {
         message(paste("Non-Negative least squares convergence:", fit.nnls$mode == 1))
       }
@@ -77,6 +131,8 @@ method.NNLS <- function() {
   invisible(out)
 }
 
+#' @export
+#' @rdname SL.method
 method.NNLS2 <- function() {
   out <- list(
   require = 'quadprog',
@@ -123,6 +179,8 @@ method.NNLS2 <- function() {
   invisible(out)
 }
 
+#' @export
+#' @rdname SL.method
 method.NNloglik <- function() {
   out <- list(
     require = NULL,
@@ -187,6 +245,8 @@ method.NNloglik <- function() {
   invisible(out)
 }
 
+#' @export
+#' @rdname SL.method
 method.CC_LS <- function() {
     # Contributed by Sam Lendle
     # Edited by David Benkeser
@@ -222,10 +282,10 @@ method.CC_LS <- function() {
     # set a tolerance level to avoid numerical instability
     tol <- 8
     dupCols <- which(duplicated(round(Z, tol), MARGIN = 2))
-    anyDupCols <- length(dupCols) > 0 
+    anyDupCols <- length(dupCols) > 0
     if(anyDupCols){
         # if present, throw warning identifying learners
-        warning(paste0(paste0(libraryNames[dupCols],collapse = ", "), 
+        warning(paste0(paste0(libraryNames[dupCols],collapse = ", "),
                        " are duplicates of previous learners.",
                        " Removing from super learner."))
     }
@@ -266,6 +326,8 @@ method.CC_LS <- function() {
   invisible(out)
 }
 
+#' @export
+#' @rdname SL.method
 method.CC_nloglik <- function() {
     # Contributed by Sam Lendle
     # Edited by David Benkeser
@@ -278,14 +340,14 @@ method.CC_nloglik <- function() {
   }
   computeCoef = function(Z, Y, libraryNames, obsWeights, control, verbose, ...) {
     # check for duplicated columns
-    # set a tolerance 
+    # set a tolerance
     tol <- 8
     dupCols <- which(duplicated(round(Z, tol), MARGIN = 2))
-    anyDupCols <- length(dupCols) > 0 
+    anyDupCols <- length(dupCols) > 0
     modZ <- Z
     if(anyDupCols){
         # if present, throw warning identifying learners
-        warning(paste0(paste0(libraryNames[dupCols],collapse = ", "), 
+        warning(paste0(paste0(libraryNames[dupCols],collapse = ", "),
                        " are duplicates of previous learners.",
                        " Removing from super learner."))
         modZ <- modZ[,-dupCols]
@@ -338,7 +400,7 @@ method.CC_nloglik <- function() {
       warning("Some algorithms have weights of NA, setting to 0.")
       coef[is.na(coef)] <- 0
     }
-    # add in duplicated coefficients equal to 0 
+    # add in duplicated coefficients equal to 0
     if(anyDupCols){
         ind <- c(seq_along(coef), dupCols - 0.5)
         coef <- c(coef,rep(0, length(dupCols)))
@@ -355,7 +417,9 @@ method.CC_nloglik <- function() {
        computeCoef = computeCoef,
        computePred = computePred)
 }
-        
+
+#' @export
+#' @rdname SL.method
 method.AUC <- function(nlopt_method = NULL, optim_method = "L-BFGS-B",
                        bounds = c(0, Inf), normalize = TRUE) {
   # Contributed by Erin LeDell

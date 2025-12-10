@@ -2,43 +2,52 @@
 % Please edit documentation in R/SL.cforest.R
 \name{SL.cforest}
 \alias{SL.cforest}
-\title{cforest {party}}
+\alias{predict.SL.cforest}
+\title{SL wrapper for \code{party::cforest()}}
 \usage{
-SL.cforest(Y, X, newX, family, obsWeights, id, ntree = 1000,
-  mtry = max(floor(ncol(X)/3), 1), mincriterion = 0, teststat = "quad",
-  testtype = "Univ", replace = F, fraction = 0.632, ...)
+SL.cforest(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  ntree = 1000,
+  mtry = max(floor(ncol(X)/3), 1),
+  mincriterion = 0,
+  teststat = "quad",
+  testtype = "Univ",
+  replace = F,
+  fraction = 0.632,
+  ...
+)
+
+\method{predict}{SL.cforest}(object, newdata, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Covariate dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Optional dataframe to predict the outcome}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{"gaussian" for regression, "binomial" for binary
-classification}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
-\item{obsWeights}{Optional observation-level weights (supported but not tested)}
+\item{obsWeights}{Optional observation weights.}
 
-\item{id}{Optional id to group observations from the same unit (not used
-currently).}
+\item{ntree}{Number of trees.}
 
-\item{ntree}{Number of trees}
+\item{mtry}{Number of randomly selected features per node.}
 
-\item{mtry}{Number of randomly selected features per node}
+\item{mincriterion, teststat, testtype, replace, fraction}{Arguments passed to \code{party::cforest_control()}.}
 
-\item{mincriterion}{See ?cforest_control}
+\item{...}{For SL wrappers, other remaining arguments. For \code{write.SL.template()}, arguments passed to \code{\link[=cat]{cat()}}.}
 
-\item{teststat}{See ?cforest_control}
+\item{object}{an object resulting from the fitting function.}
 
-\item{testtype}{See ?cforest_control}
-
-\item{replace}{See ?cforest_control}
-
-\item{fraction}{See ?cforest_control}
-
-\item{...}{Remaining arguments (unused)}
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
-These defaults emulate cforest_unbiased() but allow customization.
+These defaults emulate \code{party::cforest_unbiased()} but allow customization.
 }

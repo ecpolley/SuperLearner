@@ -1,28 +1,30 @@
-#' @title SL wrapper for MASS:lda
-#' @description Linear discriminant analysis, used for classification.
+#' SL wrappers for `MASS::lda()` and `MASS::qda()`
 #'
-#' @param Y Outcome variable
-#' @param X Training dataframe
-#' @param newX Test dataframe
+#' Linear and quadratic discriminant analysis, used for classification.
+#'
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 #' @param family Binomial only, cannot be used for regression.
-#' @param obsWeights Observation-level weights
-#' @param id Not supported.
 #' @param verbose If TRUE, display additional output during execution.
-#
-# Algorithm-specific arguments:
-#
 #' @param prior the prior probabilities of class membership. If unspecified, the
-#'   class proportions for the training set are used. If present, the
-#'   probabilities should be specified in the order of the factor levels.
-#' @param method "moment" for standard estimators of the mean and variance,
+#'   class proportions for the training set are used. For `SL.lda()` and `SL.qda()`, if present, the
+#'   probabilities should be specified in the order of the factor levels. For `predict.SL.lda()`, defaults to the
+#'   proportions in the training set or what was set in the call to `lda()` or `qda()`.
+#' @param method for `SL.lda()` and `SL.qda()`, "moment" for standard estimators of the mean and variance,
 #'   "mle" for MLEs, "mve" to use cov.mve, or "t" for robust estimates based on
-#'   a t distribution.
+#'   a t distribution. For `predict.SL.lda()` and `predict.SL.qda()`, this determines how the parameter estimation is handled. With "plug-in" (the default) the usual unbiased parameter estimates are used and
+#'   assumed to be correct. With "debiased" an unbiased estimator of the log
+#'   posterior probabilities is used, and with "predictive" the parameter
+#'   estimates are integrated out using a vague prior.
 #' @param tol tolerance
-#' @param CV If true, returns results (classes and posterior probabilities) for
+#' @param CV If `TRUE`, returns results (classes and posterior probabilities) for
 #'   leave-one-out cross-validation. Note that if the prior is estimated, the
 #'   proportions in the whole dataset are used.
-#' @param nu degrees of freedom for method = "t".
-#' @param ... Any additional arguments, not currently used.
+#' @param nu degrees of freedom for `method = "t"`.
+#' @param dimen the dimension of the space to be used. If this is less than
+#'   `min(p, ng-1)`, only the first dimen discriminant components are used (except
+#'   for `method="predictive"`), and only those dimensions are returned in x.
 #'
 #' @examples
 #'
@@ -35,7 +37,8 @@
 #'
 #' # Use only 2 CV folds to speed up example.
 #' sl = SuperLearner(Y, X, family = binomial(), cvControl = list(V = 2),
-#'                  SL.library = c("SL.mean", "SL.lda"))
+#'                  SL.library = c("SL.mean", "SL.lda",
+#'                                 "SL.qda"))
 #' sl
 #'
 #' pred = predict(sl, X)
@@ -49,18 +52,15 @@
 #' @seealso \code{\link{predict.SL.lda}} \code{\link[MASS]{lda}}
 #'   \code{\link[MASS]{predict.lda}} \code{\link{SL.qda}}
 #'
-#' @importFrom utils capture.output
-#'
 #' @export
-SL.lda =
-  function(Y, X, newX, family, obsWeights = rep(1, nrow(X)),
-           id = NULL, verbose = F,
-           prior = as.vector(prop.table(table(Y))),
-           method = "mle",
-           tol = 1.0e-4,
-           CV = F,
-           nu = 5,
-           ...) {
+SL.lda <- function(Y, X, newX = X, family = binomial(),
+                   verbose = FALSE,
+                   prior = as.vector(prop.table(table(Y))),
+                   method = "mle",
+                   tol = 1.0e-4,
+                   CV = FALSE,
+                   nu = 5,
+                   ...) {
 
   .SL.require("MASS")
 
@@ -74,7 +74,7 @@ SL.lda =
 
   # X can be a matrix or dataframe.
   # If method = "t" this will print a lot of unnecessary output, so capture it.
-  capture.output({
+  utils::capture.output({
     fit = MASS::lda(x = X,
                     grouping = Y,
                     prior = prior,
@@ -95,28 +95,52 @@ SL.lda =
   return(out)
 }
 
-#' @title Prediction wrapper for SL.lda
-#'
-#' @description Prediction wrapper for SL.lda
-#'
-#' @param object SL.lda object
-#' @param newdata Dataframe to generate predictions
-#' @param prior The prior probabilities of the classes, by default the
-#'   proportions in the training set or what was set in the call to lda.
-#' @param dimen the dimension of the space to be used. If this is less than
-#'   min(p, ng-1), only the first dimen discriminant components are used (except
-#'   for method="predictive"), and only those dimensions are returned in x.
-#' @param method This determines how the parameter estimation is handled. With
-#'   "plug-in" (the default) the usual unbiased parameter estimates are used and
-#'   assumed to be correct. With "debiased" an unbiased estimator of the log
-#'   posterior probabilities is used, and with "predictive" the parameter
-#'   estimates are integrated out using a vague prior.
-#' @param ... Unused additional arguments
-#'
-#' @seealso \code{\link{SL.lda}} \code{\link[MASS]{lda}}
-#'   \code{\link[MASS]{predict.lda}}
-#'
 #' @export
+#' @rdname SL.lda
+SL.qda <- function(Y, X, newX = X, family = binomial(),
+                   verbose = FALSE,
+                   prior = as.vector(prop.table(table(Y))),
+                   method = "mle",
+                   tol = 1.0e-4,
+                   CV = FALSE,
+                   nu = 5,
+                   ...) {
+
+  .SL.require("MASS")
+
+  if (family$family != "binomial") {
+    stop("SL.qda only supports binomial outcomes.")
+  }
+
+  if (!is.factor(Y)) {
+    Y = as.factor(Y)
+  }
+
+  # X can be a matrix or dataframe.
+  # If method = "t" this will print a lot of unnecessary output, so capture it.
+  utils::capture.output({
+    fit = MASS::qda(x = X,
+                    grouping = Y,
+                    prior = prior,
+                    method = method,
+                    tol = tol,
+                    CV = CV,
+                    nu = nu)
+  })
+
+  pred = predict(fit, newX)$posterior
+
+  # $posterior is a two-column matrix; we want P(Y = 1 | X).
+  pred = pred[, "1"]
+
+  fit = list(object = fit, verbose = verbose)
+  class(fit) = "SL.qda"
+  out = list(pred = pred, fit = fit)
+  return(out)
+}
+
+#' @exportS3Method predict SL.lda
+#' @rdname SL.lda
 predict.SL.lda <- function(object, newdata,
                            prior = object$object$prior,
                            dimen = NULL,
@@ -134,3 +158,7 @@ predict.SL.lda <- function(object, newdata,
 
   return(pred)
 }
+
+#' @exportS3Method predict SL.qda
+#' @rdname SL.lda
+predict.SL.qda <- predict.SL.lda

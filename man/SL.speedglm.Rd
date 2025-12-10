@@ -2,30 +2,54 @@
 % Please edit documentation in R/SL.speedglm.R
 \name{SL.speedglm}
 \alias{SL.speedglm}
-\title{Wrapper for speedglm}
+\alias{SL.speedlm}
+\alias{predict.SL.speedglm}
+\alias{predict.SL.speedlm}
+\title{Wrapper for \code{speedglm}}
 \usage{
-SL.speedglm(Y, X, newX, family, obsWeights, maxit = 25, k = 2, ...)
+SL.speedglm(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  maxit = 25,
+  k = 2,
+  ...
+)
+
+SL.speedlm(Y, X, newX = X, family = gaussian(), obsWeights = NULL, ...)
+
+\method{predict}{SL.speedglm}(object, newdata, ...)
+
+\method{predict}{SL.speedlm}(object, newdata, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Training dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Test dataframe}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{Gaussian or binomial}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
-\item{obsWeights}{Observation-level weights}
+\item{obsWeights}{Optional observation weights.}
 
 \item{maxit}{Maximum number of iterations before stopping.}
 
 \item{k}{numeric, the penalty per parameter to be used; the default k = 2 is
 the classical AIC.}
 
-\item{...}{Any remaining arguments, not used.}
+\item{...}{For SL wrappers, other remaining arguments. For \code{write.SL.template()}, arguments passed to \code{\link[=cat]{cat()}}.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
-Speedglm is a fast version of glm()
+\code{speedglm::speedglm()} and \code{speedglm::speedlm()} are fast versions of \code{glm()} and \code{lm()}, respectively.
 }
 \references{
 Enea, M. A. R. C. O. (2013). Fitting linear models and generalized linear
@@ -34,5 +58,5 @@ Large Datasets: book of short papers, 411-414.
 }
 \seealso{
 \code{\link{predict.SL.speedglm}} \code{\link[speedglm]{speedglm}}
-  \code{\link[speedglm]{predict.speedglm}}
+\code{\link[speedglm]{predict.speedglm}}
 }

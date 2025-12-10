@@ -2,27 +2,46 @@
 % Please edit documentation in R/SL.glmnet.R
 \name{SL.glmnet}
 \alias{SL.glmnet}
-\title{Elastic net regression, including lasso and ridge}
+\alias{predict.SL.glmnet}
+\title{SL wrapper for elastic net regression, including lasso and ridge}
 \usage{
-SL.glmnet(Y, X, newX, family, obsWeights, id, alpha = 1, nfolds = 10,
-  nlambda = 100, useMin = TRUE, loss = "deviance", ...)
+SL.glmnet(
+  Y,
+  X,
+  newX,
+  family,
+  obsWeights,
+  id,
+  alpha = 1,
+  nfolds = 10,
+  nlambda = 100,
+  useMin = TRUE,
+  loss = "deviance",
+  ...
+)
+
+\method{predict}{SL.glmnet}(
+  object,
+  newdata,
+  remove_extra_cols = TRUE,
+  add_missing_cols = TRUE,
+  ...
+)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Covariate dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Dataframe to predict the outcome}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{"gaussian" for regression, "binomial" for binary
-classification. Untested options: "multinomial" for multiple classification
-or "mgaussian" for multiple response, "poisson" for non-negative outcome
-with proportional mean and variance, "cox".}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
-\item{obsWeights}{Optional observation-level weights}
+\item{obsWeights}{Optional observation weights.}
 
-\item{id}{Optional id to group observations from the same unit (not used
-currently).}
+\item{id}{Optional cluster identification variable.}
 
 \item{alpha}{Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
 and 1 = lasso.}
@@ -39,7 +58,17 @@ background).}
 \item{loss}{Loss function, can be "deviance", "mse", or "mae". If family =
 binomial can also be "auc" or "class" (misclassification error).}
 
-\item{...}{Any additional arguments are passed through to cv.glmnet.}
+\item{...}{Any additional arguments are passed through to \code{cv.glmnet()}.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
+
+\item{remove_extra_cols}{Remove any extra columns in the new data that were
+not part of the original model.}
+
+\item{add_missing_cols}{Add any columns from original data that do not exist
+in the new data, and set values to 0.}
 }
 \description{
 Penalized regression using elastic net. Alpha = 0 corresponds to ridge
@@ -84,5 +113,5 @@ Methodology), 67(2), 301-320.
 }
 \seealso{
 \code{\link{predict.SL.glmnet}} \code{\link[glmnet]{cv.glmnet}}
-  \code{\link[glmnet]{glmnet}}
+\code{\link[glmnet]{glmnet}}
 }

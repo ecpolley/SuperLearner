@@ -2,26 +2,40 @@
 % Please edit documentation in R/SL.xgboost.R
 \name{SL.xgboost}
 \alias{SL.xgboost}
-\title{XGBoost SuperLearner wrapper}
+\alias{predict.SL.xgboost}
+\title{SL wrapper for XGBoost}
 \usage{
-SL.xgboost(Y, X, newX, family, obsWeights, id, ntrees = 1000, max_depth = 4,
-  shrinkage = 0.1, minobspernode = 10, params = list(), nthread = 1,
-  verbose = 0, save_period = NULL, ...)
+SL.xgboost(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  ntrees = 1000,
+  max_depth = 4,
+  shrinkage = 0.1,
+  minobspernode = 10,
+  params = list(),
+  nthread = 1,
+  verbose = 0,
+  save_period = NULL,
+  ...
+)
+
+\method{predict}{SL.xgboost}(object, newdata, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Covariate dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Optional dataframe to predict the outcome}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{"gaussian" for regression, "binomial" for binary
-classification, "multinomial" for multiple classification (not yet supported).}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
-\item{obsWeights}{Optional observation-level weights (supported but not tested)}
-
-\item{id}{Optional id to group observations from the same unit (not used
-currently).}
+\item{obsWeights}{Optional observation weights.}
 
 \item{ntrees}{How many trees to fit. Low numbers may underfit but high
 numbers may overfit, depending also on the shrinkage.}
@@ -36,7 +50,7 @@ overfitting.}
 no more splitting will occur.}
 
 \item{params}{Many other parameters can be customized. See
-\url{https://xgboost.readthedocs.io/en/latest/parameter.html}}
+\url{http://xgboost.readthedocs.io/en/latest/parameter.html}}
 
 \item{nthread}{How many threads (cores) should xgboost use. Generally we want
 to keep this to 1 so that XGBoost does not compete with SuperLearner
@@ -49,9 +63,13 @@ disk during processing. If NULL does not save model, and if 0 saves model
 at the end.}
 
 \item{...}{Any remaining arguments (not supported though).}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
-Supports the Extreme Gradient Boosting package for SuperLearnering, which is
+Supports the Extreme Gradient Boosting package for SuperLearning, which is
 a variant of gradient boosted machines (GBM).
 }
 \details{
@@ -62,5 +80,8 @@ on cross-validated performance.
 
 If you run into errors please first try installing the latest version of
 XGBoost from drat as described here:
-\url{https://xgboost.readthedocs.io/en/latest/build.html}
+\url{http://xgboost.readthedocs.io/en/latest/build.html}
+}
+\seealso{
+\code{\link[=create.SL.xgboost]{create.SL.xgboost()}} to create new xgboost wrappers with different parameters.
 }
