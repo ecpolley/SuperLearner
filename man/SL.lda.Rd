@@ -2,47 +2,101 @@
 % Please edit documentation in R/SL.lda.R
 \name{SL.lda}
 \alias{SL.lda}
-\title{SL wrapper for MASS:lda}
+\alias{SL.qda}
+\alias{predict.SL.lda}
+\alias{predict.SL.qda}
+\title{SL wrappers for \code{MASS::lda()} and \code{MASS::qda()}}
 \usage{
-SL.lda(Y, X, newX, family, obsWeights = rep(1, nrow(X)), id = NULL,
-  verbose = F, prior = as.vector(prop.table(table(Y))), method = "mle",
-  tol = 1e-04, CV = F, nu = 5, ...)
+SL.lda(
+  Y,
+  X,
+  newX = X,
+  family = binomial(),
+  verbose = FALSE,
+  prior = as.vector(prop.table(table(Y))),
+  method = "mle",
+  tol = 1e-04,
+  CV = FALSE,
+  nu = 5,
+  ...
+)
+
+SL.qda(
+  Y,
+  X,
+  newX = X,
+  family = binomial(),
+  verbose = FALSE,
+  prior = as.vector(prop.table(table(Y))),
+  method = "mle",
+  tol = 1e-04,
+  CV = FALSE,
+  nu = 5,
+  ...
+)
+
+\method{predict}{SL.lda}(
+  object,
+  newdata,
+  prior = object$object$prior,
+  dimen = NULL,
+  method = "plug-in",
+  ...
+)
+
+\method{predict}{SL.qda}(
+  object,
+  newdata,
+  prior = object$object$prior,
+  dimen = NULL,
+  method = "plug-in",
+  ...
+)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Training dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Test dataframe}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
 \item{family}{Binomial only, cannot be used for regression.}
-
-\item{obsWeights}{Observation-level weights}
-
-\item{id}{Not supported.}
 
 \item{verbose}{If TRUE, display additional output during execution.}
 
 \item{prior}{the prior probabilities of class membership. If unspecified, the
-class proportions for the training set are used. If present, the
-probabilities should be specified in the order of the factor levels.}
+class proportions for the training set are used. For \code{SL.lda()} and \code{SL.qda()}, if present, the
+probabilities should be specified in the order of the factor levels. For \code{predict.SL.lda()}, defaults to the
+proportions in the training set or what was set in the call to \code{lda()} or \code{qda()}.}
 
-\item{method}{"moment" for standard estimators of the mean and variance,
+\item{method}{for \code{SL.lda()} and \code{SL.qda()}, "moment" for standard estimators of the mean and variance,
 "mle" for MLEs, "mve" to use cov.mve, or "t" for robust estimates based on
-a t distribution.}
+a t distribution. For \code{predict.SL.lda()} and \code{predict.SL.qda()}, this determines how the parameter estimation is handled. With "plug-in" (the default) the usual unbiased parameter estimates are used and
+assumed to be correct. With "debiased" an unbiased estimator of the log
+posterior probabilities is used, and with "predictive" the parameter
+estimates are integrated out using a vague prior.}
 
 \item{tol}{tolerance}
 
-\item{CV}{If true, returns results (classes and posterior probabilities) for
+\item{CV}{If \code{TRUE}, returns results (classes and posterior probabilities) for
 leave-one-out cross-validation. Note that if the prior is estimated, the
 proportions in the whole dataset are used.}
 
-\item{nu}{degrees of freedom for method = "t".}
+\item{nu}{degrees of freedom for \code{method = "t"}.}
 
-\item{...}{Any additional arguments, not currently used.}
+\item{...}{For SL wrappers, other remaining arguments. For \code{write.SL.template()}, arguments passed to \code{\link[=cat]{cat()}}.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
+
+\item{dimen}{the dimension of the space to be used. If this is less than
+\code{min(p, ng-1)}, only the first dimen discriminant components are used (except
+for \code{method="predictive"}), and only those dimensions are returned in x.}
 }
 \description{
-Linear discriminant analysis, used for classification.
+Linear and quadratic discriminant analysis, used for classification.
 }
 \examples{
 
@@ -55,7 +109,8 @@ set.seed(1)
 
 # Use only 2 CV folds to speed up example.
 sl = SuperLearner(Y, X, family = binomial(), cvControl = list(V = 2),
-                 SL.library = c("SL.mean", "SL.lda"))
+                 SL.library = c("SL.mean", "SL.lda",
+                                "SL.qda"))
 sl
 
 pred = predict(sl, X)
@@ -68,5 +123,5 @@ to Statistical Learning (Vol. 6). New York: Springer. Section 4.4.
 }
 \seealso{
 \code{\link{predict.SL.lda}} \code{\link[MASS]{lda}}
-  \code{\link[MASS]{predict.lda}} \code{\link{SL.qda}}
+\code{\link[MASS]{predict.lda}} \code{\link{SL.qda}}
 }

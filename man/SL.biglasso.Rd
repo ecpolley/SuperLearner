@@ -2,22 +2,37 @@
 % Please edit documentation in R/SL.biglasso.R
 \name{SL.biglasso}
 \alias{SL.biglasso}
+\alias{predict.SL.biglasso}
 \title{SL wrapper for biglasso}
 \usage{
-SL.biglasso(Y, X, newX, family, obsWeights, penalty = "lasso",
-  alg.logistic = "Newton", screen = "SSR", alpha = 1, nlambda = 100,
-  eval.metric = "default", ncores = 1, nfolds = 5, ...)
+SL.biglasso(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  penalty = "lasso",
+  alg.logistic = "Newton",
+  screen = "SSR",
+  alpha = 1,
+  nlambda = 100,
+  eval.metric = "default",
+  ncores = 1,
+  nfolds = 5,
+  ...
+)
+
+\method{predict}{SL.biglasso}(object, newdata, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Training dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Test dataframe}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{Gaussian or binomial}
-
-\item{obsWeights}{Observation-level weights}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
 \item{penalty}{The penalty to be applied to the model. Either "lasso"
 (default), "ridge", or "enet" (elastic net).}
@@ -51,13 +66,16 @@ cluster created by the \code{parallel} package.}
 
 \item{nfolds}{The number of cross-validation folds.  Default is 5.}
 
-\item{...}{Any additional arguments, not currently used.}
+\item{...}{For SL wrappers, other remaining arguments. For \code{write.SL.template()}, arguments passed to \code{\link[=cat]{cat()}}.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
 SL wrapper for biglasso
 }
 \examples{
-
 data(Boston, package = "MASS")
 Y = Boston$medv
 # Remove outcome from covariate dataframe.
@@ -84,6 +102,6 @@ Data. https://CRAN.R-project.org/package=biglasso.
 }
 \seealso{
 \code{\link{predict.SL.biglasso}} \code{\link[biglasso]{biglasso}}
-  \code{\link[biglasso]{cv.biglasso}}
-  \code{\link[biglasso]{predict.biglasso}} \code{\link{SL.glmnet}}
+\code{\link[biglasso]{cv.biglasso}}
+\code{\link[biglasso]{predict.biglasso}} \code{\link{SL.glmnet}}
 }

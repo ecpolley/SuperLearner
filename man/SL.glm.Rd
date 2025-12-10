@@ -2,34 +2,84 @@
 % Please edit documentation in R/SL.glm.R
 \name{SL.glm}
 \alias{SL.glm}
-\title{Wrapper for glm}
+\alias{SL.glm.interaction}
+\alias{SL.lm}
+\alias{SL.mean}
+\alias{predict.SL.glm}
+\title{SL wrapper for \code{glm()}}
 \usage{
-SL.glm(Y, X, newX, family, obsWeights, model = TRUE, ...)
+SL.glm(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  model = TRUE,
+  ...
+)
+
+SL.glm.interaction(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  model = TRUE,
+  ...
+)
+
+SL.lm(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  model = TRUE,
+  ...
+)
+
+SL.mean(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  model = TRUE,
+  ...
+)
+
+\method{predict}{SL.glm}(object, newdata, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Training dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Test dataframe}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{Gaussian or binomial}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
-\item{obsWeights}{Observation-level weights}
+\item{obsWeights}{Optional observation weights.}
 
-\item{model}{Whether to save model.matrix of data in fit object. Set to FALSE
+\item{model}{Whether to save \code{model.matrix} of data in fit object. Set to \code{FALSE}
 to save memory.}
 
-\item{...}{Any remaining arguments, not used.}
+\item{...}{Ignored.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
-Wrapper for generalized linear models via glm().
-
+\code{SL.glm()} is a wrapper for generalized linear models (GLMs) fit with \code{\link[=glm]{glm()}}. \code{SL.glm.interaction()} is the same but automatically includes all 2-way interactions between predictors. \code{SL.lm()} is a wrapper for linear models fit with \code{\link[=lm]{lm()}}. \code{SL.mean()} is a wrapper for an intercept-only model.
+}
+\details{
 Note that for outcomes bounded by [0, 1] the binomial family can be used in
 addition to gaussian.
 }
 \examples{
-
 data(Boston, package = "MASS")
 Y = Boston$medv
 # Remove outcome from covariate dataframe.
@@ -37,11 +87,11 @@ X = Boston[, -14]
 
 set.seed(1)
 
-sl = SuperLearner(Y, X, family = gaussian(),
-                  SL.library = c("SL.mean", "SL.glm"))
+sl <- SuperLearner(Y, X, family = gaussian(),
+                   SL.library = c("SL.mean", "SL.glm",
+                                  "SL.glm.interaction"))
 
 print(sl)
-
 }
 \references{
 Fox, J. (2015). Applied regression analysis and generalized linear models.
@@ -49,5 +99,5 @@ Sage Publications.
 }
 \seealso{
 \code{\link{predict.SL.glm}} \code{\link[stats]{glm}}
-  \code{\link[stats]{predict.glm}}  \code{\link{SL.speedglm}}
+\code{\link[stats]{predict.glm}}  \code{\link{SL.speedglm}}
 }

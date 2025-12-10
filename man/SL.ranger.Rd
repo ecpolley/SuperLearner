@@ -2,25 +2,41 @@
 % Please edit documentation in R/SL.ranger.R
 \name{SL.ranger}
 \alias{SL.ranger}
+\alias{predict.SL.ranger}
 \title{SL wrapper for ranger}
 \usage{
-SL.ranger(Y, X, newX, family, obsWeights, num.trees = 500,
-  mtry = floor(sqrt(ncol(X))), write.forest = TRUE,
+SL.ranger(
+  Y,
+  X,
+  newX = X,
+  family = gaussian(),
+  obsWeights = NULL,
+  num.trees = 500,
+  mtry = floor(sqrt(ncol(X))),
+  write.forest = TRUE,
   probability = family$family == "binomial",
-  min.node.size = ifelse(family$family == "gaussian", 5, 1), replace = TRUE,
-  sample.fraction = ifelse(replace, 1, 0.632), num.threads = 1,
-  verbose = T, ...)
+  min.node.size = ifelse(family$family == "gaussian", 5, 1),
+  replace = TRUE,
+  sample.fraction = ifelse(replace, 1, 0.632),
+  num.threads = 1,
+  verbose = FALSE,
+  ...
+)
+
+\method{predict}{SL.ranger}(object, newdata, num.threads = 1, verbose = object$verbose, ...)
 }
 \arguments{
-\item{Y}{Outcome variable}
+\item{Y}{The outcome in the training data set. Must be a numeric vector.}
 
-\item{X}{Training dataframe}
+\item{X}{The predictor variables in the training data set, usually a data.frame.}
 
-\item{newX}{Test dataframe}
+\item{newX}{The predictor variables in the validation data set. The
+structure should match X.}
 
-\item{family}{Gaussian or binomial}
+\item{family}{Either \code{\link[=gaussian]{gaussian()}} or \code{\link[=binomial]{binomial()}} to
+describe the error distribution. Link function information will be ignored.}
 
-\item{obsWeights}{Observation-level weights}
+\item{obsWeights}{Optional observation weights.}
 
 \item{num.trees}{Number of trees.}
 
@@ -42,14 +58,19 @@ sampling with replacement and 0.632 for sampling without replacement.}
 
 \item{num.threads}{Number of threads to use.}
 
-\item{verbose}{If TRUE, display additional output during execution.}
+\item{verbose}{If \code{TRUE}, display additional output during execution.}
 
-\item{...}{Any additional arguments, not currently used.}
+\item{...}{For SL wrappers, other remaining arguments. For \code{write.SL.template()}, arguments passed to \code{\link[=cat]{cat()}}.}
+
+\item{object}{an object resulting from the fitting function.}
+
+\item{newdata}{a data frame of predictors for which to compute predictions.}
 }
 \description{
 Ranger is a fast implementation of Random Forest (Breiman 2001)
-  or recursive partitioning, particularly suited for high dimensional data.
-
+or recursive partitioning, particularly suited for high dimensional data.
+}
+\details{
 Extending code by Eric Polley from the SuperLearnerExtra package.
 }
 \examples{
@@ -79,5 +100,5 @@ Software, in press. http://arxiv.org/abs/1508.04409.
 }
 \seealso{
 \code{\link{SL.ranger}} \code{\link[ranger]{ranger}}
-  \code{\link[ranger]{predict.ranger}}
+\code{\link[ranger]{predict.ranger}}
 }
