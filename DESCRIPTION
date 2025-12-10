@@ -1,20 +1,23 @@
 Package: SuperLearner
 Type: Package
 Title: Super Learner Prediction
-Version: 2.0-30-9000
-Date: 2024-02-06
-Authors@R: c(person("Eric", "Polley", email = "epolley@uchicago.edu", role = c("aut", "cre")), person("Erin", "LeDell", role = c("aut")), person("Chris", "Kennedy", role = c("aut")), person("Sam", "Lendle", role = c("ctb")), person("Mark", "van der Laan", role = c("aut", "ths")))
-Maintainer: Eric Polley <epolley@uchicago.edu>
+Version: 2.0-30-9001
+Authors@R: c(person("Eric", "Polley", email = "epolley@uchicago.edu", role = c("aut", "cre")),
+             person("Erin", "LeDell", role = c("aut")),
+             person("Chris", "Kennedy", role = c("aut")),
+             person("Sam", "Lendle", role = c("ctb")),
+             person("Mark", "van der Laan", role = c("aut", "ths")))
 Description: Implements the super learner prediction method and contains a
     library of prediction algorithms to be used in the super learner.
 License: GPL-3
 URL: https://github.com/ecpolley/SuperLearner
+BugReports: https://github.com/ecpolley/SuperLearner/issues
 Depends:
-    R (>= 2.14.0),
-    nnls
+    R (>= 4.0.0)
 Imports:
     cvAUC,
-    methods
+    nnls,
+    stats
 Suggests:
     arm,
     bartMachine,
@@ -40,6 +43,7 @@ Suggests:
     mlbench,
     nloptr,
     nnet,
+    parallel,
     party,
     polspline,
     prettydoc,
@@ -55,7 +59,9 @@ Suggests:
     spls,
     sva,
     testthat,
-    xgboost (>= 0.6)
+    xgboost (>= 3.1.2.1)
 LazyLoad: yes
-VignetteBuilder: knitr, rmarkdown
-RoxygenNote: 6.0.1
+Encoding: UTF-8
+VignetteBuilder: knitr
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
