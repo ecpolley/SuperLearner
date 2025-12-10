@@ -1,15 +1,13 @@
-#' @title Wrapper for speedglm
-#' @description Speedglm is a fast version of glm()
+#' Wrapper for `speedglm`
 #'
-#' @param Y Outcome variable
-#' @param X Training dataframe
-#' @param newX Test dataframe
-#' @param family Gaussian or binomial
-#' @param obsWeights Observation-level weights
+#' `speedglm::speedglm()` and `speedglm::speedlm()` are fast versions of `glm()` and `lm()`, respectively.
+#'
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 #' @param maxit Maximum number of iterations before stopping.
 #' @param k numeric, the penalty per parameter to be used; the default k = 2 is
 #'   the classical AIC.
-#' @param ... Any remaining arguments, not used.
 #'
 #' @references
 #'
@@ -19,12 +17,10 @@
 #'
 #' @seealso \code{\link{predict.SL.speedglm}} \code{\link[speedglm]{speedglm}}
 #'   \code{\link[speedglm]{predict.speedglm}}
-#'
+
 #' @export
-SL.speedglm <- function(Y, X, newX, family, obsWeights,
-                        maxit = 25,
-                        k = 2,
-                        ...) {
+SL.speedglm <- function(Y, X, newX = X, family = gaussian(), obsWeights = NULL,
+                        maxit = 25, k = 2, ...) {
   .SL.require("speedglm")
 
   # X must be a dataframe, not a matrix.
@@ -33,9 +29,9 @@ SL.speedglm <- function(Y, X, newX, family, obsWeights,
   }
 
   fit <- speedglm::speedglm(Y ~ ., data = X, family = family,
-                                weights = obsWeights,
-                                maxit = maxit,
-                                k = k)
+                            weights = obsWeights,
+                            maxit = maxit,
+                            k = k)
 
   if (is.matrix(newX)) {
     newX = as.data.frame(newX)
@@ -51,17 +47,34 @@ SL.speedglm <- function(Y, X, newX, family, obsWeights,
   return(out)
 }
 
-#' @title Prediction for SL.speedglm
-#' @description Prediction for SL.speedglm
-#'
-#' @param object SL.speedglm object
-#' @param newdata Dataframe to generate predictions
-#' @param ... Unused additional arguments
-#'
-#' @seealso \code{\link{SL.speedglm}} \code{\link[speedglm]{speedglm}}
-#'   \code{\link[speedglm]{predict.speedglm}}
-#'
 #' @export
+#' @rdname SL.speedglm
+SL.speedlm <- function(Y, X, newX = X, family = gaussian(), obsWeights = NULL, ...) {
+  .SL.require("speedglm")
+
+  # X must be a dataframe, not a matrix.
+  if (is.matrix(X)) {
+    X = as.data.frame(X)
+  }
+
+  fit <- speedglm::speedlm(Y ~ ., data = X, weights = obsWeights)
+
+  if (is.matrix(newX)) {
+    newX = as.data.frame(newX)
+  }
+
+  pred <- predict(fit, newdata = newX, type = "response")
+
+  fit <- list(object = fit)
+  class(fit) <- "SL.speedlm"
+
+  out <- list(pred = pred, fit = fit)
+
+  return(out)
+}
+
+#' @exportS3Method predict SL.speedglm
+#' @rdname SL.speedglm
 predict.SL.speedglm <- function(object, newdata, ...) {
   .SL.require("speedglm")
 
@@ -70,7 +83,9 @@ predict.SL.speedglm <- function(object, newdata, ...) {
     newdata = as.data.frame(newdata)
   }
 
-  pred <- predict(object = object$object, newdata = newdata, type = "response")
-
-  pred
+  predict(object = object$object, newdata = newdata, type = "response")
 }
+
+#' @exportS3Method predict SL.speedlm
+#' @rdname SL.speedglm
+predict.SL.speedlm <- predict.SL.speedglm
