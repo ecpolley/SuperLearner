@@ -1,8 +1,9 @@
 ## polymars{polspline}
 # in the binomial case, drop the cv=5 selects model based on AIC
-SL.polymars <- function(Y, X, newX, family, obsWeights, ...){
+#' @export
+SL.polymars <- function(Y, X, newX = X, family = gaussian(), obsWeights = NULL, ...){
   .SL.require('polspline')
-	if(family$family == "gaussian") { 
+	if(family$family == "gaussian") {
 		fit.mars <- polspline::polymars(Y, X, weights = obsWeights)
  		pred <- predict(fit.mars, x = newX)
 		fit <- list(object = fit.mars)
@@ -17,12 +18,13 @@ SL.polymars <- function(Y, X, newX, family, obsWeights, ...){
 	return(out)
 }
 
+#' @exportS3Method predict SL.polymars
 predict.SL.polymars <- function(object, newdata, family, ...) {
   .SL.require('polspline')
-	if(family$family=="gaussian"){ 
+	if (family$family == "gaussian"){
  		pred <- predict(object = object$object, x = newdata)
 	}
-	if(family$family=="binomial"){
+	else if (family$family == "binomial"){
 		pred <- polspline::ppolyclass(cov=newdata, fit=object$fit)[, 2]
 	}
 	return(pred)

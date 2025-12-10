@@ -1,11 +1,10 @@
-#' @title Wrapper for Kernlab's SVM algorithm
+#' SL wrapper for Kernlab's SVM algorithm
 #'
-#' @description Wrapper for Kernlab's support vector machine algorithm.
+#' Wrapper for Kernlab's support vector machine algorithm.
 #'
-#' @param Y Outcome variable
-#' @param X Training dataframe
-#' @param newX Test dataframe
-#' @param family Gaussian or binomial
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 #' @param type ksvm can be used for classification , for regression, or for
 #'   novelty detection. Depending on whether y is a factor or not, the default
 #'   setting for type is C-svc or eps-svr, respectively, but can be overwritten
@@ -43,13 +42,10 @@
 #' @param cache cache memory in MB (default 40)
 #' @param tol tolerance of termination criterion (default: 0.001)
 #' @param shrinking option whether to use the shrinking-heuristics (default: TRUE)
-#' @param ... Any additional parameters, not currently passed through.
-#'
-#' @return List with predictions and the original training data &
-#'   hyperparameters.
+#' @param coupler Coupling method used in the multiclass case, can be one of
+#'   minpair or pkpd (see kernlab package for details). For future usage.
 #'
 #' @references
-#'
 #' Hsu, C. W., Chang, C. C., & Lin, C. J. (2016). A practical guide to support
 #' vector classification. \url{http://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf}
 #'
@@ -63,7 +59,6 @@
 #' 1-20.
 #'
 #' @examples
-#'
 #' data(Boston, package = "MASS")
 #' Y = Boston$medv
 #' # Remove outcome from covariate dataframe.
@@ -78,29 +73,27 @@
 #' pred = predict(sl, X)
 #' summary(pred$pred)
 #'
-#' @importFrom kernlab predict
 #'
 #' @seealso \code{\link{predict.SL.ksvm}} \code{\link[kernlab]{ksvm}}
 #'   \code{\link[kernlab]{predict.ksvm}}
 #'
-#' @encoding utf-8
-#'
+
 #' @export
-SL.ksvm = function(Y, X, newX, family,
-                   type = NULL,
-                   kernel = "rbfdot",
-                   kpar = "automatic",
-                   scaled = T,
-                   C = 1,
-                   nu = 0.2,
-                   epsilon = 0.1,
-                   cross = 0,
-                   prob.model = family$family == "binomial",
-                   class.weights = NULL,
-                   cache = 40,
-                   tol = 0.001,
-                   shrinking = T,
-                   ...) {
+SL.ksvm <- function(Y, X, newX = X, family = gaussian(),
+                    type = NULL,
+                    kernel = "rbfdot",
+                    kpar = "automatic",
+                    scaled = TRUE,
+                    C = 1,
+                    nu = 0.2,
+                    epsilon = 0.1,
+                    cross = 0,
+                    prob.model = family$family == "binomial",
+                    class.weights = NULL,
+                    cache = 40,
+                    tol = 0.001,
+                    shrinking = TRUE,
+                    ...) {
   .SL.require("kernlab")
 
   # Make sure X is a matrix rather than a dataframe.
@@ -151,20 +144,8 @@ SL.ksvm = function(Y, X, newX, family,
   return(out)
 }
 
-#' Prediction for SL.ksvm
-#'
-#' @param object SL.kernlab object
-#' @param newdata Dataframe to generate predictions
-#' @param family Gaussian or binomial
-#' @param coupler Coupling method used in the multiclass case, can be one of
-#'   minpair or pkpd (see kernlab package for details). For future usage.
-#' @param ... Unused additional arguments
-#'
-#' @importFrom kernlab predict
-#'
-#' @seealso \code{\link{SL.ksvm}} \code{\link[kernlab]{ksvm}} \code{\link[kernlab]{predict.ksvm}}
-#'
-#' @export
+#' @exportS3Method predict SL.ksvm
+#' @rdname SL.ksvm
 predict.SL.ksvm <- function(object, newdata, family, coupler = "minpair", ...) {
   .SL.require("kernlab")
 
@@ -182,7 +163,7 @@ predict.SL.ksvm <- function(object, newdata, family, coupler = "minpair", ...) {
   }
 
   # CK: I could not get this to work using simply predict(). Not sure why.
-  pred = kernlab::predict(object$object, newdata, predict_type, coupler = coupler)
+  pred <- kernlab::predict(object$object, newdata, predict_type, coupler = coupler)
 
   if (family$family == "binomial") {
     # Second column is P(Y = 1 | X).

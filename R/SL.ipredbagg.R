@@ -1,13 +1,16 @@
 # bagging {ipred}
-# 
+#
 
-SL.ipredbagg <- function(Y, X, newX, family, nbagg = 100, control = rpart::rpart.control(xval = 0, maxsurrogate = 0, minsplit = 20, cp = 0.01, maxdepth = 30), ...){
+#' @export
+SL.ipredbagg <- function(Y, X, newX = X, family = gaussian(), nbagg = 100,
+                         control = rpart::rpart.control(xval = 0, maxsurrogate = 0, minsplit = 20, cp = 0.01, maxdepth = 30),
+                         ...) {
 	.SL.require('ipred')
-	if(family$family == "gaussian"){
+	if (family$family == "gaussian"){
 		fit.bag <- ipred::ipredbagg(y=Y, X = X, nbagg = nbagg, control = control)
 		pred <- predict(fit.bag, newdata = newX, aggregation = "average")
 	}
-	if(family$family == "binomial"){
+	if (family$family == "binomial"){
 		fit.bag <- ipred::ipredbagg(y = as.factor(Y), X = X, nbagg = nbagg, control = control)
 		pred <- predict(fit.bag, newdata = newX, type = "prob", aggregation = "average")[, 2]
 	}
@@ -17,15 +20,14 @@ SL.ipredbagg <- function(Y, X, newX, family, nbagg = 100, control = rpart::rpart
 	return(out)
 }
 
-# 
-predict.SL.ipredbagg <- function(object, newdata, family, X=NULL, Y=NULL,...) {
+#' @exportS3Method predict SL.ipredbagg
+predict.SL.ipredbagg <- function(object, newdata, family, ...) {
   .SL.require('ipred')
-	if(family$family=="gaussian"){
+	if (family$family == "gaussian") {
 		pred <- predict(object = object$object, newdata = newdata, aggregation = "average")
 	}
-	if(family$family=="binomial"){
-		pred <- predict(object = object$object, newdata = newdata, type = "prob", aggregation = "average")[, 2] 
+	else if (family$family == "binomial"){
+		pred <- predict(object = object$object, newdata = newdata, type = "prob", aggregation = "average")[, 2L]
 	}
 	return(pred)
 }
-

@@ -2,7 +2,8 @@
 # can change the size
 # SL.nnet.3 <- function(..., size = 3) SL.nnet(..., size = size)
 
-SL.nnet <- function(Y, X, newX, family, obsWeights, size = 2, ...){
+#' @export
+SL.nnet <- function(Y, X, newX = X, family = gaussian(), obsWeights = NULL, size = 2, ...){
   .SL.require('nnet')
 	if(family$family == "gaussian") {
 		fit.nnet <- nnet::nnet(x = X, y = Y, size = size, linout = TRUE, trace = FALSE, maxit = 500, weights = obsWeights)
@@ -17,9 +18,9 @@ SL.nnet <- function(Y, X, newX, family, obsWeights, size = 2, ...){
 	return(out)
 }
 
-predict.SL.nnet <- function(object, newdata,...) {
+#' @exportS3Method predict SL.nnet
+predict.SL.nnet <- function(object, newdata, ...) {
   .SL.require('nnet')
-	pred <- predict(object$object, newdata = newdata, type = "raw")
-	return(pred)
+	predict(object$object, newdata = newdata, type = "raw")
 }
 

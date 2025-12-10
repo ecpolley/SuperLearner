@@ -1,4 +1,4 @@
-#' @title Elastic net regression, including lasso and ridge
+#' SL wrapper for elastic net regression, including lasso and ridge
 #'
 #' @description
 #' Penalized regression using elastic net. Alpha = 0 corresponds to ridge
@@ -7,17 +7,10 @@
 #' See \code{vignette("glmnet_beta", package = "glmnet")} for a nice tutorial on
 #' glmnet.
 #'
-#' @param Y Outcome variable
-#' @param X Covariate dataframe
-#' @param newX Dataframe to predict the outcome
-#' @param obsWeights Optional observation-level weights
-#' @param id Optional id to group observations from the same unit (not used
-#'   currently).
-#' @param family "gaussian" for regression, "binomial" for binary
-#'   classification. Untested options: "multinomial" for multiple classification
-#'   or "mgaussian" for multiple response, "poisson" for non-negative outcome
-#'   with proportional mean and variance, "cox".
-#' @param alpha Elastic net mixing parameter, range [0, 1]. 0 = ridge regression
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
+#' @param alpha Elastic net mixing parameter, range \[0, 1\]. 0 = ridge regression
 #'   and 1 = lasso.
 #' @param nfolds Number of folds for internal cross-validation to optimize lambda.
 #' @param nlambda Number of lambda values to check, recommended to be 100 or more.
@@ -27,7 +20,11 @@
 #'   standard-error rule which chooses a higher penalty with performance within
 #'   one standard error of the minimum (see Breiman et al. 1984 on CART for
 #'   background).
-#' @param ... Any additional arguments are passed through to cv.glmnet.
+#' @param ... Any additional arguments are passed through to `cv.glmnet()`.
+#' @param remove_extra_cols Remove any extra columns in the new data that were
+#'   not part of the original model.
+#' @param add_missing_cols Add any columns from original data that do not exist
+#'   in the new data, and set values to 0.
 #'
 #' @examples
 #'
@@ -65,7 +62,7 @@
 #'
 #' @seealso \code{\link{predict.SL.glmnet}} \code{\link[glmnet]{cv.glmnet}}
 #'   \code{\link[glmnet]{glmnet}}
-#'
+
 #' @export
 SL.glmnet <- function(Y, X, newX, family, obsWeights, id,
                       alpha = 1, nfolds = 10, nlambda = 100, useMin = TRUE,
@@ -102,24 +99,11 @@ SL.glmnet <- function(Y, X, newX, family, obsWeights, id,
   return(out)
 }
 
-#' @title Prediction for an SL.glmnet object
-#'
-#' @description Prediction for the glmnet wrapper.
-#'
-#' @param object Result object from SL.glmnet
-#' @param newdata Dataframe or matrix that will generate predictions.
-#' @param remove_extra_cols Remove any extra columns in the new data that were
-#'   not part of the original model.
-#' @param add_missing_cols Add any columns from original data that do not exist
-#'   in the new data, and set values to 0.
-#' @param ... Any additional arguments (not used).
-#'
-#' @seealso \code{\link{SL.glmnet}}
-#'
-#' @export
+#' @exportS3Method predict SL.glmnet
+#' @rdname SL.glmnet
 predict.SL.glmnet <- function(object, newdata,
-                              remove_extra_cols = T,
-                              add_missing_cols = T,
+                              remove_extra_cols = TRUE,
+                              add_missing_cols = TRUE,
                               ...) {
   .SL.require('glmnet')
 
@@ -135,7 +119,7 @@ predict.SL.glmnet <- function(object, newdata,
     extra_cols = setdiff(colnames(newdata), original_cols)
     if (length(extra_cols) > 0) {
       warning(paste("Removing extra columns in prediction data:",
-                     paste(extra_cols, collapse = ", ")))
+                    toString(extra_cols)))
 
       newdata = newdata[, !colnames(newdata) %in% extra_cols, drop = FALSE]
     }
@@ -146,7 +130,7 @@ predict.SL.glmnet <- function(object, newdata,
     missing_cols = setdiff(original_cols, colnames(newdata))
     if (length(missing_cols) > 0) {
       warning(paste("Adding missing columns in prediction data:",
-                     paste(missing_cols, collapse = ", ")))
+                    toString(missing_cols)))
 
       new_cols = matrix(0, nrow = nrow(newdata), ncol = length(missing_cols))
       colnames(new_cols) = missing_cols
@@ -159,8 +143,7 @@ predict.SL.glmnet <- function(object, newdata,
 
   # If we predict with the cv.glmnet object we can specify lambda using a
   # string.
-  pred <- predict(object$object, newx = newdata, type = "response",
-             s = ifelse(object$useMin, "lambda.min", "lambda.1se"))
 
-  return(pred)
+  predict(object$object, newx = newdata, type = "response",
+          s = ifelse(object$useMin, "lambda.min", "lambda.1se"))
 }

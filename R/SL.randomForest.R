@@ -1,6 +1,7 @@
 # randomForest{randomForest}
 
-SL.randomForest <- function(Y, X, newX, family, mtry = ifelse(family$family == "gaussian",
+#' @export
+SL.randomForest <- function(Y, X, newX = X, family = gaussian(), mtry = ifelse(family$family == "gaussian",
                             max(floor(ncol(X)/3), 1), floor(sqrt(ncol(X)))), ntree = 1000,
                             nodesize = ifelse(family$family == "gaussian", 5, 1),
                             maxnodes = NULL,
@@ -21,12 +22,13 @@ SL.randomForest <- function(Y, X, newX, family, mtry = ifelse(family$family == "
 	return(out)
 }
 
+#' @exportS3Method predict SL.randomForest
 predict.SL.randomForest <- function(object, newdata, family, ...) {
 	.SL.require('randomForest')
 	if (family$family == "gaussian") {
 		pred <- predict(object$object, newdata = newdata, type = 'response')
 	}
-	if (family$family == "binomial") {
+	else if (family$family == "binomial") {
 		pred <- predict(object$object, newdata = newdata, type = 'vote')[,2]
 	}
 	pred

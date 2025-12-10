@@ -1,11 +1,8 @@
 #' @title SL wrapper for biglasso
-#' @description SL wrapper for biglasso
 #'
-#' @param Y Outcome variable
-#' @param X Training dataframe
-#' @param newX Test dataframe
-#' @param family Gaussian or binomial
-#' @param obsWeights Observation-level weights
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 #' @param penalty The penalty to be applied to the model. Either "lasso"
 #'   (default), "ridge", or "enet" (elastic net).
 #' @param alg.logistic The algorithm used in logistic regression. If "Newton"
@@ -30,13 +27,8 @@
 #' @param ncores The number of cores to use for parallel execution across a
 #'   cluster created by the \code{parallel} package.
 #' @param nfolds The number of cross-validation folds.  Default is 5.
-#' @param ... Any additional arguments, not currently used.
-#'
-#' @importFrom biglasso cv.biglasso
-#' @importFrom bigmemory as.big.matrix
 #'
 #' @examples
-#'
 #' data(Boston, package = "MASS")
 #' Y = Boston$medv
 #' # Remove outcome from covariate dataframe.
@@ -66,20 +58,18 @@
 #'   \code{\link[biglasso]{predict.biglasso}} \code{\link{SL.glmnet}}
 #'
 #' @export
-SL.biglasso <-
-  function(Y, X, newX, family,
-           obsWeights,
-           penalty = "lasso",
-           alg.logistic = "Newton",
-           screen = "SSR",
-           alpha = 1,
-           nlambda = 100,
-           eval.metric = "default",
-           ncores = 1,
-           nfolds = 5,
-           ...) {
+SL.biglasso <- function(Y, X, newX = X, family = gaussian(),
+                        penalty = "lasso",
+                        alg.logistic = "Newton",
+                        screen = "SSR",
+                        alpha = 1,
+                        nlambda = 100,
+                        eval.metric = "default",
+                        ncores = 1,
+                        nfolds = 5,
+                        ...) {
   .SL.require("biglasso")
-  .SL.require("bigmemory")  
+  .SL.require("bigmemory")
 
   # If binomial, biglasso still wants Y to be a numeric.
 
@@ -90,25 +80,25 @@ SL.biglasso <-
   }
 
   # This will give a warning if X is only a single covariate.
-  X = bigmemory::as.big.matrix(X)
+  X <- bigmemory::as.big.matrix(X)
 
-  fit = biglasso::cv.biglasso(X, Y, family = family$family,
-                           penalty = penalty,
-                           alg.logistic = alg.logistic,
-                           screen = screen,
-                           eval.metric = eval.metric,
-                           ncores = ncores,
-                           alpha = alpha,
-                           nfolds = nfolds,
-                           nlambda = nlambda)
+  fit <- biglasso::cv.biglasso(X, Y, family = family$family,
+                              penalty = penalty,
+                              alg.logistic = alg.logistic,
+                              screen = screen,
+                              eval.metric = eval.metric,
+                              ncores = ncores,
+                              alpha = alpha,
+                              nfolds = nfolds,
+                              nlambda = nlambda)
 
   if (!is.matrix(newX)) {
-    newX = model.matrix(~ ., newX)
+    newX <- model.matrix(~ ., newX)
     # Remove intercept that was added.
-    newX = newX[, -1]
+    newX <- newX[, -1]
   }
 
-  newX = bigmemory::as.big.matrix(newX)
+  newX <- bigmemory::as.big.matrix(newX)
   pred <- predict(fit, newX, type = "response")
 
   fit <- list(object = fit)
@@ -119,32 +109,19 @@ SL.biglasso <-
   return(out)
 }
 
-#' @title Prediction wrapper for SL.biglasso
-#'
-#' @description Prediction wrapper for SL.biglasso objects.
-#'
-#' @param object SL.kernlab object
-#' @param newdata Dataframe to generate predictions
-#' @param ... Unused additional arguments
-#'
-#' @importFrom bigmemory as.big.matrix
-#'
-#' @seealso \code{\link{SL.biglasso}} \code{\link[biglasso]{biglasso}}
-#'   \code{\link[biglasso]{predict.biglasso}}
-#'
-#' @export
-predict.SL.biglasso <- function(object, newdata,
-                              ...) {
+#' @exportS3Method predict SL.biglasso
+#' @rdname SL.biglasso
+predict.SL.biglasso <- function(object, newdata, ...) {
   .SL.require("biglasso")
   .SL.require("bigmemory")
 
   if (!is.matrix(newdata)) {
-    newdata = model.matrix(~ ., newdata)
+    newdata <- model.matrix(~ ., newdata)
     # Remove intercept that was added.
-    newdata = newdata[, -1]
+    newdata <- newdata[, -1]
   }
 
-  newdata = bigmemory::as.big.matrix(newdata)
+  newdata <- bigmemory::as.big.matrix(newdata)
 
   # Binomial and gaussian prediction is the same.
   pred <- predict(object$object, newdata, type = "response")

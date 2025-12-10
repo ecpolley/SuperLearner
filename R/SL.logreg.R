@@ -1,7 +1,8 @@
 # logreg {LogicReg}
 
 # currently uses CV to select model size
-SL.logreg <- function(Y, X, newX, family, ntrees = c(1, 3), nleaves = c(1, 7), kfold = 10, ...) {
+#' @export
+SL.logreg <- function(Y, X, newX = X, family = gaussian(), ntrees = c(1, 3), nleaves = c(1, 7), kfold = 10, ...) {
   .SL.require('LogicReg')
 	if(family$family == "gaussian") {
 		fit.cv.logreg <- LogicReg::logreg(resp = Y, bin = X, type = 2, select = 3, ntrees = ntrees, nleaves = nleaves, kfold = kfold)
@@ -40,10 +41,9 @@ SL.logreg <- function(Y, X, newX, family, ntrees = c(1, 3), nleaves = c(1, 7), k
 	return(out)
 }
 
-# 
-predict.SL.logreg <- function(object, newdata, family, X=NULL, Y=NULL,...) {
+#' @exportS3Method predict SL.logreg
+predict.SL.logreg <- function(object, newdata, ...) {
   .SL.require('LogicReg')
-	pred <- predict(object$object, newbin=newdata)
-	return(pred)
+	predict(object$object, newbin = newdata)
 }
 

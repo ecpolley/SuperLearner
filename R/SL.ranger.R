@@ -1,14 +1,13 @@
-#' @title SL wrapper for ranger
-#' @description Ranger is a fast implementation of Random Forest (Breiman 2001)
+#' SL wrapper for ranger
+#'
+#' Ranger is a fast implementation of Random Forest (Breiman 2001)
 #'   or recursive partitioning, particularly suited for high dimensional data.
 #'
 #' Extending code by Eric Polley from the SuperLearnerExtra package.
 #'
-#' @param Y Outcome variable
-#' @param X Training dataframe
-#' @param newX Test dataframe
-#' @param family Gaussian or binomial
-#' @param obsWeights Observation-level weights
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 #' @param num.trees Number of trees.
 #' @param mtry Number of variables to possibly split at in each node. Default is
 #'   the (rounded down) square root of the number variables.
@@ -21,8 +20,7 @@
 #' @param sample.fraction Fraction of observations to sample. Default is 1 for
 #'   sampling with replacement and 0.632 for sampling without replacement.
 #' @param num.threads Number of threads to use.
-#' @param verbose If TRUE, display additional output during execution.
-#' @param ... Any additional arguments, not currently used.
+#' @param verbose If `TRUE`, display additional output during execution.
 #'
 #' @examples
 #'
@@ -51,11 +49,10 @@
 #'
 #' @seealso \code{\link{SL.ranger}} \code{\link[ranger]{ranger}}
 #'   \code{\link[ranger]{predict.ranger}}
-#'
+
 #' @export
-SL.ranger <-
-  function(Y, X, newX, family,
-           obsWeights,
+SL.ranger <- function(Y, X, newX = X, family = gaussian(),
+           obsWeights = NULL,
            num.trees = 500,
            mtry = floor(sqrt(ncol(X))),
            write.forest = TRUE,
@@ -64,7 +61,7 @@ SL.ranger <-
            replace = TRUE,
            sample.fraction = ifelse(replace, 1, 0.632),
            num.threads = 1,
-           verbose = T,
+           verbose = FALSE,
            ...) {
   # need write.forest = TRUE for predict method
   .SL.require("ranger")
@@ -107,22 +104,9 @@ SL.ranger <-
   return(out)
 }
 
-#' @title Prediction wrapper for ranger random forests
-#'
-#' @description Prediction wrapper for SL.ranger objects.
-#'
-#' @param object SL.kernlab object
-#' @param newdata Dataframe to generate predictions
-#' @param family Gaussian or binomial
-#' @param num.threads Number of threads used for parallelization
-#' @param verbose If TRUE output additional information during execution.
-#' @param ... Unused additional arguments
-#'
-#' @seealso \code{\link{SL.ranger}} \code{\link[ranger]{ranger}}
-#'   \code{\link[ranger]{predict.ranger}}
-#'
-#' @export
-predict.SL.ranger <- function(object, newdata, family,
+#' @exportS3Method predict SL.ranger
+#' @rdname SL.ranger
+predict.SL.ranger <- function(object, newdata,
                               num.threads = 1,
                               verbose = object$verbose,
                               ...) {
@@ -133,7 +117,7 @@ predict.SL.ranger <- function(object, newdata, family,
                   num.threads = num.threads)$predictions
 
   # For binomial family $predictions is a two-column matrix.
-  if (family$family == "binomial") {
+  if (NCOL(pred) > 1L) {
     # P(Y = 1 | X) for binomial.
     pred = pred[, "1"]
   }
