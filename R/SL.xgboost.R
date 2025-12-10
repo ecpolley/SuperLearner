@@ -1,6 +1,6 @@
-#' XGBoost SuperLearner wrapper
+#' SL wrapper for XGBoost
 #'
-#' Supports the Extreme Gradient Boosting package for SuperLearnering, which is
+#' Supports the Extreme Gradient Boosting package for SuperLearning, which is
 #' a variant of gradient boosted machines (GBM).
 #'
 #' The performance of XGBoost, like GBM, is sensitive to the configuration
@@ -12,14 +12,9 @@
 #' XGBoost from drat as described here:
 #' \url{http://xgboost.readthedocs.io/en/latest/build.html}
 #'
-#' @param Y Outcome variable
-#' @param X Covariate dataframe
-#' @param newX Optional dataframe to predict the outcome
-#' @param obsWeights Optional observation-level weights (supported but not tested)
-#' @param id Optional id to group observations from the same unit (not used
-#'   currently).
-#' @param family "gaussian" for regression, "binomial" for binary
-#'   classification, "multinomial" for multiple classification (not yet supported).
+#' @inheritParams SL.template
+#' @inheritParams predict.SL.template
+#' @inheritParams SL.glm
 #' @param ntrees How many trees to fit. Low numbers may underfit but high
 #'   numbers may overfit, depending also on the shrinkage.
 #' @param max_depth How deep each tree can be. 1 means no interactions, aka tree
@@ -39,8 +34,10 @@
 #' @param verbose Verbosity of XGB fitting.
 #' @param ... Any remaining arguments (not supported though).
 #'
+#' @seealso [create.SL.xgboost()] to create new xgboost wrappers with different parameters.
+
 #' @export
-SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
+SL.xgboost = function(Y, X, newX = X, family = gaussian(), obsWeights = NULL, ntrees = 1000,
                       max_depth = 4, shrinkage = 0.1, minobspernode = 10,
                       params = list(),
                       nthread = 1,
@@ -48,119 +45,64 @@ SL.xgboost = function(Y, X, newX, family, obsWeights, id, ntrees = 1000,
                       save_period = NULL,
                       ...) {
   .SL.require("xgboost")
-  if(packageVersion("xgboost") < "0.6") stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
-  # X needs to be converted to a matrix first, then an xgb.DMatrix.
-  if (!is.matrix(X)) {
-    X = model.matrix(~ . - 1, X)
+
+  if (utils::packageVersion("xgboost") < "0.6") {
+    stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
   }
 
   # Convert to an xgboost compatible data matrix, using the sample weights.
-  xgmat = xgboost::xgb.DMatrix(data = X, label = Y, weight = obsWeights)
+  xgmat <- xgboost::xgb.DMatrix(data = X, label = Y, weight = obsWeights)
 
   # TODO: support early stopping, which requires a "watchlist". See ?xgb.train
 
   if (family$family == "gaussian") {
-    # reg:linear was deprecated in version 1.1.1.1, changed to reg:squarederror
-    if(packageVersion("xgboost") >= "1.1.1.1") {
-      objective <- 'reg:squarederror'
-      } else {
-      objective <- 'reg:linear'
-    }
-    model = xgboost::xgboost(data = xgmat, objective=objective, nrounds = ntrees,
-                max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
-                verbose = verbose, nthread = nthread, params = params,
-                save_period = save_period)
+    xgbpar <- xgboost::xgb.params(objective = "reg:squarederror",
+                                  nthread = nthread,
+                                  eta = shrinkage,
+                                  max_depth = max_depth,
+                                  min_child_weight = minobspernode)
   }
-  if (family$family == "binomial") {
-    model = xgboost::xgboost(data = xgmat, objective="binary:logistic", nrounds = ntrees,
-                max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
-                verbose = verbose, nthread = nthread, params = params,
-                save_period = save_period, eval_metric = "logloss")
+  else if (family$family == "binomial") {
+    xgbpar <- xgboost::xgb.params(objective = "binary:logistic",
+                                  nthread = nthread,
+                                  eta = shrinkage,
+                                  max_depth = max_depth,
+                                  min_child_weight = minobspernode,
+                                  eval_metric = "logloss")
   }
-  if (family$family == "multinomial") {
+  else if (family$family == "multinomial") {
     # TODO: test this.
-    model = xgboost::xgboost(data = xgmat, objective="multi:softmax", nrounds = ntrees,
-                max_depth = max_depth, min_child_weight = minobspernode, eta = shrinkage,
-                verbose = verbose, num_class = length(unique(Y)), nthread = nthread,
-                params = params,
-                save_period = save_period)
+    xgbpar <- xgboost::xgb.params(objective = "multi:softmax",
+                                  nthread = nthread,
+                                  eta = shrinkage,
+                                  max_depth = max_depth,
+                                  min_child_weight = minobspernode,
+                                  num_class = length(unique(Y)))
   }
 
-  # Newdata needs to be converted to a matrix first, then an xgb.DMatrix.
-  if (!is.matrix(newX)) {
-    newX = model.matrix(~ . - 1, newX)
+  for (i in intersect(names(params), names(formals(xgboost::xgb.params)))) {
+    xgbpar[[i]] <- params[[i]]
   }
 
-  pred = predict(model, newdata = newX)
+  model <- xgboost::xgb.train(params = xgbpar, data = xgmat, nrounds = ntrees,
+                              save_period = save_period, verbose = verbose)
 
-  fit = list(object = model)
-  class(fit) = c("SL.xgboost")
-  out = list(pred = pred, fit = fit)
-  return(out)
+  pred <- predict(model, newdata = xgboost::xgb.DMatrix(data = newX))
+
+  fit <- list(object = model)
+  class(fit) <- c("SL.xgboost")
+
+  list(pred = pred, fit = fit)
 }
 
-#' XGBoost prediction on new data
-#' @param object Model fit object from SuperLearner
-#' @param newdata Dataframe that will be converted to an xgb.DMatrix
-#' @param family Binomial or gaussian
-#' @param ... Any remaining arguments (not supported though).
-predict.SL.xgboost <- function(object, newdata, family, ...) {
+#' @exportS3Method predict SL.xgboost
+#' @rdname SL.xgboost
+predict.SL.xgboost <- function(object, newdata, ...) {
   .SL.require("xgboost")
-  if(packageVersion("xgboost") < "0.6") stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
-  # newdata needs to be converted to a matrix first
-  if (!is.matrix(newdata)) {
-    newdata = model.matrix(~ . - 1, newdata)
+
+  if (utils::packageVersion("xgboost") < "0.6") {
+    stop("SL.xgboost requires xgboost version >= 0.6, try help(\'SL.xgboost\') for details")
   }
-  pred = predict(object$object, newdata = newdata)
-  return(pred)
-}
 
-#' Factory for XGBoost SL wrappers
-#'
-#' Create multiple configurations of XGBoost learners based on the desired combinations of hyperparameters.
-#'
-#' @param tune List of hyperparameter settings to test. If specified, each hyperparameter will need to be defined.
-#' @param detailed_names Set to T to have the function names include the parameter configurations.
-#' @param env Environment in which to create the SL.xgboost functions. Defaults to the global environment.
-#' @param name_prefix The prefix string for the name of each function that is generated.
-#'
-#' @examples
-#'
-#' # Create a new environment to store the learner functions.
-#' # This keeps the global environment organized.
-#' sl_env = new.env()
-#' # Create 2 * 2 * 1 * 3 = 12 combinations of hyperparameters.
-#' tune = list(ntrees = c(100, 500), max_depth = c(1, 2), minobspernode = 10,
-#'             shrinkage = c(0.1, 0.01, 0.001))
-#' # Generate a separate learner for each combination.
-#' xgb_grid = create.SL.xgboost(tune = tune, env = sl_env)
-#' # Review the function configurations.
-#' xgb_grid
-#' # Attach the environment so that the custom learner functions can be accessed.
-#' attach(sl_env)
-#' \dontrun{
-#' sl = SuperLearner(Y = Y, X = X, SL.library = xgb_grid$names)
-#' }
-#' detach(sl_env)
-#' @export
-create.SL.xgboost = function(tune = list(ntrees = c(1000), max_depth = c(4), shrinkage = c(0.1),
-                             minobspernode = c(10)), detailed_names = F, env = .GlobalEnv,
-                             name_prefix = "SL.xgb") {
-  # Create all combinations of hyperparameters, for grid-like search.
-  tuneGrid = expand.grid(tune, stringsAsFactors=F)
-
-  names = rep("", nrow(tuneGrid))
-
-  for (i in seq(nrow(tuneGrid))) {
-    g = tuneGrid[i,]
-    if (detailed_names) {
-      name = paste(name_prefix, g$ntrees, g$max_depth, g$shrinkage, g$minobspernode, sep=".")
-    } else {
-      name = paste(name_prefix, i, sep=".")
-    }
-    names[i] = name
-    eval(parse(text = paste0(name, "= function(..., ntrees = ", g$ntrees, ", max_depth = ", g$max_depth, ", shrinkage=", g$shrinkage, ", minobspernode=", g$minobspernode, ") SL.xgboost(..., ntrees = ntrees, max_depth = max_depth, shrinkage=shrinkage, minobspernode=minobspernode)")), envir = env)
-  }
-  results = list(grid = tuneGrid, names = names)
-  invisible(results)
+  predict(object$object, newdata = xgboost::xgb.DMatrix(data = newdata))
 }
