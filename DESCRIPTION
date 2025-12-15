@@ -26,7 +26,6 @@ Suggests:
     devtools,
     e1071,
     earth,
-    gam (>= 1.15),
     gbm,
     genefilter,
     ggplot2,
