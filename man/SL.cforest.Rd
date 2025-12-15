@@ -2,7 +2,7 @@
 % Please edit documentation in R/SL.cforest.R
 \name{SL.cforest}
 \alias{SL.cforest}
-\title{cforest {party}}
+\title{cforest party}
 \usage{
 SL.cforest(Y, X, newX, family, obsWeights, id, ntree = 1000,
   mtry = max(floor(ncol(X)/3), 1), mincriterion = 0, teststat = "quad",
