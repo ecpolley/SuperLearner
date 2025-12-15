@@ -5,7 +5,7 @@
 \title{Factory for XGBoost SL wrappers}
 \usage{
 create.SL.xgboost(tune = list(ntrees = c(1000), max_depth = c(4), shrinkage =
-  c(0.1), minobspernode = c(10)), detailed_names = F, env = .GlobalEnv,
+  c(0.1), minobspernode = c(10)), detailed_names = FALSE, env = .GlobalEnv,
   name_prefix = "SL.xgb")
 }
 \arguments{
